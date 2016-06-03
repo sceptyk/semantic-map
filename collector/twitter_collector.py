@@ -21,6 +21,8 @@ class Twitter_Collector(Collector):
 		)"""
 		self.cursor.execute(sql)
 
+		self.last_id = ''
+
 	def authorize(self):
 		auth = tweepy.OAuthHandler(self._CLIENT_KEY, self._CLIENT_SECRET)
 		auth.set_access_token(self._ACCESS_TOKEN, self._ACCESS_SECRET)
@@ -38,7 +40,8 @@ class Twitter_Collector(Collector):
 		tweet = Tweet(tweet_id, lat, lng, user, text, timestamp)
 		return tweet
 
-	def get_data(self, max_id = ''):
+	def get_data(self):
+		max_id = self.last_id
 		for tweet in tweepy.Cursor(self.client.search, 
 										q = urllib.quote_plus(''),
 										geocode = '53.3447512,-6.2686897,20km', #centre of Dublin
@@ -55,8 +58,7 @@ class Twitter_Collector(Collector):
 				yield data
 			
 	def store_data(self, data):
-		last_id = ''
-
+		
 		for tweet in data:
 			values = tweet._tuple()
 
@@ -71,18 +73,15 @@ class Twitter_Collector(Collector):
 			except:
 				self.conn.rollback()
 
-			last_id = values[0]
-
-		return last_id
+			self.last_id = values[0]
 
 	def run(self):
 		print("running -----------")
-		last_id = ''
 		
 		while True:
 			try:
-				data = self.get_data(last_id)
-				last_id = self.store_data(data)
+				data = self.get_data()
+				self.store_data(data)
 			except tweepy.error.TweepError:
 				time.sleep(960.0)#timeout 16mins to avoid twitter rate policy
 			else:
