@@ -3,14 +3,18 @@ import MySQLdb
 class Collector(object):
 	'Web API access object'
 
-	def __init__(self, client_key = '', client_secret = '', access_token = '', access_secret = '', dbuser = 'user', dbpass = 'pass', ):
+	def __init__(self, client_key = '', client_secret = '', access_token = '', access_secret = '', dbuser = 'user', dbpass = ''):
 		self._CLIENT_KEY = client_key
 		self._CLIENT_SECRET = client_secret
 		self._ACCESS_TOKEN = access_token
 		self._ACCESS_SECRET = access_secret
 
 		self.client = self.authorize()
-		self.conn = MySQLdb.connect('localhost', dbsuer, dbpass, 'semantic_map_2016')
+		self.conn = MySQLdb.connect(
+			host = 'localhost', 
+			user = dbuser,
+			passwd = dbpass, 
+			db = 'semantic_map_2016')
 		self.cursor = self.conn.cursor()		
 
 	def authorize(self):
@@ -27,4 +31,8 @@ class Collector(object):
 		
 	def store_data(self, data):
 		'Stores single node data'
+		pass
+
+	def run(self):
+		'Runs the collector'
 		pass

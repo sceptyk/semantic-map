@@ -3,20 +3,23 @@ from tweet import Tweet
 import tweepy
 import urllib
 import MySQLdb
+import json
 import time
 
 class Twitter_Collector(Collector):
 
-	def __init__(self):
-		super(Collector, self).__init__()
-		self.cursor.execute("""CREATE TABLE tweets (
-			_id PRIMARY KEY UNSIGNED BIGINT,
+	def __init__(self, *args, **kwargs):
+		super(Twitter_Collector, self).__init__(*args, **kwargs)
+		sql = """CREATE TABLE IF NOT EXISTS tweets (
+			_id BIGINT UNSIGNED NOT NULL,
 			lat DOUBLE(12,7),
 			lng DOUBLE(12,7),
-			user UNSIGNED BIGINT,
+			user BIGINT UNSIGNED,
 			text CHAR(255),
-			timestamp TIMESTAMP
-		)""")
+			timestamp TIMESTAMP,
+			PRIMARY KEY ( _id )
+		)"""
+		self.cursor.execute(sql)
 
 	def authorize(self):
 		auth = tweepy.OAuthHandler(self._CLIENT_KEY, self._CLIENT_SECRET)
@@ -29,10 +32,11 @@ class Twitter_Collector(Collector):
 		lat = data['coordinates']['coordinates'][1]
 		lng = data['coordinates']['coordinates'][0]
 		user = data['user']['id']
-		timestamp = time.strftime(time.strptime(data['created_at'],"%a %b %d %H:%M:%S +0000 %Y"), '%Y-%m-%d %H:%M:%S') #convert to mysql timestamp
 		text = data['text']
+		timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(data['created_at'],"%a %b %d %H:%M:%S +0000 %Y")) #convert to mysql timestamp
 
-		yield Tweet(tweet_id, lat, lng, user, timestamp, text)
+		tweet = Tweet(tweet_id, lat, lng, user, text, timestamp)
+		return tweet
 
 	def get_data(self, max_id = ''):
 		for tweet in tweepy.Cursor(self.client.search, 
@@ -42,16 +46,46 @@ class Twitter_Collector(Collector):
 										max_id = max_id, #search for entries before the id
 										count = 100
 									).items():
-			yield self.process_data(tweet._json)
+			
+			_json = tweet._json
+			if _json['coordinates'] is None:
+				continue
+			else:
+				data = self.process_data(_json)
+				yield data
 			
 	def store_data(self, data):
-		print('Store data')
-		sql = """INSERT INTO 
-			tweets(_id, lat, lng, user, text, timestamp) 
-			VALUES (%u, %f, %f, %u, %s, %s)""" % data._touple
+		last_id = ''
 
-		try:
-			self.cursor.execute(sql)
-			self.conn.commit()
-		except:
-			self.conn.rollback()
+		for tweet in data:
+			values = tweet._tuple()
+
+			sql = """INSERT INTO tweets
+				(_id, lat, lng, user, text, timestamp) 
+				VALUES 
+				('%u', '%f', '%f', '%u', '%s', '%s')""" % values
+
+			try:
+				self.cursor.execute(sql)
+				self.conn.commit()
+			except:
+				self.conn.rollback()
+
+			last_id = values[0]
+
+		return last_id
+
+	def run(self):
+		print("running -----------")
+		last_id = ''
+		
+		while True:
+			try:
+				data = self.get_data(last_id)
+				last_id = self.store_data(data)
+			except tweepy.error.TweepError:
+				time.sleep(960.0)#timeout 16mins to avoid twitter rate policy
+			else:
+				break
+
+		self.conn.close()
