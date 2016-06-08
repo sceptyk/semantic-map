@@ -14,7 +14,7 @@ class Collector(object):
 			host = 'localhost', 
 			user = dbuser,
 			passwd = dbpass, 
-			db = 'semantic_map_2016')
+			db = 'semantic_map_2016') #'ucd') FIXME
 		self.cursor = self.conn.cursor()		
 
 	def authorize(self):

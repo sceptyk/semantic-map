@@ -1,24 +1,22 @@
 class Tweet(object):
-	'Row represantation of table tweets'
 
-	def __init__(self, tweet_id, lat, lng, user, text, timestamp):
-		self._id = tweet_id
-		self.lat = lat
-		self.lng = lng
-		self.user = user
-		self.text = text
-		self.timestamp = timestamp
+    def __init__(self, tweet_id, user_id, text, lat, lng, time):
+        self._id = tweet_id
+        self._user = user_id
+        self.text = text
+        self.lat = lat
+        self.lng = lng
+        self.time = time
 
-	def _dict(self):
+    def dict(self):
+        return {
+            '_id'  : self._id,
+            '_user': self._user,
+            'text' : self.text,
+            'lat'  : self.lat,
+            'lng'  : self.lng,
+            'time' : self.time
+        }
 
-		return {
-			'_id' : self._id,
-			'lat' : self.lat,
-			'lng' : self.lng,
-			'user' : self.user,
-			'text' : self.text,
-			'timestamp' : self.timestamp
-		}
-
-	def _tuple(self):
-		return (self._id, self.lat, self.lng, self.user, self.text, self.timestamp)
+    def tuple(self):
+        return self._id, self._user, self.text, self.lat, self.lng, self.time

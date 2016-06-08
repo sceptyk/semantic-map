@@ -12,10 +12,10 @@ class Twitter_Collector(Collector):
 		super(Twitter_Collector, self).__init__(*args, **kwargs)
 		sql = """CREATE TABLE IF NOT EXISTS tweets (
 			_id BIGINT UNSIGNED NOT NULL,
-			lat DOUBLE(12,7),
-			lng DOUBLE(12,7),
 			user BIGINT UNSIGNED,
 			text CHAR(255),
+			lat DOUBLE(12,7),
+			lng DOUBLE(12,7),
 			timestamp TIMESTAMP,
 			PRIMARY KEY ( _id )
 		)"""
@@ -65,7 +65,7 @@ class Twitter_Collector(Collector):
 			sql = """INSERT INTO tweets
 				(_id, lat, lng, user, text, timestamp) 
 				VALUES 
-				('%u', '%f', '%f', '%u', '%s', '%s')""" % values
+				('%f', '%f', '%s', '%f', '%f', '%s')""" % values
 
 			try:
 				self.cursor.execute(sql)
