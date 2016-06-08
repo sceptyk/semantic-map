@@ -2,7 +2,7 @@ from twitter_collector import Twitter_Collector
 import tweepy
 import json
 import MySQLdb
-from tweet import Tweet
+from model.tweet import Tweet
 import time
 
 class Twitter_Stream_Collector(Twitter_Collector):

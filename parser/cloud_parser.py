@@ -1,4 +1,7 @@
+from model.tweet import Tweet
+
 class Cloud_Parser(Object){
+	"""Parse collected data, retrieve keywords and store them"""
 	
 	def __init__:
 		self.conn = MySQLdb.connect(
@@ -9,14 +12,15 @@ class Cloud_Parser(Object){
 		self.cursor = self.conn.cursor()
 
 		CREATE_KEYWORDS_TABLE = """CREATE TABLE IF NOT EXISTS keywords (
-			_id BIGINT UNSIGNED NOT NULL,
-			keyword CHAR(100) NOT NULL,
-			PRIMARY KEY ( _id )
+			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
+			word CHAR(100) NOT NULL UNIQUE,
+			PRIMARY KEY ( _id ),
+			INDEX KEY ( keyword )
 		)"""
 		self.cursor.execute(CREATE_KEYWORDS_TABLE)
 
 		CREATE_CLOUD_TABLE = """CREATE TABLE IF NOT EXISTS cloud (
-			_id BIGINT UNSIGNED NOT NULL,
+			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
 			start_lat DOUBLE(12,7),
 			start_lng DOUBLE(12,7),
 			end_lat DOUBLE(12,7),
@@ -28,7 +32,7 @@ class Cloud_Parser(Object){
 		self.cursor.execute(CREATE_CLOUD_TABLE)
 
 		CREATE_COUNTER_TABLE = """CREATE TABLE IF NOT EXISTS word_counter (
-			_id BIGINT UNSIGNED NOT NULL,
+			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
 			_keyword BIGINT UNSIGNED NOT NULL,
 			_cloud BIGINT UNSIGNED NOT NULL,
 			count BIGINT UNSIGNED NOT NULL,
@@ -73,6 +77,29 @@ class Cloud_Parser(Object){
 
 	def get_data(self):
 		#TODO connect to db
+		
+		chunk_size = 1000
+
+		while True:
+			start = 0
+			end = chunk_size
+			sql = """SELECT * FROM tweets ORDER BY _id LIMIT %d, %d""" % (start, end)
+
+			try:
+				cursor.execute(sql)
+				results = cursor.fetchall()
+				for row in results:
+					tweet = Tweet()
+					tweet.populate(row)
+
+					self.store_data(tweet)
+
+				start = end
+				end += chunk_size
+			except:
+				print "Error: unable to fecth data"
+				break
+
 	
 	def store_data(self, data):
 		pass
@@ -80,5 +107,23 @@ class Cloud_Parser(Object){
 		# -- each place based on location
 		# -- each time part
 		# -- global list
+		# 
+		
+		# update cloud table
+		# add locations clouds
+		
+		# add time clouds
+		
+		#update keywords table
+		sql = """INSERT IGNORE INTO keywords (word) 
+			VALUES (%s)""" % keyword
+
+		try:
+			self.cursor.execute(sql)
+			self.conn.commit()
+		except:
+			self.conn.rollback()
+
+		#update cloud_count table
 
 }

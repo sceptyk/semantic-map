@@ -1,5 +1,5 @@
 from collector import Collector
-from tweet import Tweet
+from model.tweet import Tweet
 import tweepy
 import urllib
 import MySQLdb
