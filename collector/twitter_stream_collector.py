@@ -38,6 +38,11 @@ class Twitter_Stream_Collector(Twitter_Collector):
 	def run(self):
 		print("running -----------")
 
-		self.client.filter(locations = [-6.421509, 53.189579, -6.017761, 53.447171])# FIXME
-
+		while True:
+			try:
+				self.client.filter(locations = [-6.421509, 53.189579, -6.017761, 53.447171])
+				#time.sleep(960.0)#timeout 16mins to avoid twitter rate policy
+			except:
+				break
+				
 		self.conn.close()

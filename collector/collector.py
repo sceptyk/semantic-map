@@ -11,10 +11,10 @@ class Collector(object):
 
 		self.client = self.authorize()
 		self.conn = MySQLdb.connect(
-			host = 'localhost', 
-			user = dbuser,
-			passwd = dbpass, 
-			db = 'semantic_map_2016') #'ucd') FIXME
+			host = '127.9.157.2', 
+			user = 'adminw9XD8Ju',
+			passwd = 'QIY_8QyGMW-X', 
+			db = 'ucd')
 		self.cursor = self.conn.cursor()		
 
 	def authorize(self):
