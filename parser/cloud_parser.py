@@ -118,15 +118,10 @@ class Cloud_Parser(object):
 		
 		# add time clouds
 		#START::global word cloud
-
-		global_text_query = """SELECT text FROM tweets"""
-		try:
-			self.cursor.execute(global_text_query)
-			self.conn.commit()
-			global_text_data = self.cursor.fetchall
-		except:
-			self.conn.rollback()
-		global_text_data = self.elim_useless(global_text_data)
+		#take text out
+		tweet = data.dict()
+		tweet_text = tweet['text']
+		global_text_data = self.elim_useless(tweet_text)
 		for text in global_text_data:
 			for word in text:
 				feed = """INSERT IGNORE INTO keywords (word) VALUES (%s)""" % word
@@ -137,6 +132,9 @@ class Cloud_Parser(object):
 					self.conn.rollback()
 		#END::global word cloud
 
+		#START::time based wordclouds
+
+		#END::time based wordclouds
 
 		#update keywords table
 
