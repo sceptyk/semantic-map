@@ -1,10 +1,10 @@
 from model.tweet import Tweet
 from collector.mysql_connect import Mysql_Connect
-
-class Cloud_Parser(Object){
+from stop_words import get_stop_words
+class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
 	
-	def __init__:
+	def __init__(self):
 		self.conn = Mysql_Connect().get_conn()
 		self.cursor = self.conn.cursor()
 
@@ -58,18 +58,17 @@ class Cloud_Parser(Object){
 		    r'(?:\S)' # anything else
 		]
 		    
-		tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
-		emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
+		tokens_re = regex_str.compile(r'('+'|'.join(regex_str)+')', regex_str.VERBOSE | regex_str.IGNORECASE)
+		emoticon_re = emoticons_str.compile(r'^'+emoticons_str+'$', emoticons_str.VERBOSE | emoticons_str.IGNORECASE)
 		 
 		def tokenize(s):
-		    return tokens_re.findall(s)
+			return tokens_re.findall(s)
 		 
 		def preprocess(s, lowercase=False):
-		    tokens = tokenize(s)
-		    if lowercase:
-		        tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
-		    return tokens
-
+			tokens = tokenize(s)
+			if lowercase:
+				tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
+			return tokens
 		return preprocess(data)
 
 	def get_data(self):
@@ -83,8 +82,8 @@ class Cloud_Parser(Object){
 			sql = """SELECT * FROM tweets ORDER BY _id LIMIT %d, %d""" % (start, end)
 
 			try:
-				cursor.execute(sql)
-				results = cursor.fetchall()
+				self.cursor.execute(sql)
+				results = self.cursor.fetchall()
 				for row in results:
 					tweet = Tweet()
 					tweet.populate(row)
@@ -97,30 +96,50 @@ class Cloud_Parser(Object){
 				print "Error: unable to fecth data"
 				break
 
-	
+	def elim_useless(self, list):
+		stop_words = get_stop_words("en")
+		for text in list:
+			text = text.split()
+			for word in text:
+				if word in stop_words or len(word) <= 2:
+					word = word.replace("")
+		return list
+
 	def store_data(self, data):
 		pass
 		#TODO update each branch
 		# -- each place based on location
 		# -- each time part
-		# -- global list
+		# -- global list (done)
 		# 
 		
 		# update cloud table
 		# add locations clouds
 		
 		# add time clouds
-		
-		#update keywords table
-		sql = """INSERT IGNORE INTO keywords (word) 
-			VALUES (%s)""" % keyword
+		#START::global word cloud
 
+		global_text_query = """SELECT text FROM tweets"""
 		try:
-			self.cursor.execute(sql)
+			self.cursor.execute(global_text_query)
 			self.conn.commit()
+			global_text_data = self.cursor.fetchall
 		except:
 			self.conn.rollback()
+		global_text_data = self.elim_useless(global_text_data)
+		for text in global_text_data:
+			for word in text:
+				feed = """INSERT IGNORE INTO keywords (word) VALUES (%s)""" % word
+				try:
+					self.cursor.execute(feed)
+					self.conn.commit()
+				except:
+					self.conn.rollback()
+		#END::global word cloud
+
+
+		#update keywords table
+
+
 
 		#update cloud_count table
-
-}

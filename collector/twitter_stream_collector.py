@@ -24,9 +24,8 @@ class Twitter_Stream_Collector(Twitter_Collector):
 			return True
 
 #################################################################
-
-
 	def authorize(self):
+
 		auth = tweepy.OAuthHandler(self._CLIENT_KEY, self._CLIENT_SECRET)
 		auth.set_access_token(self._ACCESS_TOKEN, self._ACCESS_SECRET)
 
