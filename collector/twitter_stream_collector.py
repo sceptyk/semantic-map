@@ -15,9 +15,11 @@ class Twitter_Stream_Collector(Twitter_Collector):
 		def on_data(self, data):
 			_json = json.loads(data)
 
-			if _json['coordinates'] is not None:
-				parsed = self.outer.process_data(_json)
-				self.outer.store_data([parsed])
+			if _json['coordinates'] is None:
+				_json['coordinates'] = {'coordinates': [0.0,0.0]}
+			
+			parsed = self.outer.process_data(_json)
+			self.outer.store_data([parsed])
 
 			return True
 
@@ -40,6 +42,5 @@ class Twitter_Stream_Collector(Twitter_Collector):
 	def run(self):
 		print("running Twitter Stream Collector -----------")
 
-		self.client.filter(locations = [-6.421509, 53.189579, -6.017761, 53.447171])
-				
-		self.conn.close()
+		self.client.filter(locations = [-6.421509, 53.189579, -6.017761, 53.447171], async=True)
+		self.db.close()

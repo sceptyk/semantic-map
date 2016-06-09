@@ -19,7 +19,7 @@ class Twitter_Collector(Collector):
 			timestamp TIMESTAMP,
 			PRIMARY KEY ( _id )
 		)"""
-		self.cursor.execute(sql)
+		self.db.execute(sql)
 
 		self.last_id = ''
 
@@ -32,10 +32,10 @@ class Twitter_Collector(Collector):
 	def process_data(self, data):
 		tweet_id = data['id']
 		user = data['user']['id']
-		text = data['text']
+		text = repr(data['text'].encode('utf_8')) #encode the string
 		lat = data['coordinates']['coordinates'][1]
 		lng = data['coordinates']['coordinates'][0]
-		timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(data['created_at'],"%a %b %d %H:%M:%S +0000 %Y")) #convert to mysql timestamp
+		timestamp = repr(time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(data['created_at'],"%a %b %d %H:%M:%S +0000 %Y"))) #convert to mysql timestamp
 
 		tweet = Tweet(tweet_id, user, text, lat, lng, timestamp)
 		return tweet
@@ -65,13 +65,9 @@ class Twitter_Collector(Collector):
 			sql = """INSERT INTO tweets
 				(_id, user, text, lat, lng, timestamp) 
 				VALUES 
-				('%f', '%f', '%s', '%f', '%f', '%s')""" % values
+				('%u', '%u', %s, '%f', '%f', %s)""" % values
 
-			try:
-				self.cursor.execute(sql)
-				self.conn.commit()
-			except:
-				self.conn.rollback()
+			self.db.execute(sql)
 
 			self.last_id = values[0]
 			print(self.last_id)
@@ -88,4 +84,4 @@ class Twitter_Collector(Collector):
 			else:
 				break
 
-		self.conn.close()
+		self.db.close()
