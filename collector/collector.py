@@ -10,8 +10,7 @@ class Collector(object):
 		self._ACCESS_SECRET = access_secret
 
 		self.client = self.authorize()
-		self.conn = Mysql_Connect().get_conn()
-		self.cursor = self.conn.cursor()		
+		self.db = Mysql_Connect()		
 
 	def authorize(self):
 		'Should return client that will be used to connect with API'
