@@ -15,4 +15,4 @@ twitter_stream = Twitter_Stream_Collector(
 
 print("Twitter data ------")
 
-twitter_strema.run()
+twitter_stream.run()

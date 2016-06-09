@@ -1,14 +1,11 @@
 from model.tweet import Tweet
+from collector.mysql_connect import Mysql_Connect
 
 class Cloud_Parser(Object){
 	"""Parse collected data, retrieve keywords and store them"""
 	
 	def __init__:
-		self.conn = MySQLdb.connect(
-			host = '127.9.157.2', 
-			user = 'adminw9XD8Ju',
-			passwd = 'QIY_8QyGMW-X', 
-			db = 'ucd')
+		self.conn = Mysql_Connect().get_conn()
 		self.cursor = self.conn.cursor()
 
 		CREATE_KEYWORDS_TABLE = """CREATE TABLE IF NOT EXISTS keywords (

@@ -1,4 +1,4 @@
-import MySQLdb
+from mysql_connect import Mysql_Connect
 
 class Collector(object):
 	'Web API access object'
@@ -10,11 +10,7 @@ class Collector(object):
 		self._ACCESS_SECRET = access_secret
 
 		self.client = self.authorize()
-		self.conn = MySQLdb.connect(
-			host = '127.9.157.2', 
-			user = 'adminw9XD8Ju',
-			passwd = 'QIY_8QyGMW-X', 
-			db = 'ucd')
+		self.conn = Mysql_Connect().get_conn()
 		self.cursor = self.conn.cursor()		
 
 	def authorize(self):
