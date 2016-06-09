@@ -15,7 +15,7 @@ class Twitter_Stream_Collector(Twitter_Collector):
 		def on_data(self, data):
 			_json = json.loads(data)
 			parsed = self.outer.process_data(_json)
-			self.outer.store_data()
+			self.outer.store_data(parsed)
 
 			return True
 
@@ -36,13 +36,8 @@ class Twitter_Stream_Collector(Twitter_Collector):
 		return stream
 
 	def run(self):
-		print("running -----------")
+		print("running Twitter Stream Collector -----------")
 
-		while True:
-			try:
-				self.client.filter(locations = [-6.421509, 53.189579, -6.017761, 53.447171])
-				#time.sleep(960.0)#timeout 16mins to avoid twitter rate policy
-			except:
-				break
+		self.client.filter(locations = [-6.421509, 53.189579, -6.017761, 53.447171])
 				
 		self.conn.close()

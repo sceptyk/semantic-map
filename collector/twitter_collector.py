@@ -76,7 +76,7 @@ class Twitter_Collector(Collector):
 			self.last_id = values[0]
 
 	def run(self):
-		print("running -----------")
+		print("running Twitter Collector -----------")
 		
 		while True:
 			try:
