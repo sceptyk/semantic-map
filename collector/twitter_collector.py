@@ -31,13 +31,13 @@ class Twitter_Collector(Collector):
 
 	def process_data(self, data):
 		tweet_id = data['id']
-		lat = data['coordinates']['coordinates'][1]
-		lng = data['coordinates']['coordinates'][0]
 		user = data['user']['id']
 		text = data['text']
+		lat = data['coordinates']['coordinates'][1]
+		lng = data['coordinates']['coordinates'][0]
 		timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(data['created_at'],"%a %b %d %H:%M:%S +0000 %Y")) #convert to mysql timestamp
 
-		tweet = Tweet(tweet_id, lat, lng, user, text, timestamp)
+		tweet = Tweet(tweet_id, user, text, lat, lng, timestamp)
 		return tweet
 
 	def get_data(self):
@@ -60,10 +60,10 @@ class Twitter_Collector(Collector):
 	def store_data(self, data):
 		
 		for tweet in data:
-			values = tweet._tuple()
+			values = tweet.tuple()
 
 			sql = """INSERT INTO tweets
-				(_id, lat, lng, user, text, timestamp) 
+				(_id, user, text, lat, lng, timestamp) 
 				VALUES 
 				('%f', '%f', '%s', '%f', '%f', '%s')""" % values
 
@@ -74,6 +74,7 @@ class Twitter_Collector(Collector):
 				self.conn.rollback()
 
 			self.last_id = values[0]
+			print(self.last_id)
 
 	def run(self):
 		print("running Twitter Collector -----------")
