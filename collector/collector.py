@@ -25,8 +25,9 @@ class Collector(object):
 		'Yield single node data'
 		pass
 		
+	# @param {iterable} data
 	def store_data(self, data):
-		'Stores single node data'
+		'Stores single node data,'
 		pass
 
 	def run(self):

@@ -8,7 +8,7 @@ class Mysql_Connect(object):
 
 		if Mysql_Connect.conn is None:
 			Mysql_Connect.conn = MySQLdb.connect(
-				host = '127.0.0.1',
+				host = '127.9.157.2',
 				port = 3306,
 				user = 'adminw9XD8Ju',
 				passwd = 'QIY_8QyGMW-X', 
