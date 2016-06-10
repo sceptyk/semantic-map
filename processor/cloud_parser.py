@@ -132,10 +132,28 @@ class Cloud_Parser(object):
 					self.conn.rollback()
 		#END::global word cloud
 
-		#START::time based wordclouds
-
-		#END::time based wordclouds
-
+		#START::location based wordclouds
+		#Start coordinate - 53.45453140530998,-6.39404296875
+		w,h = 141, 107
+		grid = [[0 for x in range(w)]for y in range(h)]
+		start_lng = 53.45698455620496
+		for i in range(h):
+			start_lat = -6.39404296875
+			for j in range(w):
+				grid[i][j] = {start_lat, start_lng}
+				start_lat += 0.0022457775
+			start_lng+=0.002457775
+		#END::location based wordclouds
+				#CREATE_CLOUD_TABLE = """CREATE TABLE IF NOT EXISTS cloud (
+				#			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
+				#			start_lat DOUBLE(12,7),
+				#			start_lng DOUBLE(12,7),
+				#			end_lat DOUBLE(12,7),
+				#			end_lng DOUBLE(12,7),
+				#			start_at TIME,
+				#			end_at,
+				#			PRIMARY KEY ( _id )
+				#		)"""
 		#update keywords table
 
 
