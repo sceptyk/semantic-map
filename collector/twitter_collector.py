@@ -7,8 +7,10 @@ import json
 import time
 
 class Twitter_Collector(Collector):
+	"""Collects tweets from twitter Web API"""
 
 	def __init__(self, *args, **kwargs):
+		"""Create table to store tweets if not exists"""
 		super(Twitter_Collector, self).__init__(*args, **kwargs)
 		sql = """CREATE TABLE IF NOT EXISTS tweets (
 			_id BIGINT UNSIGNED NOT NULL,
@@ -21,7 +23,7 @@ class Twitter_Collector(Collector):
 		)"""
 		self.db.execute(sql)
 
-		self.last_id = ''
+		self.last_id = '' 	#store last id fetched to no duplicate results
 
 	def authorize(self):
 		auth = tweepy.OAuthHandler(self._CLIENT_KEY, self._CLIENT_SECRET)
@@ -30,17 +32,21 @@ class Twitter_Collector(Collector):
 		return tweepy.API(auth)
 
 	def process_data(self, data):
-		tweet_id = data['id']
-		user = data['user']['id']
-		text = repr(data['text'].encode('utf_8')) #encode the string
-		lat = data['coordinates']['coordinates'][1]
-		lng = data['coordinates']['coordinates'][0]
+		"""Process single data obtained from server"""
+		tweet_id = data['id'] 						#tweet id {int}
+		user = data['user']['id'] 					#user id {int}
+		text = repr(data['text'].encode('utf_8'))	#encode the string and escape quotes
+		lat = data['coordinates']['coordinates'][1]	#latitude of tweet {float}
+		lng = data['coordinates']['coordinates'][0]	#longitude of tweet {float}
 		timestamp = repr(time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(data['created_at'],"%a %b %d %H:%M:%S +0000 %Y"))) #convert to mysql timestamp
 
-		tweet = Tweet(tweet_id, user, text, lat, lng, timestamp)
+		tweet = Tweet(tweet_id, user, text, lat, lng, timestamp) #populate model object
 		return tweet
 
 	def get_data(self):
+		"""Query server for data and process it
+			@return {iterable}"""
+
 		max_id = self.last_id
 		for tweet in tweepy.Cursor(self.client.search, 
 										q = urllib.quote_plus(''),
@@ -70,7 +76,6 @@ class Twitter_Collector(Collector):
 			self.db.execute(sql)
 
 			self.last_id = values[0]
-			print(self.last_id)
 
 	def run(self):
 		print("running Twitter Collector -----------")

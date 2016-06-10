@@ -1,7 +1,7 @@
 from model.tweet import Tweet
 from collector.mysql_connect import Mysql_Connect
 
-class Cloud_Parser(Object){
+class Cloud_Parser(object){
 	"""Parse collected data, retrieve keywords and store them"""
 	
 	def __init__:
