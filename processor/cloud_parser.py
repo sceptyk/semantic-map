@@ -7,7 +7,7 @@ class Cloud_Parser(object):
 	def __init__(self):
 		self.conn = Mysql_Connect().get_conn()
 		self.cursor = self.conn.cursor()
-
+		self.Matrix = self.get_grid()
 		CREATE_KEYWORDS_TABLE = """CREATE TABLE IF NOT EXISTS keywords (
 			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
 			word CHAR(100) NOT NULL UNIQUE,
@@ -17,13 +17,11 @@ class Cloud_Parser(object):
 		self.cursor.execute(CREATE_KEYWORDS_TABLE)
 
 		CREATE_CLOUD_TABLE = """CREATE TABLE IF NOT EXISTS cloud (
-			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
-			start_lat DOUBLE(12,7),
-			start_lng DOUBLE(12,7),
-			end_lat DOUBLE(12,7),
-			end_lng DOUBLE(12,7),
-			start_at TIME,
-			end_at,
+			_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+			start_lat DOUBLE(12,15),
+			start_lng DOUBLE(12,15),
+			end_lat DOUBLE(12,15),
+			end_lng DOUBLE(12,15),
 			PRIMARY KEY ( _id )
 		)"""
 		self.cursor.execute(CREATE_CLOUD_TABLE)
@@ -96,6 +94,19 @@ class Cloud_Parser(object):
 				print "Error: unable to fecth data"
 				break
 
+	def get_grid(self):
+		size_w, size_h = 141, 107
+		loc_rix = []
+		start_lat = 53.45698455620496
+		for i in range(size_h):
+			loc_rix.append([])
+			start_lng = -6.39404296875
+			for j in range(size_w):
+				loc_rix[i].append((start_lat, start_lng))
+				start_lng += 0.0022457775
+			start_lat -= 0.0022457775
+		return loc_rix
+
 	def elim_useless(self, list):
 		stop_words = get_stop_words("en")
 		for text in list:
@@ -104,6 +115,76 @@ class Cloud_Parser(object):
 				if word in stop_words or len(word) <= 2:
 					word = word.replace("")
 		return list
+
+	def populate_clouds(self):
+		size_w, size_h = 141, 107
+		loc_cursor = self.conn.cursor()
+		#self.reset_increment()
+		for i in range(size_h - 1):
+			for j in range(size_w - 1):
+				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng)
+					VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf)""" % (
+				self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
+				self.Matrix[i + 1][j + 1][1])
+				try:
+					loc_cursor.execute(pop_q)
+					self.conn.commit()
+				except:
+					self.conn.rollback()
+
+	def reset_increment(self):
+		clear = """truncate table cloud"""
+		self.cursor.execute(clear)
+
+	def get_clouds_count(self):
+		count_query = """select count(*) from cloud;"""
+		loc_cursor = self.conn.cursor()
+		loc_cursor.execute(count_query)
+		return loc_cursor.fetchall()
+
+	def point_in_cloud(self, p_lat, p_lng):
+		EDGE = 0.00000000001
+		loc_cursor = self.conn.cursor()
+		# q = """select start_lat from cloud where _id=%d;"""
+		for id in range(1, self.get_clouds_count()):
+			start_latQ = """select start_lat from cloud where _id=%d;""" % id
+			loc_cursor.execute(start_latQ)
+			start_lat = "%20.15lf" % loc_cursor.fetchone()[0]
+
+			start_lngQ = """select start_lng from cloud where _id=%d;""" % id
+			loc_cursor.execute(start_lngQ)
+			start_lng = "%20.15lf" % loc_cursor.fetchone()[0]
+
+			end_latQ = """select end_lat from cloud where _id=%d;""" % id
+			loc_cursor.execute(end_latQ)
+			end_lat = "%20.15lf" % loc_cursor.fetchone()[0]
+
+			end_lngQ = """select end_lng from cloud where _id=%d;""" % id
+			loc_cursor.execute(end_lngQ)
+			end_lng = "%20.15lf" % loc_cursor.fetchone()[0]
+			if start_lng == p_lng:
+				p_lng += EDGE
+			if start_lat == p_lat:
+				p_lat += EDGE
+			if end_lng == p_lng:
+				p_lng -= EDGE
+			if end_lat == p_lat:
+				p_lat -= EDGE
+			if float(start_lng) < float(p_lng):
+				if float(start_lat) > float(p_lat):
+					if float(end_lng) > float(p_lng):
+						if float(end_lat) < float(p_lat):
+							return id
+						else:
+							continue
+					else:
+						continue
+				else:
+					continue
+			else:
+				continue
+		return "Not found"
+
 
 	def store_data(self, data):
 		pass
@@ -133,29 +214,9 @@ class Cloud_Parser(object):
 		#END::global word cloud
 
 		#START::location based wordclouds
-		#Start coordinate - 53.45453140530998,-6.39404296875
-		w,h = 141, 107
-		grid = [[0 for x in range(w)]for y in range(h)]
-		start_lng = 53.45698455620496
-		for i in range(h):
-			start_lat = -6.39404296875
-			for j in range(w):
-				grid[i][j] = {start_lat, start_lng}
-				start_lat += 0.0022457775
-			start_lng+=0.002457775
+		#Dublin divided into 250m*250m squares in total of 14840 squares
 		#END::location based wordclouds
-				#CREATE_CLOUD_TABLE = """CREATE TABLE IF NOT EXISTS cloud (
-				#			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
-				#			start_lat DOUBLE(12,7),
-				#			start_lng DOUBLE(12,7),
-				#			end_lat DOUBLE(12,7),
-				#			end_lng DOUBLE(12,7),
-				#			start_at TIME,
-				#			end_at,
-				#			PRIMARY KEY ( _id )
-				#		)"""
 		#update keywords table
-
 
 
 		#update cloud_count table
