@@ -195,6 +195,19 @@ class Cloud_Parser(object):
 		local_cursor.execute(query)
 		row = local_cursor.fetchall()[0]
 		return row
+	
+	def glob_cloud(self, tweet):
+		parse_tweet = tweet.dict()
+		tweet_text = parse_tweet['text']
+		global_text_data = self.elim_useless(tweet_text)
+		for text in global_text_data:
+			for word in text:
+				feed = """INSERT IGNORE INTO keywords (word) VALUES (%s)""" % word
+				try:
+					self.cursor.execute(feed)
+					self.conn.commit()
+				except:
+					self.conn.rollback()
 
 	def store_data(self, data):
 		pass
@@ -210,17 +223,7 @@ class Cloud_Parser(object):
 		# add time clouds
 		#START::global word cloud
 		#take text out
-		tweet = data.dict()
-		tweet_text = tweet['text']
-		global_text_data = self.elim_useless(tweet_text)
-		for text in global_text_data:
-			for word in text:
-				feed = """INSERT IGNORE INTO keywords (word) VALUES (%s)""" % word
-				try:
-					self.cursor.execute(feed)
-					self.conn.commit()
-				except:
-					self.conn.rollback()
+
 		#END::global word cloud
 
 		#START::location based wordclouds
