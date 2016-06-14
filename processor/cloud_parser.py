@@ -1,6 +1,8 @@
 from model.tweet import Tweet
 from collector.mysql_connect import Mysql_Connect
 from stop_words import get_stop_words
+
+
 class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
 	
@@ -107,14 +109,16 @@ class Cloud_Parser(object):
 			start_lat -= 0.0022457775
 		return loc_rix
 
-	def elim_useless(self, list):
+	def elim_useless(self, txt):
 		stop_words = get_stop_words("en")
-		for text in list:
-			text = text.split()
-			for word in text:
-				if word in stop_words or len(word) <= 2:
-					word = word.replace("")
-		return list
+		list = txt.split(' ')
+		r_list = []
+		for word in list:
+			if word in stop_words or len(word) <= 2:
+				continue
+			else:
+				r_list.append(word)
+		return r_list
 
 	def populate_clouds(self):
 		size_w, size_h = 141, 107
