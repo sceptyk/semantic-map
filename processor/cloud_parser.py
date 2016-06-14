@@ -185,6 +185,12 @@ class Cloud_Parser(object):
 				continue
 		return "Not found"
 
+	def get_cloud_coords(self, id):
+		local_cursor = self.conn.cursor()
+		query = "select * from cloud where _id=%d" % id
+		local_cursor.execute(query)
+		row = local_cursor.fetchall()[0]
+		return row
 
 	def store_data(self, data):
 		pass
