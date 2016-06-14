@@ -1,6 +1,7 @@
 from model.tweet import Tweet
 from collector.mysql_connect import Mysql_Connect
 from stop_words import get_stop_words
+import time
 
 
 class Cloud_Parser(object):
@@ -24,6 +25,8 @@ class Cloud_Parser(object):
 			start_lng DOUBLE(12,15),
 			end_lat DOUBLE(12,15),
 			end_lng DOUBLE(12,15),
+			start_time TIME,
+			end_time TIME,
 			PRIMARY KEY ( _id )
 		)"""
 		self.cursor.execute(CREATE_CLOUD_TABLE)
@@ -121,17 +124,47 @@ class Cloud_Parser(object):
 		return r_list
 
 	def populate_clouds(self):
-		size_w, size_h = 141, 107
-		loc_cursor = self.conn.cursor()
 		#self.reset_increment()
+		size_w, size_h = 141, 107
 		for i in range(size_h - 1):
 			for j in range(size_w - 1):
-				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng)
-					VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf)""" % (
-				self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
-				self.Matrix[i + 1][j + 1][1])
+				# Morning tweets
+				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
+									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
+					self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
+					self.Matrix[i + 1][j + 1][1], time.strftime('4:00:00'), time.strftime('11:59:59'))
 				try:
-					loc_cursor.execute(pop_q)
+					self.cursor.execute(pop_q)
+					self.conn.commit()
+				except:
+					self.conn.rollback()
+				# Afternoon tweets
+				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
+									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
+					self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
+					self.Matrix[i + 1][j + 1][1], time.strftime('12:00:00'), time.strftime('16:59:59'))
+				try:
+					self.cursor.execute(pop_q)
+					self.conn.commit()
+				except:
+					self.conn.rollback()
+				# Evening tweets
+				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
+									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
+					self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
+					self.Matrix[i + 1][j + 1][1], time.strftime('17:00:00'), time.strftime('21:59:59'))
+				try:
+					self.cursor.execute(pop_q)
+					self.conn.commit()
+				except:
+					self.conn.rollback()
+				# Night time tweets
+				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
+									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
+					self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
+					self.Matrix[i + 1][j + 1][1], time.strftime('22:00:00'), time.strftime('3:59:59'))
+				try:
+					self.cursor.execute(pop_q)
 					self.conn.commit()
 				except:
 					self.conn.rollback()
@@ -195,7 +228,7 @@ class Cloud_Parser(object):
 		local_cursor.execute(query)
 		row = local_cursor.fetchall()[0]
 		return row
-	
+
 	def glob_cloud(self, tweet):
 		parse_tweet = tweet.dict()
 		tweet_text = parse_tweet['text']
