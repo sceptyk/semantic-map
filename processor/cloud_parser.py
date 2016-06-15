@@ -2,6 +2,7 @@ from model.tweet import Tweet
 from collector.mysql_connect import Mysql_Connect
 from stop_words import get_stop_words
 import time
+import string
 
 
 class Cloud_Parser(object):
@@ -12,7 +13,7 @@ class Cloud_Parser(object):
 		self.cursor = self.conn.cursor()
 		self.Matrix = self.get_grid()
 		CREATE_KEYWORDS_TABLE = """CREATE TABLE IF NOT EXISTS keywords (
-			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
+			_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 			word CHAR(100) NOT NULL UNIQUE,
 			PRIMARY KEY ( _id ),
 			INDEX KEY ( keyword )
@@ -242,6 +243,13 @@ class Cloud_Parser(object):
 				except:
 					self.conn.rollback()
 
+	def clear_punctuation(self, text):
+		clear_string = ""
+		delimiters = string.punctuation + "\n\t"
+		for symbol in text:
+			if symbol not in delimiters:
+				clear_string += symbol
+		return clear_string
 	def store_data(self, data):
 		pass
 		#TODO update each branch
