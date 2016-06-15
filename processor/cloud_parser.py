@@ -118,7 +118,7 @@ class Cloud_Parser(object):
 		list = txt.split(' ')
 		r_list = []
 		for word in list:
-			if word in stop_words or len(word) <= 2:
+			if word.lower() in self.stopwords() or len(word) <= 2:
 				continue
 			else:
 				r_list.append(word)
@@ -277,3 +277,11 @@ class Cloud_Parser(object):
 
 
 		#update cloud_count table
+	def stopwords(self):
+		with open("stopwords.txt") as input:
+			text = input.readline()
+		list = text.split(",")
+		clear_list = []
+		for word in list:
+			clear_list.append(word.replace(" ", ""))
+		return clear_list
