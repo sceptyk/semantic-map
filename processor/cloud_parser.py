@@ -234,7 +234,8 @@ class Cloud_Parser(object):
 		parse_tweet = tweet.dict()
 		tweet_text = parse_tweet['text']
 		global_text_data = self.elim_useless(tweet_text)
-		for text in global_text_data:
+		clear_global_text_data = self.clear_punctuation(global_text_data)
+		for text in clear_global_text_data:
 			for word in text:
 				feed = """INSERT IGNORE INTO keywords (word) VALUES (%s)""" % word
 				try:
@@ -250,6 +251,8 @@ class Cloud_Parser(object):
 			if symbol not in delimiters:
 				clear_string += symbol
 		return clear_string
+
+
 	def store_data(self, data):
 		pass
 		#TODO update each branch
