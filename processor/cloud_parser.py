@@ -223,11 +223,11 @@ class Cloud_Parser(object):
 		return "Not found"
 
 	def get_cloud_coords(self, id):
-		local_cursor = self.conn.cursor()
+		local_cursor = self.data_b.cursor()
 		query = "select * from cloud where _id=%d" % id
 		local_cursor.execute(query)
-		row = local_cursor.fetchall()[0]
-		return row
+		fetch = local_cursor.fetchall()[0]
+		return [fetch[1], fetch[2], fetch[3], fetch[4]]
 
 	def glob_cloud(self, tweet):
 		parse_tweet = tweet.dict()
