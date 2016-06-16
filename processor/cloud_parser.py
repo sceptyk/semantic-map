@@ -284,14 +284,15 @@ class Cloud_Parser(object):
 			clear_list.append(word.replace(" ", ""))
 		return clear_list
 
-	def get_cloud_id(self, s_lat, s_lng):
+	def get_cloud_id(self, s_lat, s_lng, end_lat, end_lng):
 		loc_cursor = self.conn.cursor()
 		output = []
-		query = """select _id from cloud where start_lat = %20.15lf AND start_lng = %20.15lf""" % (
-		float(s_lat), float(s_lng))
+		query = """select _id from cloud where start_lat = %20.15lf AND start_lng = %20.15lf and end_lat = %20.15lf
+																and end_lng = %20.15lf""" % (s_lat, s_lng,
+																							 end_lat, end_lng)
 		loc_cursor.execute(query)
 		out = loc_cursor.fetchall()
-		for i in range(0, 3):
+		for i in range(0, 4):
 			output.append(out[i][0])
 		return output
 
@@ -302,3 +303,74 @@ class Cloud_Parser(object):
 				if self.Matrix[i][j] == (float(lat), float(lng)):
 					return True
 		return False
+
+	def cloud_exists(self, s_lat, s_lng, e_lat, e_lng):
+		loc_cursor = self.conn.cursor()
+		query = """ select exists(select * from cloud where start_lat = %20.15lf and start_lng = %20.15lf and end_lat = %20.15lf
+																and end_lng = %20.15lf);""" % (s_lat, s_lng,
+																							   e_lat, e_lng)
+		loc_cursor.execute(query)
+		return loc_cursor.fetchall()[0][0]
+
+	def custom_cloud(self, start_lat, start_lng, end_lat,
+					 end_lng):  # 10000% private method - user MUST NOT be able to access it under any circumstances
+		loc_cursor = self.conn.cursor()
+		if self.coord_in_matrix(start_lat, start_lng):
+			if self.coord_in_matrix(end_lat,
+									end_lng):  # Some calculations will be needed in order to identify the actual position
+				if float(start_lat) > float(end_lat):
+					if float(start_lng) < float(end_lng):
+						if self.cloud_exists(start_lat, start_lng, end_lat, end_lng) != 1:
+							# All checks passed - can make a safe query now
+							morning = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
+								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
+																								  end_lat, end_lng,
+																								  time.strftime(
+																									  '12:00:00'),
+																								  time.strftime(
+																									  '16:59:59'))
+							try:
+								loc_cursor.execute(morning)
+								self.conn.commit()
+							except:
+								self.conn.rollback()
+							a_noon = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
+								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
+																								  end_lat, end_lng,
+																								  time.strftime(
+																									  '12:00:00'),
+																								  time.strftime(
+																									  '16:59:59'))
+							try:
+								loc_cursor.execute(a_noon)
+								self.conn.commit()
+							except:
+								self.conn.rollback()
+							evenin = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
+								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
+																								  end_lat, end_lng,
+																								  time.strftime(
+																									  '17:00:00'),
+																								  time.strftime(
+																									  '21:59:59'))
+							try:
+								loc_cursor.execute(evenin)
+								self.conn.commit()
+							except:
+								self.conn.rollback()
+							night = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
+								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
+																								  end_lat, end_lng,
+																								  time.strftime(
+																									  '22:00:00'),
+																								  time.strftime(
+																									  '3:59:59'))
+							try:
+								loc_cursor.execute(night)
+								self.conn.commit()
+							except:
+								self.conn.rollback()
+		return_id = """select _id where start_lat = %20.15lf and start_lng = %20.15lf and end_lat = %20.15lf
+																and end_lng = %20.15lf;""" % (start_lat, start_lng,
+																							  end_lat, end_lng)
+		return self.get_cloud_id(start_lat, start_lng, end_lat, end_lng)
