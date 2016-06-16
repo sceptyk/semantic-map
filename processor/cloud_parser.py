@@ -1,6 +1,5 @@
 from model.tweet import Tweet
 from collector.mysql_connect import Mysql_Connect
-from stop_words import get_stop_words
 import time
 import string
 
@@ -286,7 +285,7 @@ class Cloud_Parser(object):
 		return clear_list
 
 	def get_cloud_id(self, s_lat, s_lng):
-		loc_cursor = self.data_b.cursor()
+		loc_cursor = self.conn.cursor()
 		output = []
 		query = """select _id from cloud where start_lat = %20.15lf AND start_lng = %20.15lf""" % (
 		float(s_lat), float(s_lng))
@@ -295,3 +294,11 @@ class Cloud_Parser(object):
 		for i in range(0, 3):
 			output.append(out[i][0])
 		return output
+
+	def coord_in_matrix(self, lat, lng):
+		size_w, size_h = 141, 107
+		for i in range(size_h):
+			for j in range(size_w):
+				if self.Matrix[i][j] == (float(lat), float(lng)):
+					return True
+		return False
