@@ -114,7 +114,6 @@ class Cloud_Parser(object):
 		return loc_rix
 
 	def elim_useless(self, txt):
-		stop_words = get_stop_words("en")
 		list = txt.split(' ')
 		r_list = []
 		for word in list:
