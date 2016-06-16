@@ -223,7 +223,7 @@ class Cloud_Parser(object):
 		return "Not found"
 
 	def get_cloud_coords(self, id):
-		local_cursor = self.data_b.cursor()
+		local_cursor = self.conn.cursor()
 		query = "select * from cloud where _id=%d" % id
 		local_cursor.execute(query)
 		fetch = local_cursor.fetchall()[0]
@@ -284,3 +284,14 @@ class Cloud_Parser(object):
 		for word in list:
 			clear_list.append(word.replace(" ", ""))
 		return clear_list
+
+	def get_cloud_id(self, s_lat, s_lng):
+		loc_cursor = self.data_b.cursor()
+		output = []
+		query = """select _id from cloud where start_lat = %20.15lf AND start_lng = %20.15lf""" % (
+		float(s_lat), float(s_lng))
+		loc_cursor.execute(query)
+		out = loc_cursor.fetchall()
+		for i in range(0, 3):
+			output.append(out[i][0])
+		return output
