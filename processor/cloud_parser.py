@@ -374,3 +374,23 @@ class Cloud_Parser(object):
 																and end_lng = %20.15lf;""" % (start_lat, start_lng,
 																							  end_lat, end_lng)
 		return self.get_cloud_id(start_lat, start_lng, end_lat, end_lng)
+
+	def clouds_in_clouds(self, cloud_id):
+		coords = self.get_cloud_coords(cloud_id)  # [0] start_lat, [1] start_lng, [2] end_lat, [3] end_lng
+		loc_cursor = self.conn.cursor()
+		result = []
+		query = """select _id from cloud where
+						start_lat >  %20.15lf and
+						start_lat <= %20.15lf and
+						start_lng <  %20.15lf and
+						start_lng >= %20.15lf and
+						end_lat   <  %20.15lf and
+						end_lat	  >= %20.15lf and
+						end_lng   >  %20.15lf and
+						end_lng   <= %20.15lf;
+						""" % (coords[2], coords[0], coords[3], coords[1], coords[0], coords[2], coords[1], coords[3])
+		loc_cursor.execute(query)
+		out = loc_cursor.fetchall()
+		for i in range(0, len(out)):
+			result.append(out[i][0])
+		return result
