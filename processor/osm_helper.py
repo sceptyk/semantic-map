@@ -16,7 +16,6 @@ class Osm_Helper(object):
 			@return {class: string, type: string}"""
 		position = "%f, %f" % (lat, lng)
 		location = self.geolocator.reverse(position)
-
 		more = self.geolocator.geocode(location.address)
 
 		name = more.raw['display_name'].partition(',')[0]
