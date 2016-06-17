@@ -36,6 +36,13 @@ class Cloud_Parser(object){
 			PRIMARY KEY ( _id )
 		)"""
 		self.cursor.execute(CREATE_COUNTER_TABLE)
+
+		CREATE_TWEET_KEYWORDS_TABLE = """CREATE TABLE IF NOT EXISTS tweet_keywords (
+			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
+			_tweet BIGINT,
+			_keyword BIGINT,
+			PRIMARY KEY ( _id )
+		)"""
 	
 	def process(self, data):
 		emoticons_str = r"""

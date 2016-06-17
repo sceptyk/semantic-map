@@ -36,5 +36,8 @@ class Mysql_Connect(object):
 	def get_connection():
 		return Mysql_Connect.conn
 
+	def get_cursor():
+		return Mysql_Connect.conn.cursor()
+
 	def close(self):
 		Mysql_Connect.conn.close()
