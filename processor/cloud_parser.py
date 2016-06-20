@@ -326,9 +326,9 @@ class Cloud_Parser(object):
 								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
 																								  end_lat, end_lng,
 																								  time.strftime(
-																									  '12:00:00'),
+																									  '4:00:00'),
 																								  time.strftime(
-																									  '16:59:59'))
+																									  '11:59:59'))
 							try:
 								loc_cursor.execute(morning)
 								self.conn.commit()

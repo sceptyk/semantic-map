@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="" />
+    <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
+    </list>
     <ignored path="semantic-map.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,8 +38,8 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="385" column="49" selection-start-line="385" selection-start-column="49" selection-end-line="385" selection-end-column="49" />
+            <state relative-caret-position="517">
+              <caret line="330" column="105" selection-start-line="330" selection-start-column="105" selection-end-line="330" selection-end-column="105" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
                 <element signature="e#223#1208#0" expanded="false" />
@@ -58,7 +60,6 @@
                 <element signature="e#8501#8883#0" expanded="false" />
                 <element signature="e#8925#9089#0" expanded="false" />
                 <element signature="e#9146#9466#0" expanded="false" />
-                <element signature="e#9627#12412#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -91,8 +92,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="784" />
+    <option name="width" value="1378" />
+    <option name="height" value="780" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -144,6 +145,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -188,12 +191,10 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/testing_grid" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
@@ -383,10 +384,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
+    <frame x="-8" y="-8" width="1378" height="780" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12225476" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23201175" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -773,8 +774,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="385" column="49" selection-start-line="385" selection-start-column="49" selection-end-line="385" selection-end-column="49" />
+        <state relative-caret-position="517">
+          <caret line="330" column="105" selection-start-line="330" selection-start-column="105" selection-end-line="330" selection-end-column="105" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
             <element signature="e#223#1208#0" expanded="false" />
@@ -795,7 +796,6 @@
             <element signature="e#8501#8883#0" expanded="false" />
             <element signature="e#8925#9089#0" expanded="false" />
             <element signature="e#9146#9466#0" expanded="false" />
-            <element signature="e#9627#12412#0" expanded="false" />
           </folding>
         </state>
       </provider>
