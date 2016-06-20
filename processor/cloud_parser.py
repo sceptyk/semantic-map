@@ -172,11 +172,11 @@ class Cloud_Parser(object):
 		clear = """truncate table cloud"""
 		self.cursor.execute(clear)
 
-	def get_clouds_count(self):
-		count_query = """select count(*) from cloud;"""
-		loc_cursor = self.conn.cursor()
-		loc_cursor.execute(count_query)
-		return loc_cursor.fetchall()
+	#def get_clouds_count(self):
+	#	count_query = """select count(*) from cloud;"""
+	#	loc_cursor = self.conn.cursor()
+	#	loc_cursor.execute(count_query)
+	#	return loc_cursor.fetchall()
 
 	def point_in_cloud(self, p_lat, p_lng):
 		EDGE = 0.00000000001
@@ -394,3 +394,19 @@ class Cloud_Parser(object):
 		for i in range(0, len(out)):
 			result.append(out[i][0])
 		return result
+
+	def fetch_keyword_id(self, word):
+		loc_cursor = self.conn.cursor()
+		query = """select _id from keywords where word = ('%s')""" % word
+		loc_cursor.execute(query)
+		return loc_cursor.fetchall()[0][0]
+
+	def insert_keyword(self, list):
+		loc_cursor = self.conn.cursor()
+		for i in range(len(list)):
+			query = """INSERT IGNORE INTO keywords (word) VALUES ('%s')""" % list[i]
+			try:
+				loc_cursor.execute(query)
+				self.conn.commit()
+			except:
+				raise Exception("Error in - insert into keyword table")
