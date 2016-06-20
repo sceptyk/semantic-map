@@ -447,7 +447,7 @@ class Cloud_Parser(object):
 			result.append(out[i][0])
 		return result
 
-	def fetch_word_id(self, word):
+	def fetch_keyword_id(self, word):
 		loc_cursor = self.conn.cursor()
 		query = """select _id from keywords where word = ('%s')""" % word
 		loc_cursor.execute(query)

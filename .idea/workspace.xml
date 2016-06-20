@@ -26,8 +26,8 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="13" column="39" selection-start-line="13" selection-start-column="39" selection-end-line="13" selection-end-column="39" />
+            <state relative-caret-position="68">
+              <caret line="449" column="17" selection-start-line="449" selection-start-column="17" selection-end-line="449" selection-end-column="17" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
                 <element signature="e#3584#4634#0" expanded="false" />
@@ -425,7 +425,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23133236" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -810,8 +810,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="13" column="39" selection-start-line="13" selection-start-column="39" selection-end-line="13" selection-end-column="39" />
+        <state relative-caret-position="68">
+          <caret line="449" column="17" selection-start-line="449" selection-start-column="17" selection-end-line="449" selection-end-column="17" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
             <element signature="e#3584#4634#0" expanded="false" />
