@@ -11,13 +11,15 @@ class Cloud_Parser(object):
 		self.conn = Mysql_Connect().get_conn()
 		self.cursor = self.conn.cursor()
 		self.Matrix = self.get_grid()
-		CREATE_KEYWORDS_TABLE = """CREATE TABLE IF NOT EXISTS keywords (
-			_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-			word CHAR(100) NOT NULL UNIQUE,
-			PRIMARY KEY ( _id ),
-			INDEX KEY ( keyword )
-		)"""
-		self.cursor.execute(CREATE_KEYWORDS_TABLE)
+		CREATE_KEYWORDS_TABLE = """CREATE TABLE keywords (
+				              _id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
+				              word CHAR(100) NOT NULL COMMENT '',
+				              PRIMARY KEY (_id)  COMMENT '',
+				              UNIQUE INDEX word_UNIQUE (word ASC)  COMMENT '');"""
+		try:
+			self.cursor.execute(CREATE_KEYWORDS_TABLE)
+		except:
+			self.conn.rollback()
 
 		CREATE_CLOUD_TABLE = """CREATE TABLE IF NOT EXISTS cloud (
 			_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -29,7 +31,10 @@ class Cloud_Parser(object):
 			end_time TIME,
 			PRIMARY KEY ( _id )
 		)"""
-		self.cursor.execute(CREATE_CLOUD_TABLE)
+		try:
+			self.cursor.execute(CREATE_CLOUD_TABLE)
+		except:
+			self.conn.rollback()
 
 		CREATE_COUNTER_TABLE = """CREATE TABLE IF NOT EXISTS word_counter (
 			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
@@ -38,7 +43,10 @@ class Cloud_Parser(object):
 			count BIGINT UNSIGNED NOT NULL,
 			PRIMARY KEY ( _id )
 		)"""
-		self.cursor.execute(CREATE_COUNTER_TABLE)
+		try:
+			self.cursor.execute(CREATE_COUNTER_TABLE)
+		except:
+			self.conn.rollback()
 	
 	def process(self, data):
 		emoticons_str = r"""
@@ -395,7 +403,7 @@ class Cloud_Parser(object):
 			result.append(out[i][0])
 		return result
 
-	def fetch_keyword_id(self, word):
+	def fetch_word_id(self, word):
 		loc_cursor = self.conn.cursor()
 		query = """select _id from keywords where word = ('%s')""" % word
 		loc_cursor.execute(query)
@@ -405,8 +413,21 @@ class Cloud_Parser(object):
 		loc_cursor = self.conn.cursor()
 		for i in range(len(list)):
 			query = """INSERT IGNORE INTO keywords (word) VALUES ('%s')""" % list[i]
-			try:
-				loc_cursor.execute(query)
-				self.conn.commit()
-			except:
-				raise Exception("Error in - insert into keyword table")
+			if self.kword_exist(list[i]) != 1:
+				print self.kword_exist(list[i])
+				try:
+					loc_cursor.execute(query)
+					self.conn.commit()
+				except:
+					self.conn.rollback()
+			else:
+				continue
+
+	def kword_exist(self, word):
+		loc_cursor = self.conn.cursor()
+		query = """select 1 from keywords where word = ('%s')""" % word
+		loc_cursor.execute(query)
+		try:
+			return loc_cursor.fetchall()[0][0]
+		except:
+			return 0
