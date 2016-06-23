@@ -15,28 +15,28 @@ class Cloud_Generator(object):
 		#validate filterValue
 		# filter
 		# rect (slt, sln, elt, eln)
-		# time (s, e)
+		# time (st, et)
 
 		if type == 'heatmap':
 			if filter == 'global':
-				self._get_global_heat_map(filterValue)
+				return self._get_global_heat_map(filterValue)
 			elif filter == 'location':
-				self._get_zoomed_heat_map(filterValue)
+				return self._get_zoomed_heat_map(filterValue)
 
 		elif type == 'cloud':
 			if filter == 'global':
-				self._get_global_cloud(filterValue)
+				return self._get_global_cloud(filterValue)
 			elif filter == 'location':
-				self._get_zoomed_cloud(filterValue)
+				return self._get_zoomed_cloud(filterValue)
 
 		elif type == 'movement':
-			self._get_global_movement()
+			return self._get_global_movement()
 
 		else:
 			raise Exception('Type of procedure is not defined')
 
 
-	def _get_global_heat_map(self, filterValue):
+	def _get_global_heat_map(self, fv):
 		"""Get weight of each square cloud
 			@return array of squares"""
 		
@@ -51,9 +51,12 @@ class Cloud_Generator(object):
 				(k.word LIKE %s) 
 				AND 
 				(c.start_time > %s AND c.end_time < %s)
-			""" % filterValue
+			""" % (fv['keyword'], fv['time']['st'], fv['time']['et'])
 
-		return self._return_result(sql)
+		sql_dev = """SELECT lat, lng FROM tweets WHERE lat <> 0 LIMIT 10000""";
+
+		return self._return_result(sql_dev)
+		#return self._return_result(sql)
 
 	def _get_zoomed_heat_map(self, filterValue):
 		"""Get points to display proper heatmap
@@ -116,21 +119,25 @@ class Cloud_Generator(object):
 		return self._return_result(sql)
 
 	def _get_global_movement(self):
-		"""Get keywords of global cloud
+		"""Get movement chains of users
 			@return array of points"""
 
-		sql = """SELECT t.lat, t.lng, t.user, t.timestamp FROM tweets t
-			GROUP BY t.user 
-			ORDER BY t.timestamp 
-			LIMIT 10000
+		sql = """SELECT user, lat, lng FROM tweets
+			WHERE user IN (
+				SELECT t.user FROM tweets AS t
+			    GROUP BY t.user
+			    HAVING count(t.user) > 100
+			)
+			ORDER BY user;
 			""" % filterValue
 
 		return self._return_result(sql)
 
 	def _return_result(self, sql):
-		self.db.execute(sql)
-		cursor = self.db.get_cursor()
+		cursor = self.db.execute(sql)
 
 		results = cursor.fetchall()
+
+		print(sql)
 
 		return json.dumps(results)
