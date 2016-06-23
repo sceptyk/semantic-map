@@ -4,19 +4,20 @@ import os
 from wsgiref.simple_server import make_server
 import json
 from cgi import parse_qs, escape
-from cloud_generator import Cloud_Generator
+from generator.cloud_generator import Cloud_Generator
 
 STATIC_URL_PREFIX = '/'
-STATIC_FILE_DIR = 'public'
+STATIC_FILE_DIR = 'generator\public'
 
 API_PREFIX = '/json'
 
 MIME_TABLE = {
-				'.txt': 'text/plain',
-				'.html': 'text/html',
-				'.css': 'text/css',
-				'.js': 'application/javascript',
-				}
+	'.txt': 'text/plain',
+	'.html': 'text/html',
+	'.css': 'text/css',
+	'.js': 'application/javascript',
+	'.ico': 'image/x-icon'
+}
 
 GENERATOR = Cloud_Generator()
 
@@ -35,28 +36,34 @@ def web_api(environ, start_response):
 	# response type json
 	
 	path = environ['PATH_INFO']
-	path = path.replace(API_PREFIX, '')
+	path = path.replace(API_PREFIX, '') #remove api directory
+	path = path[1:] #remove backslash from the begining
 	path = os.path.normpath(path)
 
 	d = parse_qs(environ['QUERY_STRING'])
 
-	filter = d.filter
+	def GET(key):
+		return escape(d.get(key, [''])[0])
+
+	filter = GET('filter')
 	filterValue = {
 		'rect' : {
-			'slt' : escape(d.slt),
-			'sln' : escape(d.sln),
-			'elt' : escape(d.elt),
-			'eln' : escape(d.eln),
+			'slt' : GET('slt'),
+			'sln' : GET('sln'),
+			'elt' : GET('elt'),
+			'eln' : GET('eln'),
 		},
 		'time' : {
-			's' : escape(d.start_time),
-			'e' : escape(d.end_time),
-		}
+			'st' : GET('st'),
+			'et' : GET('et'),
+		},
+		'keyword': GET('keyword'),
 	}
 
 	try:
 		content = GENERATOR.generate(path, filter, filterValue)
-	except:
+	except Exception, e:
+		print('Error %s' % str(e))
 		return show_404_app(environ, start_response)
 
 	headers = [('content-type', 'application/json')]
@@ -89,7 +96,7 @@ def static_app(environ, start_response):
 		return show_404_app(environ, start_response)
 
 def show_404_app(environ, start_response):
-	h = open('public/error/404.html', 'rb')
+	h = open(STATIC_FILE_DIR + '/error/404.html', 'rb')
 	content = h.read()
 	h.close()
 
@@ -102,6 +109,8 @@ def application(environ, start_response):
 		based on the request URI"""
 
 	path = environ['PATH_INFO']
+
+	print(path)
 
 	if path.startswith(API_PREFIX):
 		return web_api(environ, start_response)

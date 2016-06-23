@@ -8,41 +8,61 @@ class Cloud_Parser(object){
 		self.conn = Mysql_Connect().get_conn()
 		self.cursor = self.conn.cursor()
 
-		CREATE_KEYWORDS_TABLE = """CREATE TABLE IF NOT EXISTS keywords (
-			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
-			word CHAR(100) NOT NULL UNIQUE,
-			PRIMARY KEY ( _id ),
-			INDEX KEY ( keyword )
-		)"""
+		CREATE_KEYWORDS_TABLE = """CREATE TABLE `ucd`.`new_table` (
+			  `_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
+			  `word` CHAR(100) NOT NULL COMMENT '',
+			  PRIMARY KEY (`_id`)  COMMENT '',
+			  UNIQUE INDEX `word_UNIQUE` (`word` ASC)  COMMENT '');"""
 		self.cursor.execute(CREATE_KEYWORDS_TABLE)
 
-		CREATE_CLOUD_TABLE = """CREATE TABLE IF NOT EXISTS cloud (
-			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
-			start_lat DOUBLE(12,7),
-			start_lng DOUBLE(12,7),
-			end_lat DOUBLE(12,7),
-			end_lng DOUBLE(12,7),
-			start_at TIME,
-			end_at,
-			PRIMARY KEY ( _id )
-		)"""
+		CREATE_CLOUD_TABLE = """CREATE TABLE `ucd`.`new_table` (
+			  `_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
+			  `start_lat` DOUBLE(12,7) NULL COMMENT '',
+			  `start_lng` DOUBLE(12,7) NULL COMMENT '',
+			  `end_lat` DOUBLE(12,7) NULL COMMENT '',
+			  `end_lng` DOUBLE(12,7) NULL COMMENT '',
+			  `start_at` TIME NULL COMMENT '',
+			  `end_at` TIME NULL COMMENT '',
+			  PRIMARY KEY (`_id`)  COMMENT '');"""
 		self.cursor.execute(CREATE_CLOUD_TABLE)
 
-		CREATE_COUNTER_TABLE = """CREATE TABLE IF NOT EXISTS word_counter (
-			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
-			_keyword BIGINT UNSIGNED NOT NULL,
-			_cloud BIGINT UNSIGNED NOT NULL,
-			count BIGINT UNSIGNED NOT NULL,
-			PRIMARY KEY ( _id )
-		)"""
+		CREATE_COUNTER_TABLE = """CREATE TABLE `ucd`.`word_counter` (
+			  `_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
+			  `_keyword` BIGINT UNSIGNED NOT NULL COMMENT '',
+			  `_cloud` BIGINT UNSIGNED NOT NULL COMMENT '',
+			  `count` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+			  PRIMARY KEY (`_id`)  COMMENT '',
+			  INDEX `keywrod_idx` (`_keyword` ASC)  COMMENT '',
+			  INDEX `cloud_idx` (`_cloud` ASC)  COMMENT '',
+			  CONSTRAINT `keyword`
+			    FOREIGN KEY (`_keyword`)
+			    REFERENCES `ucd`.`keywords` (`_id`)
+			    ON DELETE NO ACTION
+			    ON UPDATE NO ACTION,
+			  CONSTRAINT `cloud`
+			    FOREIGN KEY (`_cloud`)
+			    REFERENCES `ucd`.`cloud` (`_id`)
+			    ON DELETE NO ACTION
+			    ON UPDATE NO ACTION);"""
 		self.cursor.execute(CREATE_COUNTER_TABLE)
 
-		CREATE_TWEET_KEYWORDS_TABLE = """CREATE TABLE IF NOT EXISTS tweet_keywords (
-			_id BIGINT UNSIGNED NOT NULL AUTOINCREMENT,
-			_tweet BIGINT,
-			_keyword BIGINT,
-			PRIMARY KEY ( _id )
-		)"""
+		CREATE_TWEET_KEYWORDS_TABLE = """CREATE TABLE `ucd`.`tweet_keywords` (
+			  `_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
+			  `_tweet` BIGINT UNSIGNED NOT NULL COMMENT '',
+			  `_keyword` BIGINT UNSIGNED NOT NULL COMMENT '',
+			  PRIMARY KEY (`_id`)  COMMENT '',
+			  INDEX `tweet_idx` (`_tweet` ASC)  COMMENT '',
+			  INDEX `keyword_idx` (`_keyword` ASC)  COMMENT '',
+			  CONSTRAINT `tweet`
+			    FOREIGN KEY (`_tweet`)
+			    REFERENCES `ucd`.`tweets` (`_id`)
+			    ON DELETE NO ACTION
+			    ON UPDATE NO ACTION,
+			  CONSTRAINT `keyword_tweet`
+			    FOREIGN KEY (`_keyword`)
+			    REFERENCES `ucd`.`keywords` (`_id`)
+			    ON DELETE NO ACTION
+			    ON UPDATE NO ACTION);"""
 	
 	def process(self, data):
 		emoticons_str = r"""
