@@ -490,7 +490,10 @@ class Cloud_Parser(object):
 
 	def insert_layer(self, layer, s_time, e_time, day):  # 5 layers - 0 to 4 (timestamp - time.strftime('22:00:00'))
 		loc_cursor = self.conn.cursor()
-		itr = int(math.pow(2, layer) - 1)
+		if layer > 3:
+			itr = int(math.pow(2, layer) - 1)
+		else:
+			itr = int(math.pow(2, layer))
 		for i in range(0, self.size_h - itr, itr):
 			for j in range(0, self.size_w - itr, itr):
 				query = """insert into cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time, layer, day)
