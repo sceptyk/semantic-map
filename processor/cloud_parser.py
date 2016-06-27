@@ -2,11 +2,12 @@ from model.tweet import Tweet
 from collector.mysql_connect import Mysql_Connect
 import time
 import string
+import math
 
 
 class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
-	
+	size_w, size_h = 64, 64
 	def __init__(self):
 		self.conn = Mysql_Connect().get_conn()
 		self.cursor = self.conn.cursor()
@@ -152,16 +153,15 @@ class Cloud_Parser(object):
 				break
 
 	def get_grid(self):
-		size_w, size_h = 141, 107
 		loc_rix = []
-		start_lat = 53.45698455620496
-		for i in range(size_h):
+		start_lat = 53.39806981341725
+		for i in range(self.size_h):
 			loc_rix.append([])
-			start_lng = -6.39404296875
-			for j in range(size_w):
+			start_lng = -6.3686370849609375
+			for j in range(self.size_w):
 				loc_rix[i].append((start_lat, start_lng))
-				start_lng += 0.0022457775
-			start_lat -= 0.0022457775
+				start_lng += 0.00488173872
+			start_lat -= 0.003145015
 		return loc_rix
 
 	def elim_useless(self, txt):
@@ -176,9 +176,8 @@ class Cloud_Parser(object):
 
 	def populate_clouds(self):
 		#self.reset_increment()
-		size_w, size_h = 141, 107
-		for i in range(size_h - 1):
-			for j in range(size_w - 1):
+		for i in range(self.size_h - 1):
+			for j in range(self.size_w - 1):
 				# Morning tweets
 				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
 									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
@@ -224,11 +223,11 @@ class Cloud_Parser(object):
 		clear = """truncate table cloud"""
 		self.cursor.execute(clear)
 
-	#def get_clouds_count(self):
-	#	count_query = """select count(*) from cloud;"""
-	#	loc_cursor = self.conn.cursor()
-	#	loc_cursor.execute(count_query)
-	#	return loc_cursor.fetchall()
+	def get_clouds_count(self):
+		count_query = """select count(*) from cloud;"""
+		loc_cursor = self.conn.cursor()
+		loc_cursor.execute(count_query)
+		return loc_cursor.fetchall()
 
 	def point_in_cloud(self, p_lat, p_lng):
 		EDGE = 0.00000000001
@@ -349,9 +348,8 @@ class Cloud_Parser(object):
 		return output
 
 	def coord_in_matrix(self, lat, lng):
-		size_w, size_h = 141, 107
-		for i in range(size_h):
-			for j in range(size_w):
+		for i in range(self.size_h):
+			for j in range(self.size_w):
 				if self.Matrix[i][j] == (float(lat), float(lng)):
 					return True
 		return False
@@ -475,3 +473,17 @@ class Cloud_Parser(object):
 			return loc_cursor.fetchall()[0][0]
 		except:
 			return 0
+
+	# START: Helper functions to calculate metres per 1 degree considering the Earth's elevation
+	def rlat(self, deg):
+		return (deg * math.pi) / 180
+
+	def metres_per_lat(self, rlat):
+		return 111132.92 - 559.82 * math.cos(2 * rlat)
+
+	def rlng(self, deg):
+		return (50 * math.pi) / 180
+
+	def metres_per_lng(self, rlng):
+		return 111412.84 * math.cos(rlng) - 93.5 * math.cos(3 * rlng)
+		# END: Helper functions to calculate metres per 1 degree considering the Earth's elevation

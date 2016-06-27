@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
     </list>
     <ignored path="semantic-map.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,27 +27,30 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
-              <caret line="475" column="15" selection-start-line="475" selection-start-column="15" selection-end-line="475" selection-end-column="15" />
+            <state relative-caret-position="476">
+              <caret line="484" column="35" selection-start-line="484" selection-start-column="35" selection-end-line="484" selection-end-column="35" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <element signature="e#3584#4634#0" expanded="false" />
-                <element signature="e#4659#5100#0" expanded="false" />
-                <element signature="e#5125#5424#0" expanded="false" />
-                <element signature="e#5458#5633#0" expanded="false" />
-                <element signature="e#5665#7636#0" expanded="false" />
-                <element signature="e#7668#7731#0" expanded="false" />
-                <element signature="e#7734#7762#0" expanded="false" />
-                <element signature="e#7960#9196#0" expanded="false" />
-                <element signature="e#9233#9433#0" expanded="false" />
-                <element signature="e#9467#9879#0" expanded="false" />
-                <element signature="e#9919#10082#0" expanded="false" />
-                <element signature="e#10600#10790#0" expanded="false" />
-                <element signature="e#10851#11233#0" expanded="false" />
-                <element signature="e#11275#11439#0" expanded="false" />
-                <element signature="e#11496#11816#0" expanded="false" />
-                <element signature="e#11977#14761#0" expanded="false" />
-                <element signature="e#14804#15478#0" expanded="false" />
+                <element signature="e#3619#4669#0" expanded="false" />
+                <element signature="e#4694#5135#0" expanded="false" />
+                <element signature="e#5160#5446#0" expanded="false" />
+                <element signature="e#5480#5655#0" expanded="false" />
+                <element signature="e#5687#7640#0" expanded="false" />
+                <element signature="e#7672#7735#0" expanded="false" />
+                <element signature="e#7768#7914#0" expanded="false" />
+                <element signature="e#7959#9195#0" expanded="false" />
+                <element signature="e#9232#9432#0" expanded="false" />
+                <element signature="e#9466#9878#0" expanded="false" />
+                <element signature="e#9918#10081#0" expanded="false" />
+                <element signature="e#10599#10789#0" expanded="false" />
+                <element signature="e#10850#11232#0" expanded="false" />
+                <element signature="e#11274#11420#0" expanded="false" />
+                <element signature="e#11477#11797#0" expanded="false" />
+                <element signature="e#11958#14742#0" expanded="false" />
+                <element signature="e#14785#15459#0" expanded="false" />
+                <element signature="e#15498#15662#0" expanded="false" />
+                <element signature="e#15699#16033#0" expanded="false" />
+                <element signature="e#16067#16262#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -230,12 +234,12 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/testing_grid" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
@@ -428,7 +432,7 @@
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.112737924" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11200586" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -465,7 +469,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -753,13 +757,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/PycharmProjects/testing_grid/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/testing_grid/test.py" />
     <entry file="file://$USER_HOME$/PycharmProjects/ML-Summer2016/pantas_tut.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="235">
@@ -808,27 +806,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="475" column="15" selection-start-line="475" selection-start-column="15" selection-end-line="475" selection-end-column="15" />
+        <state relative-caret-position="476">
+          <caret line="484" column="35" selection-start-line="484" selection-start-column="35" selection-end-line="484" selection-end-column="35" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#3584#4634#0" expanded="false" />
-            <element signature="e#4659#5100#0" expanded="false" />
-            <element signature="e#5125#5424#0" expanded="false" />
-            <element signature="e#5458#5633#0" expanded="false" />
-            <element signature="e#5665#7636#0" expanded="false" />
-            <element signature="e#7668#7731#0" expanded="false" />
-            <element signature="e#7734#7762#0" expanded="false" />
-            <element signature="e#7960#9196#0" expanded="false" />
-            <element signature="e#9233#9433#0" expanded="false" />
-            <element signature="e#9467#9879#0" expanded="false" />
-            <element signature="e#9919#10082#0" expanded="false" />
-            <element signature="e#10600#10790#0" expanded="false" />
-            <element signature="e#10851#11233#0" expanded="false" />
-            <element signature="e#11275#11439#0" expanded="false" />
-            <element signature="e#11496#11816#0" expanded="false" />
-            <element signature="e#11977#14761#0" expanded="false" />
-            <element signature="e#14804#15478#0" expanded="false" />
+            <element signature="e#3619#4669#0" expanded="false" />
+            <element signature="e#4694#5135#0" expanded="false" />
+            <element signature="e#5160#5446#0" expanded="false" />
+            <element signature="e#5480#5655#0" expanded="false" />
+            <element signature="e#5687#7640#0" expanded="false" />
+            <element signature="e#7672#7735#0" expanded="false" />
+            <element signature="e#7768#7914#0" expanded="false" />
+            <element signature="e#7959#9195#0" expanded="false" />
+            <element signature="e#9232#9432#0" expanded="false" />
+            <element signature="e#9466#9878#0" expanded="false" />
+            <element signature="e#9918#10081#0" expanded="false" />
+            <element signature="e#10599#10789#0" expanded="false" />
+            <element signature="e#10850#11232#0" expanded="false" />
+            <element signature="e#11274#11420#0" expanded="false" />
+            <element signature="e#11477#11797#0" expanded="false" />
+            <element signature="e#11958#14742#0" expanded="false" />
+            <element signature="e#14785#15459#0" expanded="false" />
+            <element signature="e#15498#15662#0" expanded="false" />
+            <element signature="e#15699#16033#0" expanded="false" />
+            <element signature="e#16067#16262#0" expanded="false" />
           </folding>
         </state>
       </provider>
