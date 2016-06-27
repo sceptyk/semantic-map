@@ -487,3 +487,18 @@ class Cloud_Parser(object):
 	def metres_per_lng(self, rlng):
 		return 111412.84 * math.cos(rlng) - 93.5 * math.cos(3 * rlng)
 		# END: Helper functions to calculate metres per 1 degree considering the Earth's elevation
+
+	def insert_layer(self, layer, s_time, e_time, day):  # 5 layers - 0 to 4 (timestamp - time.strftime('22:00:00'))
+		loc_cursor = self.conn.cursor()
+		itr = int(math.pow(2, layer) - 1)
+		for i in range(0, self.size_h - itr, itr):
+			for j in range(0, self.size_w - itr, itr):
+				query = """insert into cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time, layer, day)
+										values (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s', %d, '%s')""" % (
+					self.Matrix[i][j][0], self.Matrix[i][j][1],
+					self.Matrix[i + itr][j + itr][0], self.Matrix[i + itr][j + itr][1], s_time, e_time, layer, day)
+				try:
+					loc_cursor.execute(query)
+					self.conn.commit()
+				except:
+					self.conn.rollback()

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="" />
+    <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
+    </list>
     <ignored path="semantic-map.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,8 +26,8 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="484" column="35" selection-start-line="484" selection-start-column="35" selection-end-line="484" selection-end-column="35" />
+            <state relative-caret-position="612">
+              <caret line="503" column="29" selection-start-line="503" selection-start-column="29" selection-end-line="503" selection-end-column="29" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
                 <element signature="e#3619#4669#0" expanded="false" />
@@ -426,7 +428,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11200586" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -803,8 +805,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="484" column="35" selection-start-line="484" selection-start-column="35" selection-end-line="484" selection-end-column="35" />
+        <state relative-caret-position="612">
+          <caret line="503" column="29" selection-start-line="503" selection-start-column="29" selection-end-line="503" selection-end-column="29" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
             <element signature="e#3619#4669#0" expanded="false" />
