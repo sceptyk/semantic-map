@@ -174,50 +174,14 @@ class Cloud_Parser(object):
 				r_list.append(word)
 		return r_list
 
-	def populate_clouds(self):
-		#self.reset_increment()
-		for i in range(self.size_h - 1):
-			for j in range(self.size_w - 1):
-				# Morning tweets
-				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
-									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
-					self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
-					self.Matrix[i + 1][j + 1][1], time.strftime('4:00:00'), time.strftime('11:59:59'))
-				try:
-					self.cursor.execute(pop_q)
-					self.conn.commit()
-				except:
-					self.conn.rollback()
-				# Afternoon tweets
-				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
-									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
-					self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
-					self.Matrix[i + 1][j + 1][1], time.strftime('12:00:00'), time.strftime('16:59:59'))
-				try:
-					self.cursor.execute(pop_q)
-					self.conn.commit()
-				except:
-					self.conn.rollback()
-				# Evening tweets
-				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
-									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
-					self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
-					self.Matrix[i + 1][j + 1][1], time.strftime('17:00:00'), time.strftime('21:59:59'))
-				try:
-					self.cursor.execute(pop_q)
-					self.conn.commit()
-				except:
-					self.conn.rollback()
-				# Night time tweets
-				pop_q = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
-									VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (
-					self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + 1][j + 1][0],
-					self.Matrix[i + 1][j + 1][1], time.strftime('22:00:00'), time.strftime('3:59:59'))
-				try:
-					self.cursor.execute(pop_q)
-					self.conn.commit()
-				except:
-					self.conn.rollback()
+	def populate_clouds(self): #Do not run by accident - will take ages + will fuck up cloud table
+		days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
+		for i in days:
+			for j in range(0, 4):
+				self.insert_layer(j, time.strftime('4:00:00'), time.strftime('11:59:59'), i)
+				self.insert_layer(j, time.strftime('12:00:00'), time.strftime('16:59:59'), i)
+				self.insert_layer(j, time.strftime('17:00:00'), time.strftime('21:59:59'), i)
+				self.insert_layer(j, time.strftime('22:00:00'), time.strftime('3:59:59'), i)
 
 	def reset_increment(self):
 		clear = """truncate table cloud"""
