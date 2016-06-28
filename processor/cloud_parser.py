@@ -34,14 +34,16 @@ class Cloud_Parser(object):
 		except:
 			self.conn.rollback()
 		CREATE_CLOUD_TABLE = """CREATE TABLE  cloud  (
-				               _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
-				               start_lat  DOUBLE(12,7) NULL COMMENT '',
-				               start_lng  DOUBLE(12,7) NULL COMMENT '',
-				               end_lat  DOUBLE(12,7) NULL COMMENT '',
-				               end_lng  DOUBLE(12,7) NULL COMMENT '',
-				               start_time  TIME NULL COMMENT '',
-				               end_time  TIME NULL COMMENT '',
-				              PRIMARY KEY ( _id )  COMMENT '');"""
+		               _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
+		               start_lat  DOUBLE(12,7) NULL COMMENT '',
+		               start_lng  DOUBLE(12,7) NULL COMMENT '',
+		               end_lat  DOUBLE(12,7) NULL COMMENT '',
+		               end_lng  DOUBLE(12,7) NULL COMMENT '',
+		               start_time  TIME NULL COMMENT '',
+		               end_time  TIME NULL COMMENT '',
+		               layer INT(1) NULL COMMENT '',
+		               day CHAR(3) NULL COMMENT '',
+		              PRIMARY KEY ( _id )  COMMENT '');"""
 		try:
 			loc_cursor.execute(CREATE_CLOUD_TABLE)
 		except:
@@ -174,10 +176,10 @@ class Cloud_Parser(object):
 				r_list.append(word)
 		return r_list
 
-	def populate_clouds(self): #Do not run by accident - will take ages + will fuck up cloud table
+	def populate_clouds(self):
 		days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-		for i in days:
-			for j in range(0, 4):
+		for j in range(0, 4):
+			for i in days:
 				self.insert_layer(j, time.strftime('4:00:00'), time.strftime('11:59:59'), i)
 				self.insert_layer(j, time.strftime('12:00:00'), time.strftime('16:59:59'), i)
 				self.insert_layer(j, time.strftime('17:00:00'), time.strftime('21:59:59'), i)
