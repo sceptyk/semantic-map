@@ -3,10 +3,10 @@ $(function() {
         range: true,
         min: 0,
         max: 24,
-        step: 6,
-        values: [6, 18],
+        step: 1,
+        values: [0, 24],
         slide: function( event, ui ) {
-	        $( "#range-time" ).val( ui.values[ 0 ] + ":00 - " + ui.values[ 1 ] + ":00");
+	        $( "#range-time" ).text( ui.values[ 0 ] + ":00 - " + ui.values[ 1 ] + ":00");
 	      }
     });
     $( "#range-time" ).text( $( "#slider-time" ).slider( "values", 0 ) +

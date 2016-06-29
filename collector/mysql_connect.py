@@ -6,9 +6,9 @@ class Mysql_Connect(object):
 
 	def __init__(self, dev = False):
 		if dev:
-			Mysql_Connect.conn = self.connect_dev()
+			self.conn = self.connect_dev()
 		else:
-			Mysql_Connect.conn = self.connect()
+			self.conn = self.connect()
 
 	def connect(self):
 		return MySQLdb.connect(
@@ -31,31 +31,33 @@ class Mysql_Connect(object):
 		cursor = None
 
 		try:
-			cursor = Mysql_Connect.conn.cursor()
+			cursor = self.conn.cursor()
 			cursor.execute(sql)
-			Mysql_Connect.conn.commit()
-		except (AttributeError, MySQLdb.OperationalError):
-			try:
-				print("reconnected")
-				Mysql_Connect.conn = self.connect()
-				cursor = Mysql_Connect.conn.cursor()
-				cursor.execute(sql)
-				Mysql_Connect.conn.commit()
-			except:
-				print(sql)
-				Mysql_Connect.conn.rollback()
+			self.conn.commit()
+		#except (AttributeError, MySQLdb.OperationalError):
+		#	try:
+		#		print("reconnected")
+		#		self.conn = self.connect()
+		#		cursor = self.conn.cursor()
+		#		cursor.execute(sql)
+		#		self.conn.commit()
+		#	except:
+		#		print("Exception on reconnect:")
+		#		#print(sql)
+		#		self.conn.rollback()
 		except Exception, e:
-			print(str(e))
-			print(sql)
-			Mysql_Connect.conn.rollback()
+		#	print("Exception on first try:")
+		#	print(str(e))
+			#print(sql)
+			self.conn.rollback()
 
 		return cursor
 
 	def get_connection(self):
-		return Mysql_Connect.conn
+		return self.conn
 
 	def get_cursor(self):
-		return Mysql_Connect.conn.cursor()
+		return self.conn.cursor()
 
 	def close(self):
-		Mysql_Connect.conn.close()
+		self.conn.close()
