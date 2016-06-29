@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 import os
 
-from wsgiref.simple_server import make_server
 import json
 from cgi import parse_qs, escape
 from generator.cloud_generator import Cloud_Generator
 
-STATIC_URL_PREFIX = '/'
-STATIC_FILE_DIR = 'generator\public'
+STATIC_FILE_DIR = os.path.normpath('generator/public')
 
-API_PREFIX = '/json'
+API_PREFIX = os.path.normpath('/json')
 
 MIME_TABLE = {
 	'.txt': 'text/plain',
@@ -31,15 +29,28 @@ def content_type(path):
 	else:
 		return "application/octet-stream"
 
+def get_static_path(path):
+	path = path[1:]
+	path = os.path.join(STATIC_FILE_DIR, path)
+	path = os.path.normpath(path)
+
+	# fall back to index first
+	name, ext = os.path.splitext(path)
+	if ext is None or not ext:
+		path = path + '/index.html'
+
+	path = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR', ''), path)
+	return path
+
 def web_api(environ, start_response):
 	"""Map urls to specific functions in cloud generator"""
 	# response type json
 	
 	path = environ['PATH_INFO']
-	path = path.replace(API_PREFIX, '') #remove api directory
-	path = path[1:] #remove backslash from the begining
 	path = os.path.normpath(path)
-
+	#print("WEB API__________________")
+	path = path.replace(API_PREFIX, '') #remove api directory
+	path = path[1:] #remove slash from the begining
 	d = parse_qs(environ['QUERY_STRING'])
 
 	def GET(key):
@@ -71,18 +82,16 @@ def web_api(environ, start_response):
 	return [content] 
 
 def static_app(environ, start_response):
-	"""Serve static files from the directory named in STATIC_FILES"""
+	"""Serve static files from the directory named in STATIC_FILE_DIR"""
 
 	path = environ['PATH_INFO']
-	path = STATIC_FILE_DIR + path
-	path = os.path.normpath(path)
+	path = get_static_path(path)
 
-	# fall back to index first
-	name, ext = os.path.splitext(path)
-	if ext is None or not ext:
-		path = path + '/index.html'
+	#print("STATICC APP _________________")
+	#print(path)
+	#print(os.path.exists(path))
 
-	if path.startswith(STATIC_FILE_DIR) and os.path.exists(path):
+	if os.path.exists(path):
 
 		h = open(path, 'rb')
 		content = h.read()
@@ -96,7 +105,10 @@ def static_app(environ, start_response):
 		return show_404_app(environ, start_response)
 
 def show_404_app(environ, start_response):
-	h = open(STATIC_FILE_DIR + '/error/404.html', 'rb')
+
+	path = get_static_path('/error/404.html')
+
+	h = open(path, 'rb')
 	content = h.read()
 	h.close()
 
@@ -109,17 +121,16 @@ def application(environ, start_response):
 		based on the request URI"""
 
 	path = environ['PATH_INFO']
-
-	print(path)
+	path = os.path.normpath(path)
 
 	if path.startswith(API_PREFIX):
 		return web_api(environ, start_response)
 	else:
 		return static_app(environ, start_response)
 
-httpd = make_server('localhost', 8080, application)
+if __name__ == '__main__':
+	from wsgiref.simple_server import make_server
+	httpd = make_server('localhost', 8080, application)
 
-print("Ready")
-httpd.serve_forever()
-
-#
+	print("Server ready")
+	httpd.serve_forever()

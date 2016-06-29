@@ -15,6 +15,7 @@
         <script src="https://code.jquery.com/ui/1.12.0-rc.2/jquery-ui.min.js" integrity="sha256-55Jz3pBCF8z9jBO1qQ7cIf0L+neuPTD1u7Ytzrp2dqo=" crossorigin="anonymous"></script>
         <!-- custom scripts -->
         <script src="lib/wordcloud2.js"></script>
+        <script src="lib/stopwords.js"></script>
         <script type="text/javascript" src="js/css.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
         <!--[if lt IE 9]>
@@ -23,11 +24,11 @@
     </head>
     <body>
         <div class="wrapper container-fluid">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div id="map">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="toolbar">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -39,7 +40,7 @@
                             <div class="input-group">
                                 <input aria-describedby="basic-addon1" class="form-control" placeholder="Keyword..." type="text" id="keyword" />
                                 <span class="input-group-btn">
-						        <button class="btn btn-default" type="button">Filter!</button>
+						        <button class="btn btn-default" type="button" id="filter-keyword">Filter!</button>
 						      </span>
                             </div>
                         </div>

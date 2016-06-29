@@ -17,9 +17,9 @@ class Twitter_Stream_Collector(Twitter_Collector):
 
 			if _json['coordinates'] is None:
 				_json['coordinates'] = {'coordinates': [0.0,0.0]}
-			
-			parsed = self.outer.process_data(_json)
-			self.outer.store_data([parsed])
+			else:
+				parsed = self.outer.process_data(_json)
+				self.outer.store_data([parsed])
 
 			return True
 

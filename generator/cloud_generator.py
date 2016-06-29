@@ -4,7 +4,8 @@ import json
 class Cloud_Generator(object):
 
 	def __init__(self):
-		self.db = Mysql_Connect()
+		#self.db = Mysql_Connect()
+		pass
 
 	def generate(self, type = 'heatmap', filter = 'global', filterValue = None):
 		"""	@param type {string} = heatmap | cloud
@@ -22,6 +23,9 @@ class Cloud_Generator(object):
 				return self._get_global_heat_map(filterValue)
 			elif filter == 'location':
 				return self._get_zoomed_heat_map(filterValue)
+
+		elif type == 'grid':
+			return self._get_global_grid_map(filterValue)
 
 		elif type == 'cloud':
 			if filter == 'global':
@@ -53,7 +57,14 @@ class Cloud_Generator(object):
 				(c.start_time > %s AND c.end_time < %s)
 			""" % (fv['keyword'], fv['time']['st'], fv['time']['et'])
 
-		sql_dev = """SELECT lat, lng FROM tweets WHERE lat <> 0 LIMIT 10000""";
+		sql_dev = """SELECT lat, lng 
+			FROM tweets 
+			WHERE 
+				text LIKE '%%%s%%' 
+				AND
+				CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
+			ORDER BY timestamp DESC 
+			LIMIT 10000""" % (fv['keyword'], fv['time']['st'], fv['time']['et']);
 
 		return self._return_result(sql_dev)
 		#return self._return_result(sql)
@@ -83,7 +94,20 @@ class Cloud_Generator(object):
 
 		return self._return_result(sql)
 
-	def _get_global_cloud(self, filterValue):
+	def _get_global_grid_map(self, fv):
+
+		sql_dev = """SELECT lat, lng 
+			FROM tweets 
+			WHERE 
+				lat > %s AND lng > %s 
+				AND 
+				lat < %s AND lng < %s 
+			ORDER BY timestamp DESC 
+			LIMIT 10000""" % (fv['rect']['slt'], fv['rect']['sln'], fv['rect']['elt'], fv['rect']['eln']);
+
+		return self._return_result(sql_dev)
+
+	def _get_global_cloud(self, fv):
 		"""Get keywords of global cloud
 			@return array of keywords"""
 
@@ -95,9 +119,16 @@ class Cloud_Generator(object):
 			WHERE 
 				(c.start_time > %s AND c.end_time < %s) 
 			LIMIT 20
-			""" % filterValue
+			""" % (fv['time']['st'], fv['time']['et'])
 
-		return self._return_result(sql)
+		sql_dev = """SELECT text 
+			FROM tweets 
+			WHERE 
+				text LIKE '%%%s%%' 
+			ORDER BY timestamp DESC 
+			LIMIT 1000;""" % fv['keyword']
+
+		return self._return_result(sql_dev)
 
 
 	def _get_zoomed_cloud(self, filterValue):
@@ -129,15 +160,21 @@ class Cloud_Generator(object):
 			    HAVING count(t.user) > 100
 			)
 			ORDER BY user;
-			""" % filterValue
+			"""
 
-		return self._return_result(sql)
+		sql_dev = """SELECT user, lat, lng 
+			FROM tweets 
+			ORDER BY user 
+			LIMIT 10000;"""
+
+		return self._return_result(sql_dev)
 
 	def _return_result(self, sql):
-		cursor = self.db.execute(sql)
+		db = Mysql_Connect()
+		cursor = db.execute(sql)
 
 		results = cursor.fetchall()
-
-		print(sql)
+		db.close()
+		#print(sql)
 
 		return json.dumps(results)
