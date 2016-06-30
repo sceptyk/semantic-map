@@ -471,3 +471,12 @@ class Cloud_Parser(object):
 					self.conn.commit()
 				except:
 					self.conn.rollback()
+
+	def get_layer_coords(self, layer):
+		loc_cursor = self.conn.cursor()
+		fetch = []
+		if 0 <= layer < 5:
+			query = """select start_lat, start_lng, end_lat, end_lng from cloud where layer = %d""" % layer
+			loc_cursor.execute(query)
+			fetch = loc_cursor.fetchall()
+		return fetch
