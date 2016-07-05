@@ -178,30 +178,6 @@ class Cloud_Parser(object):
 		clear = """truncate table cloud"""
 		self.cursor.execute(clear)
 
-	def store_data(self, data):
-		pass
-		#TODO update each branch
-		# -- each place based on location
-		# -- each time part
-		# -- global list (done)
-		# 
-		
-		# update cloud table
-		# add locations clouds
-		
-		# add time clouds
-		#START::global word cloud
-		#take text out
-
-		#END::global word cloud
-
-		#START::location based wordclouds
-		#Dublin divided into 250m*250m squares in total of 14840 squares
-		#END::location based wordclouds
-		#update keywords table
-
-
-		#update cloud_count table
 #START: word/char elimination
 	def elim_useless(self, txt):
 		clear_txt = self.clear_punctuation(txt)
@@ -333,6 +309,21 @@ class Cloud_Parser(object):
 			self.conn.commit()
 		except:
 			self.conn.rollback()
+
+	def fetch_location_id(self, word):
+		loc_cursor = self.conn.cursor()
+		query = """select _id from tweet_location where _keyword = '%s'"""
+		try:
+			loc_cursor.execute(query, self.fetch_keyword_id(word))
+			return loc_cursor.fetchall()[0]
+		except:
+			raise Exception("A word has no location")
+
+	def fetch_location_coords(self, kword):
+		loc_cursor = self.conn.cursor()
+		query = """select lat, lng from tweet_location where _keyword = '%s'"""
+		loc_cursor.execute(query, self.fetch_keyword_id(kword))
+		return loc_cursor.fetchall()[0]
 	#END: Location table
 
 	#START: Cloud Table
@@ -540,5 +531,54 @@ class Cloud_Parser(object):
 			loc_cursor.execute(query, layer)
 			fetch = loc_cursor.fetchall()
 		return fetch
-
 	#END: Cloud Table
+
+	# START: Tweet_keyword table
+	def insert_twt_keyword(self, tweet_id, kword):
+		loc_cursor = self.conn.cursor()
+		query = """insert into tweet_keyword (_tweet, _keyword) values ('%s', '%s')"""
+		try:
+			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
+			self.conn.commit()
+		except:
+			self.conn.rollback()
+
+	def fetch_twt_kword__tweet(self, kword):
+		loc_cursor = self.conn.cursor()
+		query = """select _tweet from tweet_keyword where _keyword = '%s'"""
+		loc_cursor.execute(query, self.fetch_keyword_id(kword))
+		return loc_cursor.fetchall()[0]
+
+	def fetch_twt_kword_kword(self, tweet_id):
+		loc_cursor = self.conn.cursor()
+		query = """select _tweet from tweet_keyword where _tweet = '%s'"""
+		loc_cursor.execute(query, self.fetch_keyword_id(tweet_id))
+		return loc_cursor.fetchall()[0]
+
+	def fetch_twt_kword_id(self, tweet_id, kword):
+		loc_cursor = self.conn.cursor()
+		query = """select _id from tweet_keyword where _tweet = '%s' and _keyword = '%s' """
+		loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
+		return loc_cursor.fetchall()[0]
+	# END: Tweet_keyword table
+
+	def store_data(self, tweet):
+		text = self.elim_useless(tweet['text'])
+		day = self.parse_timestamp(tweet['time'])
+		cloud = 0
+		for each in text:
+			self.insert_keyword(each)
+		for layer in range(0, 5):
+			cloud = self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer)
+		for each in text:
+			for c in cloud:
+				self.insert_counter(self.fetch_keyword_id(each), c)
+		for each in text:
+			self.insert_location(tweet['lat'], tweet['lng'], each)
+		for each in text:
+			self.insert_twt_keyword(tweet['_id'], each)
+
+	def parse_timestamp(self, timestamp):
+		day = timestamp[0:3].upper()
+		t = timestamp[11:19]
+		return day, t
