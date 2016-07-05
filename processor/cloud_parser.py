@@ -138,10 +138,10 @@ class Cloud_Parser(object):
 		while True:
 			start = 0
 			end = chunk_size
-			sql = """SELECT * FROM tweets ORDER BY _id LIMIT %d, %d""" % (start, end)
+			sql = """SELECT * FROM tweets ORDER BY _id LIMIT '%s', '%s'"""
 
 			try:
-				self.cursor.execute(sql)
+				self.cursor.execute(sql, (start, end))
 				results = self.cursor.fetchall()
 				for row in results:
 					tweet = Tweet()
@@ -152,8 +152,7 @@ class Cloud_Parser(object):
 				start = end
 				end += chunk_size
 			except:
-				print "Error: unable to fecth data"
-				break
+				raise Exception("Error: unable to fetch data")
 
 	def get_grid(self):
 		loc_rix = []
@@ -178,6 +177,7 @@ class Cloud_Parser(object):
 	def reset_increment(self):
 		clear = """truncate table cloud"""
 		self.cursor.execute(clear)
+
 	def store_data(self, data):
 		pass
 		#TODO update each branch
