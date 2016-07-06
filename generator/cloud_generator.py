@@ -7,7 +7,7 @@ class Cloud_Generator(object):
 		#self.db = Mysql_Connect()
 		pass
 
-	def generate(self, type = 'heatmap', filter = 'global', filterValue = None):
+	def generate(self, type = 'heatmap', filterValue = None):
 		"""	@param type {string} = heatmap | cloud
 			@param filter {string} = location | global
 			@param filterValue {any} = boundary | span | None
@@ -19,19 +19,16 @@ class Cloud_Generator(object):
 		# time (st, et)
 
 		if type == 'heatmap':
-			if filter == 'global':
-				return self._get_global_heat_map(filterValue)
-			elif filter == 'location':
-				return self._get_zoomed_heat_map(filterValue)
+			return self._get_global_heat_map(filterValue)
 
 		elif type == 'grid':
 			return self._get_global_grid_map(filterValue)
 
 		elif type == 'cloud':
-			if filter == 'global':
-				return self._get_global_cloud(filterValue)
-			elif filter == 'location':
-				return self._get_zoomed_cloud(filterValue)
+			return self._get_global_cloud(filterValue)
+
+		elif type == 'popularity':
+			return self._get_popularity(filterValue)
 
 		elif type == 'movement':
 			return self._get_global_movement()
@@ -41,58 +38,37 @@ class Cloud_Generator(object):
 
 
 	def _get_global_heat_map(self, fv):
-		"""Get weight of each square cloud
+		"""Get last 10000 tweets' points
 			@return array of squares"""
 		
-		sql = """SELECT SUM(wc.count), c.start_lat, c.start_lng, c.end_lat, c.end_lng FROM word_counter wc
-			GROUP BY wc._cloud 
-			ORDER BY wc._cloud DESC
-			INNER JOIN keywords k 
-				ON k._id = wc._keyword 
-			INNER JOIN cloud c
-				ON c._id = wc._cloud
-			WHERE 
-				(k.word LIKE %s) 
-				AND 
-				(c.start_time > %s AND c.end_time < %s)
-			""" % (fv['keyword'], fv['time']['st'], fv['time']['et'])
-
 		sql_dev = """SELECT lat, lng 
 			FROM tweets 
 			WHERE 
 				text LIKE '%%%s%%' 
 				AND
 				CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
+				AND
+				timestamp > '%s' 
 			ORDER BY timestamp DESC 
-			LIMIT 10000""" % (fv['keyword'], fv['time']['st'], fv['time']['et']);
+			LIMIT 10000""" % (fv['keyword'], fv['time']['start'], fv['time']['end'], fv['time']['recent'])
 
 		return self._return_result(sql_dev)
-		#return self._return_result(sql)
 
-	def _get_zoomed_heat_map(self, filterValue):
-		"""Get points to display proper heatmap
-			@return array of points"""
+	def _get_popularity(self, fv):
+		"""Get hour from tweet date"""
 
-		sql = """SELECT t.lat, t.lng FROM tweets t
-			INNER JOIN tweet_keywords tk 
-				ON tk._tweet = t._id 
-			INNER JOIN keywords k 
-				ON k._id = tk._keyword 
-			INNER JOIN word_cloud wc 
-				ON k._id = wc._keyword
-			INNER JOIN cloud c 
-				ON wc._keyword = c._id 
+		sql_dev = """SELECT HOUR(timestamp)  
+			FROM tweets 
 			WHERE 
-				(k.word LIKE %s) 
-				AND 
-				(c.start_time > %s AND c.end_time < %s)
-				AND 
-				(c.start_lat < %f AND c.start_lng < %f AND c.end_lat < %f AND c.end_lng < %f)
-			ORDER BY wc.count 
-			LIMIT 10000
-			""" % filterValue
+				text LIKE '%%%s%%' 
+				AND
+				CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
+				AND
+				timestamp > '%s' 
+			ORDER BY timestamp DESC 
+			LIMIT 10000""" % (fv['keyword'], fv['time']['start'], fv['time']['end'], fv['time']['recent'])
 
-		return self._return_result(sql)
+		return self._return_result(sql_dev)
 
 	def _get_global_grid_map(self, fv):
 
@@ -111,16 +87,6 @@ class Cloud_Generator(object):
 		"""Get keywords of global cloud
 			@return array of keywords"""
 
-		sql = """SELECT k.word, SUM(wc.count) as count FROM keywords k
-			INNER JOIN word_count wc 
-				ON k._id = wc._keyword 
-			GROUP BY wc._keyword 
-			ORDER BY count 
-			WHERE 
-				(c.start_time > %s AND c.end_time < %s) 
-			LIMIT 20
-			""" % (fv['time']['st'], fv['time']['et'])
-
 		sql_dev = """SELECT text 
 			FROM tweets 
 			WHERE 
@@ -130,37 +96,9 @@ class Cloud_Generator(object):
 
 		return self._return_result(sql_dev)
 
-
-	def _get_zoomed_cloud(self, filterValue):
-		"""Get keywords of global cloud
-			@return array of keywords"""
-
-		sql = """SELECT k.word, SUM(wc.count) as count FROM keywords k
-			INNER JOIN word_count wc 
-				ON k._id = wc._keyword 
-			GROUP BY wc._keyword 
-			ORDER BY count 
-			WHERE 
-				(c.start_time > %s AND c.end_time < %s)
-				AND 
-				(c.start_lat < %f AND c.start_lng < %f AND c.end_lat < %f AND c.end_lng < %f)
-			LIMIT 20
-			""" % filterValue
-
-		return self._return_result(sql)
-
 	def _get_global_movement(self):
 		"""Get movement chains of users
 			@return array of points"""
-
-		sql = """SELECT user, lat, lng FROM tweets
-			WHERE user IN (
-				SELECT t.user FROM tweets AS t
-			    GROUP BY t.user
-			    HAVING count(t.user) > 100
-			)
-			ORDER BY user;
-			"""
 
 		sql_dev = """SELECT user, lat, lng 
 			FROM tweets 

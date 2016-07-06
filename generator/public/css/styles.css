@@ -9,6 +9,18 @@
 	width: 100%;
 }
 
+#popularity-canvas{
+	height: 100px;
+}
+
+#popularity-canvas .column{
+	display: inline-block;
+	width: 10px;
+	background-color: #f00;
+	color: white;
+	font-size: 0.7em;
+}
+
 .input-group{
 	width: 100%;
 }
