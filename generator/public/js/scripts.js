@@ -19,17 +19,27 @@ function initMap() {
     });
 
    $(document).ready(function(){
-    
-    createWordCloud();
-    $("input#radio1").click();
-    createHeatMap();
+
+    function onHeatMap(){
+        reset();
+        createHeatMap();
+        createPopularityMap();
+
+        //hide word cloud container
+        $("#wrapper-popularity .panel-body").show();
+        $("#wrapper-cloud .panel-body").hide();
+    }
+
+    function onGridMap(){
+
+        $("#wrapper-popularity .panel-body").hide();
+    }
+
 
     $("input#radio1").click(function(){
 
         if($(this).is(":checked")){
-            reset();
-            createHeatMap();
-            createWordCloud();
+            onHeatMap();
         }
 
     });
@@ -53,10 +63,13 @@ function initMap() {
     });
 
     $("button#filter-keyword").click(function(){
-        reset();
         $("input#radio1").click();
-        createWordCloud();
     });
+
+
+
+    $("input#radio1").click();
+    onHeatMap();
     
    });
 
@@ -67,6 +80,7 @@ function reset(){
     removeHeatMap();
     removeMovementMap();
     removeGridHeatMap();
+    removePopularityMap();
 }
 
 function createGridHeatMap(){
@@ -177,8 +191,22 @@ function removeGridHeatMap(){
 
 function createHeatMap(){
     query('heatmap', function(points){
+
+        //console.log(points.length);
+
+        var gmPoints = [];
+        for(var i=0,l=points.length;i<l;i++){
+            var p = points[i];
+            //console.log(p);
+            gmPoints.push(new google.maps.LatLng(p[0], p[1]));
+            /*new google.maps.Marker({
+                position: {lat: p[0], lng: p[1]},
+                map: map
+              });*/
+        }
+
         heatmap = new google.maps.visualization.HeatmapLayer({
-            data: getPoints(points),
+            data: gmPoints,
             map: map,
             maxIntensity: 5
         });
@@ -191,22 +219,6 @@ function removeHeatMap(){
     heatmap.setMap(null);
 }
 
-function getPoints(points){
-
-    var gmPoints = [];
-    for(var i=0,l=points.length;i<l;i++){
-        var p = points[i];
-        //console.log(p);
-        gmPoints.push(new google.maps.LatLng(p[0], p[1]));
-        /*new google.maps.Marker({
-            position: {lat: p[0], lng: p[1]},
-            map: map
-          });*/
-    }
-
-    return gmPoints;
-}
-
 function getFilters(filters){
     //get boundary
     /*console.log(map);
@@ -217,7 +229,17 @@ function getFilters(filters){
     //get times
     var st = $( "#slider-time" ).slider( "values", 0 ) + ":00:00";
     var et = $( "#slider-time" ).slider( "values", 1 ) + ":00:00";
-    
+
+    //get recent limit
+    var recent = new Date();
+    recent.setHours(recent.getHours() - $("#slider-recent").slider("value"));
+
+    var recStr = recent.toISOString();
+    recStr = recStr.split("T");
+    recStr = recStr[0] + " " + recStr[1].split(".")[0];
+
+    var re = $( "#recent-switch" ).is(":checked") ? recStr : "0000-00-00 00:00:00";
+
     //get keyword
     var keyword = $( "input#keyword" ).val();
 
@@ -231,8 +253,8 @@ function getFilters(filters){
         eln: boundary.getNorthEast().lng(),
         st: st,
         et: et,
-        keyword: keyword,
-        filter: 'global'
+        re: re,
+        keyword: keyword
     };
 }
 
@@ -254,6 +276,46 @@ function query(type, filters, success){
             success(data);
         }
     );
+}
+
+function createPopularityMap(){
+
+    query('popularity', function(hours){
+
+        var max = 0;
+        var day = [];
+        for(var i=0;i<24;i++) day[i] = 0;
+
+        for(var i=0,l=hours.length;i<l;i++){
+
+            var hour = hours[i];
+            var counter = day[hour] + 1;
+
+            if(counter > max) max = counter
+            day[hour] = counter;
+
+        }
+
+        //print columns
+        var $wrap = $("#popularity-canvas");
+        var columnWidth = $wrap.width() / 24;
+        var maxHeight = $wrap.height();
+        for(var i=0;i<24;i++){
+            $("<div></div>")
+                .addClass('column')
+                .text(i)
+                .height(day[i] / max * maxHeight)
+                .width(columnWidth)
+                .appendTo($wrap);
+        }
+
+    });
+
+}
+
+function removePopularityMap(){
+    //remove columns
+    $("#popularity-canvas").empty();
 }
 
 function createMovementMap(){

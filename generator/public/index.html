@@ -62,6 +62,34 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">
+                                Limit to recent:
+                                <input type="checkbox" id="recent-switch" />
+                            </h3>
+                            
+                        </div>
+                        <div class="panel-body">
+                            <div class="input-group">
+                                <div>
+                                    <span id="range-recent">12</span>
+                                    <span>h</span>
+                                </div>
+                                <div id="slider-recent"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" id="wrapper-popularity">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Popularity:
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="popularity-canvas"></div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" id="wrapper-cloud">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
                                 Word cloud preview:
                             </h3>
                         </div>

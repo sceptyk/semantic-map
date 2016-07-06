@@ -56,7 +56,6 @@ def web_api(environ, start_response):
 	def GET(key):
 		return escape(d.get(key, [''])[0])
 
-	filter = GET('filter')
 	filterValue = {
 		'rect' : {
 			'slt' : GET('slt'),
@@ -65,14 +64,15 @@ def web_api(environ, start_response):
 			'eln' : GET('eln'),
 		},
 		'time' : {
-			'st' : GET('st'),
-			'et' : GET('et'),
+			'start' : GET('st'),
+			'end' : GET('et'),
+			'recent': GET('re'),
 		},
 		'keyword': GET('keyword'),
 	}
 
 	try:
-		content = GENERATOR.generate(path, filter, filterValue)
+		content = GENERATOR.generate(path, filterValue)
 	except Exception, e:
 		print('Error %s' % str(e))
 		return show_404_app(environ, start_response)
