@@ -12,90 +12,7 @@ class Cloud_Parser(object):
 	def __init__(self):
 		self.conn = Mysql_Connect().get_conn()
 		self.cursor = self.conn.cursor()
-		self.Matrix = self.get_grid()
-		loc_cursor = self.conn.cursor()
-		CREATE_KEYWORDS_TABLE = """CREATE TABLE keywords (
-				              _id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
-				              word CHAR(100) NOT NULL COMMENT '',
-				              PRIMARY KEY (_id)  COMMENT '',
-				              UNIQUE INDEX word_UNIQUE (word ASC)  COMMENT '');"""
-		try:
-			loc_cursor.execute(CREATE_KEYWORDS_TABLE)
-		except:
-			self.conn.rollback()
-		CREATE_POINT_TABLE = """CREATE TABLE IF NOT EXISTS tweet_location (
-				            _id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-				            lat DOUBLE(12, 7),
-				            lng DOUBLE(12, 7),
-				            _keyword BIGINT,
-				            PRIMARY KEY ( _id )
-				        )"""
-		try:
-			loc_cursor.execute(CREATE_POINT_TABLE)
-		except:
-			self.conn.rollback()
-		CREATE_CLOUD_TABLE = """CREATE TABLE  cloud  (
-		               _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
-		               start_lat  DOUBLE(12,7) NULL COMMENT '',
-		               start_lng  DOUBLE(12,7) NULL COMMENT '',
-		               end_lat  DOUBLE(12,7) NULL COMMENT '',
-		               end_lng  DOUBLE(12,7) NULL COMMENT '',
-		               start_time  TIME NULL COMMENT '',
-		               end_time  TIME NULL COMMENT '',
-		               layer INT(1) NULL COMMENT '',
-		               day CHAR(3) NULL COMMENT '',
-		              PRIMARY KEY ( _id )  COMMENT '');"""
-		try:
-			loc_cursor.execute(CREATE_CLOUD_TABLE)
-		except:
-			self.conn.rollback()
 
-		CREATE_COUNTER_TABLE = """CREATE TABLE  word_counter  (
-							   _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
-							   _keyword  BIGINT UNSIGNED NOT NULL COMMENT '',
-							   _cloud  BIGINT UNSIGNED NOT NULL COMMENT '',
-							   count  BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
-							  PRIMARY KEY ( _id )  COMMENT '',
-							  INDEX  keywrod_idx  ( _keyword  ASC)  COMMENT '',
-							  INDEX  cloud_idx  ( _cloud  ASC)  COMMENT '',
-							  CONSTRAINT  keyword
-								FOREIGN KEY ( _keyword )
-								REFERENCES  keywords  ( _id )
-								ON DELETE NO ACTION
-								ON UPDATE NO ACTION,
-							  CONSTRAINT  cloud
-								FOREIGN KEY (_cloud)
-								REFERENCES cloud  ( _id )
-								ON DELETE NO ACTION
-								ON UPDATE NO ACTION);"""
-		try:
-			loc_cursor.execute(CREATE_COUNTER_TABLE)
-		except:
-			self.conn.rollback()
-
-		CREATE_TWEET_KEYWORDS_TABLE = """CREATE TABLE tweet_keywords  (
-				               _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
-				               _tweet  BIGINT UNSIGNED NOT NULL COMMENT '',
-				               _keyword  BIGINT UNSIGNED NOT NULL COMMENT '',
-				              PRIMARY KEY ( _id )  COMMENT '',
-				              INDEX  tweet_idx  ( _tweet  ASC)  COMMENT '',
-				              INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
-				              CONSTRAINT  tweet
-				                FOREIGN KEY ( _tweet )
-				                REFERENCES  tweets  ( _id )
-				                ON DELETE NO ACTION
-				                ON UPDATE NO ACTION,
-				              CONSTRAINT  keyword_tweet
-				                FOREIGN KEY ( _keyword )
-				                REFERENCES keywords  ( _id )
-				                ON DELETE NO ACTION
-				                ON UPDATE NO ACTION);"""
-
-		try:
-			loc_cursor.execute(CREATE_TWEET_KEYWORDS_TABLE)
-		except:
-			self.conn.rollback()
-	
 	def process(self, data):
 		emoticons_str = r"""
 		    (?:
@@ -134,9 +51,8 @@ class Cloud_Parser(object):
 		#TODO connect to db
 		
 		chunk_size = 1000
-
+		start = 0
 		while True:
-			start = 0
 			end = chunk_size
 			sql = """SELECT * FROM tweets ORDER BY _id LIMIT '%s', '%s'"""
 
@@ -144,11 +60,9 @@ class Cloud_Parser(object):
 				self.cursor.execute(sql, (start, end))
 				results = self.cursor.fetchall()
 				for row in results:
-					tweet = Tweet()
-					tweet.populate(row)
-
-					self.store_data(tweet)
-
+					twt = Tweet()
+					twt.populate(row)
+					self.store_data(twt)
 				start = end
 				end += chunk_size
 			except:
@@ -327,14 +241,6 @@ class Cloud_Parser(object):
 	#END: Location table
 
 	#START: Cloud Table
-	def populate_clouds(self):
-		days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-		for j in range(0, 5):
-			for i in days:
-				self.insert_layer(j, time.strftime('4:00:00'), time.strftime('11:59:59'), i)
-				self.insert_layer(j, time.strftime('12:00:00'), time.strftime('16:59:59'), i)
-				self.insert_layer(j, time.strftime('17:00:00'), time.strftime('21:59:59'), i)
-				self.insert_layer(j, time.strftime('22:00:00'), time.strftime('3:59:59'), i)
 
 	def point_in_cloud(self, p_lat, p_lng, day, t, layer):
 		def_day = "TUE"
@@ -507,21 +413,6 @@ class Cloud_Parser(object):
 								self.conn.rollback()
 
 		return self.get_cloud_id(start_lat, start_lng, end_lat, end_lng)
-
-	def insert_layer(self, layer, s_time, e_time, day):  # 5 layers - 0 to 4 (timestamp - time.strftime('22:00:00'))
-		loc_cursor = self.conn.cursor()
-		itr = int(math.pow(2, layer))
-		for i in range(0, self.size_h - itr, itr):
-			for j in range(0, self.size_w - itr, itr):
-				query = """insert into cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time, layer, day)
-														values ('%s','%s','%s','%s', %s, %s, '%s', %s)"""
-				try:
-					loc_cursor.execute(query,
-									   (self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + itr][j + itr][0],
-										self.Matrix[i + itr][j + itr][1], s_time, e_time, layer, day))
-					self.conn.commit()
-				except:
-					self.conn.rollback()
 
 	def get_layer_coords(self, layer):
 		loc_cursor = self.conn.cursor()
