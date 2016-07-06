@@ -8,6 +8,7 @@ class Cloud_Generator(object):
         self.size_w = x
         self.conn = Mysql_Connect().get_conn()
         self.Matrix = self.get_coords()
+        self.init_glob_cloud()
         self.populate_clouds()
 
     def get_coords(self):
@@ -132,15 +133,17 @@ class Cloud_Generator(object):
     def insert_layer(self, layer, s_time, e_time, day):  # 5 layers - 0 to 4 (timestamp - time.strftime('22:00:00'))
         loc_cursor = self.conn.cursor()
         itr = int(math.pow(2, layer))
+        count = 0
+        query = """insert into cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time, layer, day)
+            values ('%s','%s','%s','%s', %s, %s, '%s', %s)"""
+        values = []
         for i in range(0, self.size_h - itr, itr):
             for j in range(0, self.size_w - itr, itr):
-                query = """insert into cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time, layer, day)
-    										values ('%s','%s','%s','%s', %s, %s, '%s', %s)"""
-                try:
-                    loc_cursor.execute(query,
-                                       (self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + itr][j + itr][0],
-                                        self.Matrix[i + itr][j + itr][1], s_time, e_time, layer, day))
-                    self.conn.commit()
-                except:
-                    self.conn.rollback()
+                values.append((self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + itr][j + itr][0],
+                                self.Matrix[i + itr][j + itr][1], s_time, e_time, layer, day))
+        try:
+            loc_cursor.executemany(query,values)
+            self.conn.commit()
+        except:
+            self.conn.rollback()
 

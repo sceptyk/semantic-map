@@ -49,16 +49,16 @@ class Cloud_Parser(object):
 
 	def get_data(self):
 		#TODO connect to db
-		
-		chunk_size = 1000
+		loc_cursor = self.conn.cursor
+		chunk_size = 10
 		start = 0
+		end = chunk_size
 		while True:
-			end = chunk_size
-			sql = """SELECT * FROM tweets ORDER BY _id LIMIT '%s', '%s'"""
+			sql = """SELECT * FROM tweets ORDER BY _id LIMIT %d, %d"""
 
 			try:
-				self.cursor.execute(sql, (start, end))
-				results = self.cursor.fetchall()
+				loc_cursor.execute(sql, (start, end))
+				results = loc_cursor.fetchall()
 				for row in results:
 					twt = Tweet()
 					twt.populate(row)
