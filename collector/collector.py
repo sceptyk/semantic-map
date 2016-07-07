@@ -10,7 +10,7 @@ class Collector(object):
 		self._ACCESS_SECRET = access_secret
 
 		self.client = self.authorize()
-		self.conn = Mysql_Connect().get_conn()
+		self.conn = Mysql_Connect().get_connection()
 		self.cursor = self.conn.cursor()		
 
 	def authorize(self):

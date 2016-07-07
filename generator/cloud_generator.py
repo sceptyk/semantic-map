@@ -6,7 +6,7 @@ class Cloud_Generator(object):
     def __init__(self,x,y):
         self.size_h = y
         self.size_w = x
-        self.conn = Mysql_Connect().get_conn()
+        self.conn = Mysql_Connect().get_connection()
         self.Matrix = self.get_coords()
         self.init_glob_cloud()
         #self.populate_clouds()

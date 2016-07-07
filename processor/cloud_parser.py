@@ -11,7 +11,7 @@ class Cloud_Parser(object):
 	size_w, size_h = 64, 64
 	EDGE = 0.00000000001
 	def __init__(self):
-		self.conn = Mysql_Connect().get_conn()
+		self.conn = Mysql_Connect().get_connection()
 		self.cursor = self.conn.cursor()
 
 	def process(self, data):

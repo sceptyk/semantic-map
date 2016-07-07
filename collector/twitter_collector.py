@@ -60,7 +60,7 @@ class Twitter_Collector(Collector):
 	def store_data(self, data):
 		
 		for tweet in data:
-			values = tweet._tuple()
+			values = tweet.tuple()
 
 			sql = """INSERT INTO tweets
 				(_id, lat, lng, user, text, timestamp) 
