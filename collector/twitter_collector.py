@@ -77,7 +77,6 @@ class Twitter_Collector(Collector):
 
 	def run(self):
 		print("running Twitter Collector -----------")
-		
 		while True:
 			try:
 				data = self.get_data()

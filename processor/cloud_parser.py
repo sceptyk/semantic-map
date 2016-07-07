@@ -283,7 +283,7 @@ class Cloud_Parser(object):
 			else:
 				continue
 		print "Not found"
-		return "Not found"
+		return 0
 
 	def help_point_in_cloud(self, t, day, layer):
 		loc_cursor = self.conn.cursor()
@@ -466,7 +466,8 @@ class Cloud_Parser(object):
 		self.insert_keyword(text)
 		for layer in range(0, 5):
 			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
-		print cloud
+		if cloud[0] == 0:
+			return
 
 		for each in text:
 			for c in cloud:
@@ -477,7 +478,7 @@ class Cloud_Parser(object):
 
 		for kw in text:
 			self.insert_twt_keyword(tweet['_id'], kw)
-			
+
 		print "NExt tweet"
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
