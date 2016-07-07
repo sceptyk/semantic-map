@@ -176,13 +176,14 @@ class Cloud_Parser(object):
 		query = """insert into word_counter (_keyword, _cloud) values ('%s', '%s')"""
 		if self.fetch_counter_id(kword, cloud) is None:
 			loc_cursor.execute(query, (kword, cloud))
+			self.conn.commit()
 			self.incr_counter_count(self.fetch_counter_id(kword, cloud))
 		else:
 			self.incr_counter_count(self.fetch_counter_id(kword, cloud))
 
 	def incr_counter_count(self, id):
 		loc_cursor = self.conn.cursor()
-		fetch = """update counter set count = count + 1 where _id = '%s'"""
+		fetch = """update word_counter set count = count + 1 where _id = '%s'"""
 		try:
 			loc_cursor.execute(fetch, id)
 			self.conn.commit()
@@ -192,7 +193,7 @@ class Cloud_Parser(object):
 
 	def fetch_counter_id(self, word, cloud):
 		loc_cursor = self.conn.cursor()
-		query = """select _id from word_counter where word = '%s' and cloud = '%s'"""
+		query = """select _id from word_counter where _keyword = '%s' and _cloud = '%s'"""
 		try:
 			loc_cursor.execute(query, (word, cloud))
 			return loc_cursor.fetchall()[0][0]
