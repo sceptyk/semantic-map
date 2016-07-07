@@ -174,7 +174,7 @@ class Cloud_Parser(object):
 	def insert_counter(self, kword, cloud):
 		loc_cursor = self.conn.cursor()
 		query = """insert into word_counter (_keyword, _cloud) values ('%s', '%s')"""
-		if self.fetch_counter_id is None:
+		if self.fetch_counter_id(kword, cloud) is None:
 			loc_cursor.execute(query, (kword, cloud))
 			self.incr_counter_count(self.fetch_counter_id(kword, cloud))
 		else:
@@ -192,12 +192,12 @@ class Cloud_Parser(object):
 
 	def fetch_counter_id(self, word, cloud):
 		loc_cursor = self.conn.cursor()
-		query = """select _id from counter where word = '%s' and cloud = '%s'"""
+		query = """select _id from word_counter where word = '%s' and cloud = '%s'"""
 		try:
 			loc_cursor.execute(query, (word, cloud))
 			return loc_cursor.fetchall()[0][0]
 		except:
-			raise Exception("Counter doesnt exist")
+			return None
 
 	def fetch_counter_cloud(self, id):
 		loc_cursor = self.conn.cursor()
@@ -250,17 +250,15 @@ class Cloud_Parser(object):
 		def_day = "TUE"
 		def_time = time.strftime("12:00:00")
 		loc_cursor = self.conn.cursor()
-		list = self.help_point_in_cloud(t, day, layer)
-		# q = """select start_lat from cloud where _id=%d;"""
-		for id in list:
-			start_latQ = """select start_lat, start_lng, end_lat, end_lng from cloud where _id = '%s';"""
-			loc_cursor.execute(start_latQ, id)
-			fetch = loc_cursor.fetchall()
-			start_lat = "%20.15lf" % fetch[0][0]
-			start_lng = "%20.15lf" % fetch[0][1]
-			end_lat = "%20.15lf" % fetch[0][2]
-			end_lng = "%20.15lf" % fetch[0][3]
+		fetch = self.help_point_in_cloud(t, day, layer)
 
+		for coords in range(0, len(fetch)):
+			id = fetch[coords][0]
+			start_lat = "%20.15lf" % fetch[coords][1]
+			start_lng = "%20.15lf" % fetch[coords][2]
+			end_lat = "%20.15lf" % fetch[coords][3]
+			end_lng = "%20.15lf" % fetch[coords][4]
+			print "Fetched"
 			if start_lng == p_lng:
 				p_lng += self.EDGE
 			if start_lat == p_lat:
@@ -273,6 +271,7 @@ class Cloud_Parser(object):
 				if float(start_lat) > float(p_lat):
 					if float(end_lng) > float(p_lng):
 						if float(end_lat) < float(p_lat):
+							print "point found"
 							return id
 						else:
 							continue
@@ -282,16 +281,17 @@ class Cloud_Parser(object):
 					continue
 			else:
 				continue
+		print "Not found"
 		return "Not found"
 
 	def help_point_in_cloud(self, t, day, layer):
 		loc_cursor = self.conn.cursor()
 		list = []
-		query = """select _id from cloud where start_time <= '%s' and end_time >= '%s' and day = '%s' and layer = '%s' """ % (
+		query = """select _id, start_lat, start_lng, end_lat, end_lng from cloud where start_time <= '%s' and end_time >= '%s' and day = '%s' and layer = '%s' """ % (
 		t, t, day, layer)
 		loc_cursor.execute(query)
 		for each in loc_cursor.fetchall():
-			list.append(each[0])
+			list.append(each)
 		return list
 
 	def get_cloud_coords(self, id):
@@ -462,9 +462,10 @@ class Cloud_Parser(object):
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
 		cloud = []
-		#self.insert_keyword(text)
+		self.insert_keyword(text)
 		for layer in range(0, 5):
 			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
+		print cloud
 		for each in text:
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each), c)
@@ -472,6 +473,7 @@ class Cloud_Parser(object):
 			self.insert_location(tweet['lat'], tweet['lng'], each)
 		for each in text:
 			self.insert_twt_keyword(tweet['_id'], each)
+		print "NExt tweet"
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
