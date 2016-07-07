@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generator/cloud_generator.py" afterPath="$PROJECT_DIR$/generator/cloud_generator.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_parse.py" afterPath="$PROJECT_DIR$/main_parse.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/stopwords.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
     </list>
     <ignored path="semantic-map.iws" />
@@ -28,46 +28,53 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="331">
-              <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+            <state relative-caret-position="244">
+              <caret line="477" column="34" selection-start-line="477" selection-start-column="34" selection-end-line="477" selection-end-column="34" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <element signature="e#383#1433#0" expanded="false" />
-                <element signature="e#1938#2224#0" expanded="false" />
-                <element signature="e#2250#2428#0" expanded="false" />
-                <element signature="e#2460#2523#0" expanded="false" />
-                <element signature="e#2587#2810#0" expanded="false" />
-                <element signature="e#2850#3013#0" expanded="false" />
-                <element signature="e#3039#3229#0" expanded="false" />
-                <element signature="e#3377#3405#0" expanded="false" />
-                <element signature="e#3442#3488#0" expanded="false" />
-                <element signature="e#3514#3542#0" expanded="false" />
-                <element signature="e#3579#3640#0" expanded="false" />
-                <element signature="e#3794#3960#0" expanded="false" />
-                <element signature="e#3997#4300#0" expanded="false" />
-                <element signature="e#4334#4523#0" expanded="false" />
-                <element signature="e#4611#4939#0" expanded="false" />
-                <element signature="e#4978#5221#0" expanded="false" />
-                <element signature="e#5267#5515#0" expanded="false" />
-                <element signature="e#5555#5782#0" expanded="false" />
-                <element signature="e#5822#6051#0" expanded="false" />
-                <element signature="e#6143#6398#0" expanded="false" />
-                <element signature="e#6438#6693#0" expanded="false" />
-                <element signature="e#6738#6935#0" expanded="false" />
-                <element signature="e#7039#8117#0" expanded="false" />
-                <element signature="e#8168#8455#0" expanded="false" />
-                <element signature="e#8492#8686#0" expanded="false" />
-                <element signature="e#8743#9021#0" expanded="false" />
-                <element signature="e#9100#9580#0" expanded="false" />
-                <element signature="e#9610#9911#0" expanded="false" />
-                <element signature="e#9954#10769#0" expanded="false" />
-                <element signature="e#10871#13527#0" expanded="false" />
-                <element signature="e#13567#13809#0" expanded="false" />
-                <element signature="e#13910#14156#0" expanded="false" />
-                <element signature="e#14202#14396#0" expanded="false" />
-                <element signature="e#14444#14639#0" expanded="false" />
-                <element signature="e#14691#14913#0" expanded="false" />
+                <element signature="e#399#1449#0" expanded="false" />
+                <element signature="e#1956#2242#0" expanded="false" />
+                <element signature="e#2268#2446#0" expanded="false" />
+                <element signature="e#2478#2541#0" expanded="false" />
+                <element signature="e#3409#3437#0" expanded="false" />
+                <element signature="e#3474#3520#0" expanded="false" />
+                <element signature="e#3546#3574#0" expanded="false" />
+                <element signature="e#3611#3672#0" expanded="false" />
+                <element signature="e#3826#3992#0" expanded="false" />
+                <element signature="e#4029#4332#0" expanded="false" />
+                <element signature="e#4366#4555#0" expanded="false" />
+                <element signature="e#4643#4971#0" expanded="false" />
+                <element signature="e#5010#5253#0" expanded="false" />
+                <element signature="e#5299#5547#0" expanded="false" />
+                <element signature="e#5587#5814#0" expanded="false" />
+                <element signature="e#5854#6083#0" expanded="false" />
+                <element signature="e#6175#6430#0" expanded="false" />
+                <element signature="e#6470#6725#0" expanded="false" />
+                <element signature="e#6770#6967#0" expanded="false" />
+                <element signature="e#7071#8149#0" expanded="false" />
+                <element signature="e#8200#8487#0" expanded="false" />
+                <element signature="e#8524#8718#0" expanded="false" />
+                <element signature="e#8775#9053#0" expanded="false" />
+                <element signature="e#9132#9612#0" expanded="false" />
+                <element signature="e#9642#9943#0" expanded="false" />
+                <element signature="e#9986#10801#0" expanded="false" />
+                <element signature="e#10903#13559#0" expanded="false" />
+                <element signature="e#13599#13841#0" expanded="false" />
+                <element signature="e#13942#14188#0" expanded="false" />
+                <element signature="e#14234#14428#0" expanded="false" />
+                <element signature="e#14476#14671#0" expanded="false" />
+                <element signature="e#14723#14945#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="stopwords.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/stopwords.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -75,8 +82,8 @@
       <file leaf-file-name="main_parse.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_parse.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+            <state relative-caret-position="102">
+              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -84,10 +91,20 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="tweet.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/tweet.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="cloud_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-209">
+            <state relative-caret-position="255">
               <caret line="25" column="8" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="8" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -98,6 +115,16 @@
                 <element signature="e#993#1054#0" expanded="false" />
                 <element signature="e#1095#4732#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="stopwords.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/processor/stopwords.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -118,13 +145,13 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/collector/twitter_stream_collector.py" />
-        <option value="$PROJECT_DIR$/model/tweet.py" />
         <option value="$PROJECT_DIR$/parser/cloud_parser.py" />
         <option value="$USER_HOME$/PycharmProjects/ML-Summer2016/pantas_tut.py" />
         <option value="$USER_HOME$/PycharmProjects/ML-Summer2016/nearest.py" />
         <option value="$PROJECT_DIR$/collector/mysql_connect.py" />
         <option value="$PROJECT_DIR$/generator/cloud_generator.py" />
         <option value="$PROJECT_DIR$/main_parse.py" />
+        <option value="$PROJECT_DIR$/model/tweet.py" />
         <option value="$PROJECT_DIR$/processor/cloud_parser.py" />
       </list>
     </option>
@@ -185,6 +212,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -261,8 +290,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -271,10 +298,11 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Vsev Montes\Desktop\scmp2016\semantic-map\processor" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Vsev Montes\Desktop\scmp2016\semantic-map" />
       <recent name="C:\Users\Vsev Montes\Desktop\scmp2016\semantic-map\processor" />
     </key>
   </component>
@@ -475,10 +503,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09956076" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0658858" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -487,19 +515,19 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32937685" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34421366" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10344828" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22620791" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4969605" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33382788" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32937685" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -518,82 +546,100 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>61</line>
-          <option name="timeStamp" value="7" />
+          <line>459</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>62</line>
-          <option name="timeStamp" value="8" />
+          <line>460</line>
+          <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>63</line>
-          <option name="timeStamp" value="9" />
+          <line>461</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>55</line>
-          <option name="timeStamp" value="11" />
+          <line>462</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>56</line>
-          <option name="timeStamp" value="13" />
+          <line>463</line>
+          <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>58</line>
-          <option name="timeStamp" value="14" />
+          <line>464</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>60</line>
-          <option name="timeStamp" value="15" />
+          <line>465</line>
+          <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>59</line>
-          <option name="timeStamp" value="16" />
+          <line>466</line>
+          <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="17" />
+          <line>467</line>
+          <option name="timeStamp" value="34" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>64</line>
-          <option name="timeStamp" value="21" />
+          <line>468</line>
+          <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>66</line>
-          <option name="timeStamp" value="22" />
+          <line>469</line>
+          <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>67</line>
-          <option name="timeStamp" value="23" />
+          <line>470</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
+          <line>471</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
+          <line>472</line>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
+          <line>69</line>
+          <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
           <line>68</line>
-          <option name="timeStamp" value="24" />
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
+          <line>474</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
+          <line>482</line>
+          <option name="timeStamp" value="62" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="25" />
+      <option name="time" value="63" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -786,13 +832,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/processor/stopwords.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/PycharmProjects/testing_grid/test.py" />
     <entry file="file://$USER_HOME$/PycharmProjects/ML-Summer2016/pantas_tut.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -812,7 +851,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="41" column="25" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -820,7 +858,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -828,7 +865,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -836,7 +872,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-675">
           <caret line="15" column="22" selection-start-line="12" selection-start-column="8" selection-end-line="15" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -844,7 +879,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="38" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -852,9 +886,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#31#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -862,9 +893,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
           <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
-          <folding>
-            <element signature="e#22#79#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -872,7 +900,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -880,7 +907,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -888,11 +914,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/keyword.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generator/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stopwords.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -902,33 +941,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/model/tweet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
+        <state relative-caret-position="289">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/generator/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_parse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-209">
+        <state relative-caret-position="255">
           <caret line="25" column="8" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="8" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
@@ -942,47 +963,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/processor/stopwords.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_parse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+        <state relative-caret-position="244">
+          <caret line="477" column="34" selection-start-line="477" selection-start-column="34" selection-end-line="477" selection-end-column="34" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#383#1433#0" expanded="false" />
-            <element signature="e#1938#2224#0" expanded="false" />
-            <element signature="e#2250#2428#0" expanded="false" />
-            <element signature="e#2460#2523#0" expanded="false" />
-            <element signature="e#2587#2810#0" expanded="false" />
-            <element signature="e#2850#3013#0" expanded="false" />
-            <element signature="e#3039#3229#0" expanded="false" />
-            <element signature="e#3377#3405#0" expanded="false" />
-            <element signature="e#3442#3488#0" expanded="false" />
-            <element signature="e#3514#3542#0" expanded="false" />
-            <element signature="e#3579#3640#0" expanded="false" />
-            <element signature="e#3794#3960#0" expanded="false" />
-            <element signature="e#3997#4300#0" expanded="false" />
-            <element signature="e#4334#4523#0" expanded="false" />
-            <element signature="e#4611#4939#0" expanded="false" />
-            <element signature="e#4978#5221#0" expanded="false" />
-            <element signature="e#5267#5515#0" expanded="false" />
-            <element signature="e#5555#5782#0" expanded="false" />
-            <element signature="e#5822#6051#0" expanded="false" />
-            <element signature="e#6143#6398#0" expanded="false" />
-            <element signature="e#6438#6693#0" expanded="false" />
-            <element signature="e#6738#6935#0" expanded="false" />
-            <element signature="e#7039#8117#0" expanded="false" />
-            <element signature="e#8168#8455#0" expanded="false" />
-            <element signature="e#8492#8686#0" expanded="false" />
-            <element signature="e#8743#9021#0" expanded="false" />
-            <element signature="e#9100#9580#0" expanded="false" />
-            <element signature="e#9610#9911#0" expanded="false" />
-            <element signature="e#9954#10769#0" expanded="false" />
-            <element signature="e#10871#13527#0" expanded="false" />
-            <element signature="e#13567#13809#0" expanded="false" />
-            <element signature="e#13910#14156#0" expanded="false" />
-            <element signature="e#14202#14396#0" expanded="false" />
-            <element signature="e#14444#14639#0" expanded="false" />
-            <element signature="e#14691#14913#0" expanded="false" />
+            <element signature="e#399#1449#0" expanded="false" />
+            <element signature="e#1956#2242#0" expanded="false" />
+            <element signature="e#2268#2446#0" expanded="false" />
+            <element signature="e#2478#2541#0" expanded="false" />
+            <element signature="e#3409#3437#0" expanded="false" />
+            <element signature="e#3474#3520#0" expanded="false" />
+            <element signature="e#3546#3574#0" expanded="false" />
+            <element signature="e#3611#3672#0" expanded="false" />
+            <element signature="e#3826#3992#0" expanded="false" />
+            <element signature="e#4029#4332#0" expanded="false" />
+            <element signature="e#4366#4555#0" expanded="false" />
+            <element signature="e#4643#4971#0" expanded="false" />
+            <element signature="e#5010#5253#0" expanded="false" />
+            <element signature="e#5299#5547#0" expanded="false" />
+            <element signature="e#5587#5814#0" expanded="false" />
+            <element signature="e#5854#6083#0" expanded="false" />
+            <element signature="e#6175#6430#0" expanded="false" />
+            <element signature="e#6470#6725#0" expanded="false" />
+            <element signature="e#6770#6967#0" expanded="false" />
+            <element signature="e#7071#8149#0" expanded="false" />
+            <element signature="e#8200#8487#0" expanded="false" />
+            <element signature="e#8524#8718#0" expanded="false" />
+            <element signature="e#8775#9053#0" expanded="false" />
+            <element signature="e#9132#9612#0" expanded="false" />
+            <element signature="e#9642#9943#0" expanded="false" />
+            <element signature="e#9986#10801#0" expanded="false" />
+            <element signature="e#10903#13559#0" expanded="false" />
+            <element signature="e#13599#13841#0" expanded="false" />
+            <element signature="e#13942#14188#0" expanded="false" />
+            <element signature="e#14234#14428#0" expanded="false" />
+            <element signature="e#14476#14671#0" expanded="false" />
+            <element signature="e#14723#14945#0" expanded="false" />
           </folding>
         </state>
       </provider>

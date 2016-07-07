@@ -3,6 +3,7 @@ from collector.mysql_connect import Mysql_Connect
 import time
 import string
 import math
+import datetime
 
 
 class Cloud_Parser(object):
@@ -49,12 +50,12 @@ class Cloud_Parser(object):
 
 	def get_data(self):
 		#TODO connect to db
-		loc_cursor = self.conn.cursor
+		loc_cursor = self.conn.cursor()
 		chunk_size = 10
 		start = 0
 		end = chunk_size
 		while True:
-			sql = """SELECT * FROM tweets ORDER BY _id LIMIT %d, %d"""
+			sql = """SELECT * FROM tweets ORDER BY _id LIMIT %s, %s"""
 
 			try:
 				loc_cursor.execute(sql, (start, end))
@@ -97,8 +98,9 @@ class Cloud_Parser(object):
 		clear_txt = self.clear_punctuation(txt)
 		list = clear_txt.split(' ')
 		r_list = []
+		stop = self.stopwords()
 		for word in list:
-			if word.lower() in self.stopwords() or len(word) <= 2:
+			if word.lower() in stop or len(word) <= 2:
 				continue
 			else:
 				r_list.append(word)
@@ -454,6 +456,7 @@ class Cloud_Parser(object):
 	# END: Tweet_keyword table
 
 	def store_data(self, tweet):
+		tweet = tweet.dict()
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
 		cloud = 0
@@ -469,7 +472,12 @@ class Cloud_Parser(object):
 		for each in text:
 			self.insert_twt_keyword(tweet['_id'], each)
 
-	def parse_timestamp(self, timestamp):
-		day = timestamp[0:3].upper()
-		t = timestamp[11:19]
-		return day, t
+	def parse_timestamp(self, timestamp):  # 2016-06-07
+		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
+		timestamp = str(timestamp)
+		year = int(timestamp[0:4])
+		month = int(timestamp[5:7])
+		day = int(timestamp[8:10])
+		wk = week_day[datetime.date(year, month, day).weekday() + 1]
+		t = time.strftime(timestamp[10:20])
+		return wk, t
