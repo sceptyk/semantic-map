@@ -147,16 +147,18 @@ class Cloud_Parser(object):
 
 	def insert_keyword(self, list):
 		loc_cursor = self.conn.cursor()
+		query = """INSERT IGNORE INTO keywords (word) VALUES (%s)"""
+		keywords = []
 		for i in range(len(list)):
-			query = """INSERT IGNORE INTO keywords (word) VALUES (%s)"""
 			if self.kword_exist(list[i]) != 1:
-				try:
-					loc_cursor.execute(query, list[i].lower())
-					self.conn.commit()
-				except:
-					self.conn.rollback()
+				keywords.append(list[i].lower())
 			else:
 				continue
+		try:
+			loc_cursor.executemany(query, keywords)
+			self.conn.commit()
+		except:
+			self.conn.rollback()
 
 	def kword_exist(self, word):
 		loc_cursor = self.conn.cursor()
@@ -460,8 +462,7 @@ class Cloud_Parser(object):
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
 		cloud = 0
-		for each in text:
-			self.insert_keyword(each)
+		self.insert_keyword(text)
 		for layer in range(0, 5):
 			cloud = self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer)
 		for each in text:
