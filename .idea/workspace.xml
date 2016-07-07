@@ -26,8 +26,8 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="147" column="35" selection-start-line="147" selection-start-column="35" selection-end-line="147" selection-end-column="35" />
+            <state relative-caret-position="299">
+              <caret line="265" column="34" selection-start-line="265" selection-start-column="34" selection-end-line="265" selection-end-column="34" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
                 <element signature="e#399#1449#0" expanded="false" />
@@ -49,19 +49,17 @@
                 <element signature="e#6214#6469#0" expanded="false" />
                 <element signature="e#6509#6764#0" expanded="false" />
                 <element signature="e#6809#7006#0" expanded="false" />
-                <element signature="e#7110#8188#0" expanded="false" />
-                <element signature="e#8239#8526#0" expanded="false" />
-                <element signature="e#8563#8757#0" expanded="false" />
-                <element signature="e#8814#9092#0" expanded="false" />
-                <element signature="e#9171#9651#0" expanded="false" />
-                <element signature="e#9681#9982#0" expanded="false" />
-                <element signature="e#10025#10840#0" expanded="false" />
-                <element signature="e#10942#13598#0" expanded="false" />
-                <element signature="e#13638#13880#0" expanded="false" />
-                <element signature="e#13981#14227#0" expanded="false" />
-                <element signature="e#14273#14467#0" expanded="false" />
-                <element signature="e#14515#14710#0" expanded="false" />
-                <element signature="e#14762#14984#0" expanded="false" />
+                <element signature="e#8509#8703#0" expanded="false" />
+                <element signature="e#8760#9038#0" expanded="false" />
+                <element signature="e#9117#9597#0" expanded="false" />
+                <element signature="e#9627#9928#0" expanded="false" />
+                <element signature="e#9971#10786#0" expanded="false" />
+                <element signature="e#10888#13544#0" expanded="false" />
+                <element signature="e#13584#13826#0" expanded="false" />
+                <element signature="e#13927#14173#0" expanded="false" />
+                <element signature="e#14219#14413#0" expanded="false" />
+                <element signature="e#14461#14656#0" expanded="false" />
+                <element signature="e#14708#14930#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -167,6 +165,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="processor" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -400,9 +412,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25475842" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25475842" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -440,21 +452,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>461</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>462</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>463</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
           <line>465</line>
@@ -866,8 +863,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="147" column="35" selection-start-line="147" selection-start-column="35" selection-end-line="147" selection-end-column="35" />
+        <state relative-caret-position="299">
+          <caret line="265" column="34" selection-start-line="265" selection-start-column="34" selection-end-line="265" selection-end-column="34" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
             <element signature="e#399#1449#0" expanded="false" />
@@ -889,19 +886,17 @@
             <element signature="e#6214#6469#0" expanded="false" />
             <element signature="e#6509#6764#0" expanded="false" />
             <element signature="e#6809#7006#0" expanded="false" />
-            <element signature="e#7110#8188#0" expanded="false" />
-            <element signature="e#8239#8526#0" expanded="false" />
-            <element signature="e#8563#8757#0" expanded="false" />
-            <element signature="e#8814#9092#0" expanded="false" />
-            <element signature="e#9171#9651#0" expanded="false" />
-            <element signature="e#9681#9982#0" expanded="false" />
-            <element signature="e#10025#10840#0" expanded="false" />
-            <element signature="e#10942#13598#0" expanded="false" />
-            <element signature="e#13638#13880#0" expanded="false" />
-            <element signature="e#13981#14227#0" expanded="false" />
-            <element signature="e#14273#14467#0" expanded="false" />
-            <element signature="e#14515#14710#0" expanded="false" />
-            <element signature="e#14762#14984#0" expanded="false" />
+            <element signature="e#8509#8703#0" expanded="false" />
+            <element signature="e#8760#9038#0" expanded="false" />
+            <element signature="e#9117#9597#0" expanded="false" />
+            <element signature="e#9627#9928#0" expanded="false" />
+            <element signature="e#9971#10786#0" expanded="false" />
+            <element signature="e#10888#13544#0" expanded="false" />
+            <element signature="e#13584#13826#0" expanded="false" />
+            <element signature="e#13927#14173#0" expanded="false" />
+            <element signature="e#14219#14413#0" expanded="false" />
+            <element signature="e#14461#14656#0" expanded="false" />
+            <element signature="e#14708#14930#0" expanded="false" />
           </folding>
         </state>
       </provider>

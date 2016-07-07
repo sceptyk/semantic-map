@@ -253,8 +253,8 @@ class Cloud_Parser(object):
 		list = self.help_point_in_cloud(t, day, layer)
 		# q = """select start_lat from cloud where _id=%d;"""
 		for id in list:
-			start_latQ = """select start_lat, start_lng, end_lat, end_lng from cloud where _id = '%s' and start_time = %s and day = %s;"""
-			loc_cursor.execute(start_latQ, (id, def_time, def_day))
+			start_latQ = """select start_lat, start_lng, end_lat, end_lng from cloud where _id = '%s';"""
+			loc_cursor.execute(start_latQ, id)
 			fetch = loc_cursor.fetchall()
 			start_lat = "%20.15lf" % fetch[0][0]
 			start_lng = "%20.15lf" % fetch[0][1]
@@ -461,10 +461,10 @@ class Cloud_Parser(object):
 		tweet = tweet.dict()
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
-		cloud = 0
-		self.insert_keyword(text)
+		cloud = []
+		#self.insert_keyword(text)
 		for layer in range(0, 5):
-			cloud = self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer)
+			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
 		for each in text:
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each), c)
