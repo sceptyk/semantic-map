@@ -467,13 +467,17 @@ class Cloud_Parser(object):
 		for layer in range(0, 5):
 			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
 		print cloud
+
 		for each in text:
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each), c)
-		for each in text:
-			self.insert_location(tweet['lat'], tweet['lng'], each)
-		for each in text:
-			self.insert_twt_keyword(tweet['_id'], each)
+
+		for wrd in text:
+			self.insert_location(tweet['lat'], tweet['lng'], wrd)
+
+		for kw in text:
+			self.insert_twt_keyword(tweet['_id'], kw)
+			
 		print "NExt tweet"
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
