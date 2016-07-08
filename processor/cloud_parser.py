@@ -4,7 +4,7 @@ import time
 import string
 import math
 import datetime
-
+import os
 
 class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
@@ -49,7 +49,7 @@ class Cloud_Parser(object):
 		return preprocess(data)
 
 	def get_data(self):
-		#TODO connect to db
+
 		loc_cursor = self.conn.cursor()
 		chunk_size = 10
 		start = 0
@@ -66,8 +66,9 @@ class Cloud_Parser(object):
 					self.store_data(twt)
 				start = end
 				end += chunk_size
-			except:
-				raise Exception("Error: unable to fetch data")
+			except Exception, e:
+				print(str(e))
+				break
 
 	def get_grid(self):
 		loc_rix = []
@@ -115,7 +116,7 @@ class Cloud_Parser(object):
 		return clear_string
 
 	def stopwords(self):
-		with open("stopwords.txt") as input:
+		with open(os.path.normpath("processor/stopwords.txt")) as input:
 			text = input.readline()
 		list = text.split(",")
 		clear_list = []
@@ -259,7 +260,7 @@ class Cloud_Parser(object):
 			start_lng = "%20.15lf" % fetch[coords][2]
 			end_lat = "%20.15lf" % fetch[coords][3]
 			end_lng = "%20.15lf" % fetch[coords][4]
-			print "Fetched"
+			#print "Fetched"
 			if start_lng == p_lng:
 				p_lng += self.EDGE
 			if start_lat == p_lat:
@@ -272,7 +273,7 @@ class Cloud_Parser(object):
 				if float(start_lat) > float(p_lat):
 					if float(end_lng) > float(p_lng):
 						if float(end_lat) < float(p_lat):
-							print "point found"
+							#print "point found"
 							return id
 						else:
 							continue
@@ -282,7 +283,7 @@ class Cloud_Parser(object):
 					continue
 			else:
 				continue
-		print "Not found"
+		#print "Not found"
 		return 0
 
 	def help_point_in_cloud(self, t, day, layer):
@@ -479,7 +480,7 @@ class Cloud_Parser(object):
 		for kw in text:
 			self.insert_twt_keyword(tweet['_id'], kw)
 
-		print "NExt tweet"
+		print("NExt tweet")
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']

@@ -5,4 +5,5 @@ import thread
 
 parser = Cloud_Parser()
 
-thread.start_new_thread(parser.get_data(), "Parser")
+print("Cloud parser-----------------------")
+thread.start_new_thread(parser.get_data, ())

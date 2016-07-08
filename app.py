@@ -4,7 +4,7 @@ import sys
 from cherrypy import wsgiserver
 import main_generator
 import main_collector
-import main_processor
+#TODO import main_processor
 
 #hack to make sure we can load wsgi.py as a module in this class
 sys.path.insert(0, os.path.dirname(__file__))
