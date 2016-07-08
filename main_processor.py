@@ -1,6 +1,8 @@
 #!usr/bin/env python
 
-from processor.osm_helper import Osm_Helper
+from processor.cloud_parser import Cloud_Parser
+import thread
 
-osm = Osm_Helper()
-osm.get_location(53.306771, -6.228867)
+parser = Cloud_Parser()
+
+thread.start_new_thread(parser.get_data(), "Parser")
