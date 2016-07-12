@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
-    </list>
+    <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="" />
     <ignored path="semantic-map.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,8 +24,8 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="128" column="47" selection-start-line="128" selection-start-column="47" selection-end-line="128" selection-end-column="47" />
+            <state relative-caret-position="-648">
+              <caret line="132" column="31" selection-start-line="132" selection-start-column="31" selection-end-line="132" selection-end-column="31" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
                 <element signature="e#405#1455#0" expanded="false" />
@@ -59,7 +57,6 @@
                 <element signature="e#8683#8877#0" expanded="false" />
                 <element signature="e#8934#9212#0" expanded="false" />
                 <element signature="e#9291#9771#0" expanded="false" />
-                <element signature="e#9801#10102#0" expanded="false" />
                 <element signature="e#10145#10960#0" expanded="false" />
                 <element signature="e#11062#13718#0" expanded="false" />
                 <element signature="e#13758#14000#0" expanded="false" />
@@ -159,8 +156,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1358" />
-    <option name="height" value="768" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="784" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -508,10 +507,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1358" height="768" extended-state="0" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17511177" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17203514" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -898,8 +897,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="128" column="47" selection-start-line="128" selection-start-column="47" selection-end-line="128" selection-end-column="47" />
+        <state relative-caret-position="-648">
+          <caret line="132" column="31" selection-start-line="132" selection-start-column="31" selection-end-line="132" selection-end-column="31" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
             <element signature="e#405#1455#0" expanded="false" />
@@ -931,7 +930,6 @@
             <element signature="e#8683#8877#0" expanded="false" />
             <element signature="e#8934#9212#0" expanded="false" />
             <element signature="e#9291#9771#0" expanded="false" />
-            <element signature="e#9801#10102#0" expanded="false" />
             <element signature="e#10145#10960#0" expanded="false" />
             <element signature="e#11062#13718#0" expanded="false" />
             <element signature="e#13758#14000#0" expanded="false" />
