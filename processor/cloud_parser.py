@@ -427,6 +427,10 @@ class Cloud_Parser(object):
 			loc_cursor.execute(query, layer)
 			fetch = loc_cursor.fetchall()
 		return fetch
+
+	def error_cloud(self):
+		loc_cursor = self.conn.cursor()
+		query = """insert into cloud """
 	#END: Cloud Table
 
 	# START: Tweet_keyword table
@@ -466,8 +470,9 @@ class Cloud_Parser(object):
 		self.insert_keyword(text)
 		for layer in range(0, 5):
 			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
+
 		if cloud[0] == 0:
-			return
+			return 0
 
 		for each in text:
 			for c in cloud:

@@ -81,7 +81,7 @@ class Cloud_Generator(object):
     					   _cloud  BIGINT UNSIGNED NOT NULL COMMENT '',
     					   count  BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
     					  PRIMARY KEY ( _id )  COMMENT '',
-    					  INDEX  keywrod_idx  ( _keyword  ASC)  COMMENT '',
+    					  INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
     					  INDEX  cloud_idx  ( _cloud  ASC)  COMMENT '',
     					  CONSTRAINT  keyword
     						FOREIGN KEY ( _keyword )

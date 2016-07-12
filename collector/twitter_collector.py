@@ -81,6 +81,8 @@ class Twitter_Collector(Collector):
 			try:
 				data = self.get_data()
 				self.store_data(data)
+				if self.store_data(data)==0:
+					continue
 			except tweepy.error.TweepError:
 				time.sleep(960.0)#timeout 16mins to avoid twitter rate policy
 			else:

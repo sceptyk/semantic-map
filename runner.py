@@ -20,5 +20,6 @@ gen.Cloud_Generator(64,64)
 #END: Initialize clouds
 
 #START: Multi-threading
-thread.start_new_thread(twitter_stream.run(), "Collector")
-thread.start_new_thread(connection.get_data(), "Parser")
+#thread.start_new_thread(twitter_stream.run(), ("Collector",1,))
+#thread.start_new_thread(connection.get_data(), "Parser")
+twitter_stream.run()
