@@ -3,7 +3,7 @@ import os
 
 import json
 from cgi import parse_qs, escape
-from generator.cloud_generator import Cloud_Generator
+from generator.api_generator import Cloud_Generator
 
 STATIC_FILE_DIR = os.path.normpath('generator/public')
 
