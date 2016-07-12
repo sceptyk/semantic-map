@@ -243,6 +243,16 @@ function getFilters(filters){
     //get keyword
     var keyword = $( "input#keyword" ).val();
 
+    //get days
+    var days = [];
+    if("input#checkbox-monday:checked") days.push("MON");
+    if("input#checkbox-tuesday:checked") days.push("TUE");
+    if("input#checkbox-wednesday:checked") days.push("WED");
+    if("input#checkbox-thursday:checked") days.push("THU");
+    if("input#checkbox-friday:checked") days.push("FRI");
+    if("input#checkbox-saturday:checked") days.push("SAT");
+    if("input#checkbox-sunday:checked") days.push("SUN");
+
     //console.log(st);
     //console.log(et);
 
@@ -254,6 +264,7 @@ function getFilters(filters){
         st: st,
         et: et,
         re: re,
+        days: days,
         keyword: keyword
     };
 }

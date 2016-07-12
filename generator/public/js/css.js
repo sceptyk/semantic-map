@@ -25,4 +25,8 @@ $(function() {
     $("#range-recent").text($("#slider-recent").slider('value'));
 
     $("#radio").buttonset();
+
+    $("input[type=checkbox]").checkboxradio({
+        icon: false
+    });
 });
