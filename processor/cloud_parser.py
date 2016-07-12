@@ -68,8 +68,8 @@ class Cloud_Parser(object):
 						continue
 				start = end
 				end += chunk_size
-			except:
-				raise Exception("Error: unable to fetch data")
+			except Exception, e:
+				print str(e)
 
 	def get_grid(self):
 		loc_rix = []
@@ -102,7 +102,7 @@ class Cloud_Parser(object):
 		r_list = []
 		stop = self.stopwords()
 		for word in list:
-			if word.lower() in stop or len(word) <= 2:
+			if word.lower() in stop or len(word) <= 2 or self.has_numbers(word) or self.has_http(word):
 				continue
 			else:
 				r_list.append(word)
@@ -124,6 +124,12 @@ class Cloud_Parser(object):
 		for word in list:
 			clear_list.append(word.replace(" ", ""))
 		return clear_list
+
+	def has_numbers(self, word):
+		return any(ch.isdigit() for ch in word)
+
+	def has_http(self, word):
+		return word.startswith('http')
 	#END: word/char elimination
 
 	#START: Helper functions to calculate metres per 1 degree considering the Earth's elevation
