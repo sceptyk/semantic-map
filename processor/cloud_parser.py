@@ -64,6 +64,8 @@ class Cloud_Parser(object):
 					twt = Tweet()
 					twt.populate(row)
 					self.store_data(twt)
+					if self.store_data(twt)==0:
+						continue
 				start = end
 				end += chunk_size
 			except:

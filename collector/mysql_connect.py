@@ -23,8 +23,8 @@ class Mysql_Connect(object):
 				host = '127.0.0.1',
 				port = 3306,
 				user = 'root',
-				passwd = '', 
-				db = 'semantic_map_2016')
+				passwd = 'he110w0rld',
+				db = 'scmp2016')
 
 	def execute(self, sql):
 
@@ -54,7 +54,7 @@ class Mysql_Connect(object):
 		return cursor
 
 	def get_connection(self):
-		return self.connect()
+		return self.connect_dev()
 
 	def get_cursor(self):
 		return self.conn.cursor()
