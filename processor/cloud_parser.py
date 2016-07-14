@@ -4,6 +4,7 @@ import time
 import string
 import math
 import datetime
+import os
 
 
 class Cloud_Parser(object):
@@ -69,6 +70,8 @@ class Cloud_Parser(object):
 				start = end
 				end += chunk_size
 			except Exception, e:
+				tweet = twt.dict()
+				print tweet['_id']
 				print str(e)
 
 	def get_grid(self):
@@ -117,7 +120,7 @@ class Cloud_Parser(object):
 		return clear_string
 
 	def stopwords(self):
-		with open("stopwords.txt") as input:
+		with open(os.path.normpath("processor/stopwords.txt")) as input:
 			text = input.readline()
 		list = text.split(",")
 		clear_list = []
@@ -256,9 +259,6 @@ class Cloud_Parser(object):
 	#START: Cloud Table
 
 	def point_in_cloud(self, p_lat, p_lng, day, t, layer):
-		def_day = "TUE"
-		def_time = time.strftime("12:00:00")
-		loc_cursor = self.conn.cursor()
 		fetch = self.help_point_in_cloud(t, day, layer)
 
 		for coords in range(0, len(fetch)):
@@ -290,7 +290,6 @@ class Cloud_Parser(object):
 					continue
 			else:
 				continue
-		print "Not found"
 		return 0
 
 	def help_point_in_cloud(self, t, day, layer):
@@ -478,7 +477,6 @@ class Cloud_Parser(object):
 		self.insert_keyword(text)
 		for layer in range(0, 5):
 			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
-
 		if cloud[0] == 0:
 			return 0
 

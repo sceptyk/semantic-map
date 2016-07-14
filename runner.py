@@ -16,10 +16,10 @@ connection = pars.Cloud_Parser()
 #END: Initialize runners
 
 #START: Initialize clouds
-gen.Cloud_Generator(64,64)
+#gen.Cloud_Generator(64,64)
 #END: Initialize clouds
 
 #START: Multi-threading
 #thread.start_new_thread(twitter_stream.run(), ("Collector",1,))
-#thread.start_new_thread(connection.get_data(), "Parser")
-twitter_stream.run()
+thread.start_new_thread(connection.get_data(), "Parser")
+#twitter_stream.run()

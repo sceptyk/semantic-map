@@ -54,7 +54,7 @@ class Mysql_Connect(object):
 		return cursor
 
 	def get_connection(self):
-		return self.connect_dev()
+		return self.connect()
 
 	def get_cursor(self):
 		return self.conn.cursor()
