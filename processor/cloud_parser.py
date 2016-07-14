@@ -443,7 +443,7 @@ class Cloud_Parser(object):
 	# START: Tweet_keyword table
 	def insert_twt_keyword(self, tweet_id, kword):
 		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_keyword (_tweet, _keyword) values ('%s', '%s')"""
+		query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s')"""
 		try:
 			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
 			self.conn.commit()
