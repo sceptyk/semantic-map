@@ -102,6 +102,7 @@ class Cloud_Generator(object):
     		               _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
     		               _tweet  BIGINT UNSIGNED NOT NULL COMMENT '',
     		               _keyword  BIGINT UNSIGNED NOT NULL COMMENT '',
+    		               date TIME NOT NULL COMMENT '',
     		              PRIMARY KEY ( _id )  COMMENT '',
     		              INDEX  tweet_idx  ( _tweet  ASC)  COMMENT '',
     		              INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
