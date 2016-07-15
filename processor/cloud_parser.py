@@ -6,6 +6,7 @@ import math
 import datetime
 import os
 
+
 class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
 	size_w, size_h = 64, 64
@@ -76,10 +77,10 @@ class Cloud_Parser(object):
 	def get_grid(self):
 		loc_rix = []
 		start_lat = 53.39806981341725
-		for i in range(self.size_h):
+		for i in range(0, self.size_h):
 			loc_rix.append([])
 			start_lng = -6.3686370849609375
-			for j in range(self.size_w):
+			for j in range(0, self.size_w):
 				loc_rix[i].append((start_lat, start_lng))
 				start_lng += 0.00488173872
 			start_lat -= 0.003145015
@@ -229,32 +230,6 @@ class Cloud_Parser(object):
 			raise Exception("Counter doesnt exist")
 	#END: Counter table
 
-	#START: Location table
-	def insert_location(self, lat, lng, kword):
-		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_location (lat, lng, _keyword) values ('%s', '%s', '%s')"""
-		try:
-			loc_cursor.execute(query, (lat, lng, self.fetch_keyword_id(kword)))
-			self.conn.commit()
-		except:
-			self.conn.rollback()
-
-	def fetch_location_id(self, word):
-		loc_cursor = self.conn.cursor()
-		query = """select _id from tweet_location where _keyword = '%s'"""
-		try:
-			loc_cursor.execute(query, self.fetch_keyword_id(word))
-			return loc_cursor.fetchall()[0]
-		except:
-			raise Exception("A word has no location")
-
-	def fetch_location_coords(self, kword):
-		loc_cursor = self.conn.cursor()
-		query = """select lat, lng from tweet_location where _keyword = '%s'"""
-		loc_cursor.execute(query, self.fetch_keyword_id(kword))
-		return loc_cursor.fetchall()[0]
-	#END: Location table
-
 	#START: Cloud Table
 
 	def point_in_cloud(self, p_lat, p_lng, day, t, layer):
@@ -266,7 +241,6 @@ class Cloud_Parser(object):
 			start_lng = "%20.15lf" % fetch[coords][2]
 			end_lat = "%20.15lf" % fetch[coords][3]
 			end_lng = "%20.15lf" % fetch[coords][4]
-			#print "Fetched"
 			if start_lng == p_lng:
 				p_lng += self.EDGE
 			if start_lat == p_lat:
@@ -279,7 +253,6 @@ class Cloud_Parser(object):
 				if float(start_lat) > float(p_lat):
 					if float(end_lng) > float(p_lng):
 						if float(end_lat) < float(p_lat):
-							#print "point found"
 							return id
 						else:
 							continue
@@ -440,11 +413,11 @@ class Cloud_Parser(object):
 	#END: Cloud Table
 
 	# START: Tweet_keyword table
-	def insert_twt_keyword(self, tweet_id, kword, date):
+	def insert_twt_keyword(self, tweet_id, kword):
 		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_keywords (_tweet, _keyword, date) values ('%s', '%s', %s)"""
+		query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s')"""
 		try:
-			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword), date))
+			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
 			self.conn.commit()
 		except:
 			self.conn.rollback()
@@ -467,18 +440,12 @@ class Cloud_Parser(object):
 		loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
 		return loc_cursor.fetchall()[0]
 
-	def fetch_twt_kword_date(self, tweet_id, kword):
-		loc_cursor = self.conn.cursor()
-		query = """select date from tweet_keyword where _tweet = '%s' and _keyword = '%s' """
-		loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
-		return loc_cursor.fetchall()[0]
 	# END: Tweet_keyword table
 
 	def store_data(self, tweet):
 		tweet = tweet.dict()
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
-		dt = self.obtain_Date(str(tweet['time']))
 		cloud = []
 		self.insert_keyword(text)
 		for layer in range(0, 5):
@@ -490,13 +457,8 @@ class Cloud_Parser(object):
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each), c)
 
-		for wrd in text:
-			self.insert_location(tweet['lat'], tweet['lng'], wrd)
-
 		for kw in text:
-			self.insert_twt_keyword(tweet['_id'], kw, dt)
-
-		print "NExt tweet"
+			self.insert_twt_keyword(tweet['_id'], kw)
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
@@ -508,5 +470,4 @@ class Cloud_Parser(object):
 		t = time.strftime(timestamp[10:20])
 		return wk, t
 
-	def obtain_Date(self, timestamp):
-		return time.strftime(timestamp[0:10])
+
