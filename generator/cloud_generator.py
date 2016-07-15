@@ -47,17 +47,6 @@ class Cloud_Generator(object):
         except:
             self.conn.rollback()
 
-        CREATE_POINT_TABLE = """CREATE TABLE IF NOT EXISTS tweet_location (
-    		            _id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    		            lat DOUBLE(12, 7),
-    		            lng DOUBLE(12, 7),
-    		            _keyword BIGINT,
-    		            PRIMARY KEY ( _id )
-    		        )"""
-        try:
-            loc_cursor.execute(CREATE_POINT_TABLE)
-        except:
-            self.conn.rollback()
         CREATE_CLOUD_TABLE = """CREATE TABLE  cloud  (
     		               _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
     		               start_lat  DOUBLE(12,7) NULL COMMENT '',

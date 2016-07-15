@@ -230,32 +230,6 @@ class Cloud_Parser(object):
 			raise Exception("Counter doesnt exist")
 	#END: Counter table
 
-	#START: Location table
-	def insert_location(self, lat, lng, kword):
-		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_location (lat, lng, _keyword) values ('%s', '%s', '%s')"""
-		try:
-			loc_cursor.execute(query, (lat, lng, self.fetch_keyword_id(kword)))
-			self.conn.commit()
-		except:
-			self.conn.rollback()
-
-	def fetch_location_id(self, word):
-		loc_cursor = self.conn.cursor()
-		query = """select _id from tweet_location where _keyword = '%s'"""
-		try:
-			loc_cursor.execute(query, self.fetch_keyword_id(word))
-			return loc_cursor.fetchall()[0]
-		except:
-			raise Exception("A word has no location")
-
-	def fetch_location_coords(self, kword):
-		loc_cursor = self.conn.cursor()
-		query = """select lat, lng from tweet_location where _keyword = '%s'"""
-		loc_cursor.execute(query, self.fetch_keyword_id(kword))
-		return loc_cursor.fetchall()[0]
-	#END: Location table
-
 	#START: Cloud Table
 
 	def point_in_cloud(self, p_lat, p_lng, day, t, layer):
@@ -443,9 +417,9 @@ class Cloud_Parser(object):
 	# START: Tweet_keyword table
 	def insert_twt_keyword(self, tweet_id, kword, date):
 		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_keywords (_tweet, _keyword, date) values ('%s', '%s', %s)"""
+		query = """insert into tweet_keywords (_tweet, _keyword, date) values ('%s', '%s')"""
 		try:
-			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword), date))
+			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
 			self.conn.commit()
 		except:
 			self.conn.rollback()
@@ -468,18 +442,12 @@ class Cloud_Parser(object):
 		loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
 		return loc_cursor.fetchall()[0]
 
-	def fetch_twt_kword_date(self, tweet_id, kword):
-		loc_cursor = self.conn.cursor()
-		query = """select date from tweet_keyword where _tweet = '%s' and _keyword = '%s' """
-		loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
-		return loc_cursor.fetchall()[0]
 	# END: Tweet_keyword table
 
 	def store_data(self, tweet):
 		tweet = tweet.dict()
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
-		dt = self.obtain_Date(str(tweet['time']))
 		cloud = []
 		self.insert_keyword(text)
 		for layer in range(0, 5):
@@ -491,11 +459,8 @@ class Cloud_Parser(object):
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each), c)
 
-		for wrd in text:
-			self.insert_location(tweet['lat'], tweet['lng'], wrd)
-
 		for kw in text:
-			self.insert_twt_keyword(tweet['_id'], kw, dt)
+			self.insert_twt_keyword(tweet['_id'], kw)
 
 		print "NExt tweet"
 
@@ -509,5 +474,4 @@ class Cloud_Parser(object):
 		t = time.strftime(timestamp[10:20])
 		return wk, t
 
-	def obtain_Date(self, timestamp):
-		return time.strftime(timestamp[0:10])
+
