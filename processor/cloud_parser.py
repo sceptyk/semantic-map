@@ -415,7 +415,7 @@ class Cloud_Parser(object):
 	#END: Cloud Table
 
 	# START: Tweet_keyword table
-	def insert_twt_keyword(self, tweet_id, kword, date):
+	def insert_twt_keyword(self, tweet_id, kword):
 		loc_cursor = self.conn.cursor()
 		query = """insert into tweet_keywords (_tweet, _keyword, date) values ('%s', '%s')"""
 		try:

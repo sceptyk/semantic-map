@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/collector/mysql_connect.py" afterPath="$PROJECT_DIR$/collector/mysql_connect.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generator/cloud_generator.py" afterPath="$PROJECT_DIR$/generator/cloud_generator.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
     </list>
     <ignored path="semantic-map.iws" />
@@ -29,8 +26,8 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="62">
-              <caret line="454" column="25" selection-start-line="454" selection-start-column="25" selection-end-line="454" selection-end-column="25" />
+            <state relative-caret-position="128">
+              <caret line="416" column="16" selection-start-line="416" selection-start-column="16" selection-end-line="416" selection-end-column="16" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
                 <element signature="e#415#1465#0" expanded="false" />
@@ -65,10 +62,10 @@
                 <element signature="e#10148#12804#0" expanded="false" />
                 <element signature="e#12844#13086#0" expanded="false" />
                 <element signature="e#13114#13180#0" expanded="false" />
-                <element signature="e#13586#13780#0" expanded="false" />
-                <element signature="e#13828#14023#0" expanded="false" />
-                <element signature="e#14075#14297#0" expanded="false" />
-                <element signature="e#14894#15187#0" expanded="false" />
+                <element signature="e#13580#13774#0" expanded="false" />
+                <element signature="e#13822#14017#0" expanded="false" />
+                <element signature="e#14069#14291#0" expanded="false" />
+                <element signature="e#14888#15181#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -77,8 +74,8 @@
       <file leaf-file-name="cloud_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="79">
-              <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+            <state relative-caret-position="-509">
+              <caret line="32" column="14" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
                 <element signature="e#372#736#0" expanded="false" />
@@ -159,7 +156,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
-    <option name="width" value="1373" />
+    <option name="width" value="1366" />
     <option name="height" value="780" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -522,15 +519,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="0" width="1373" height="780" extended-state="1" />
+    <frame x="-8" y="0" width="1366" height="780" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26897568" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27037036" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33283582" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.49253732" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -893,8 +890,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="79">
-          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+        <state relative-caret-position="-509">
+          <caret line="32" column="14" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
             <element signature="e#372#736#0" expanded="false" />
@@ -904,8 +901,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="62">
-          <caret line="454" column="25" selection-start-line="454" selection-start-column="25" selection-end-line="454" selection-end-column="25" />
+        <state relative-caret-position="128">
+          <caret line="416" column="16" selection-start-line="416" selection-start-column="16" selection-end-line="416" selection-end-column="16" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
             <element signature="e#415#1465#0" expanded="false" />
@@ -940,10 +937,10 @@
             <element signature="e#10148#12804#0" expanded="false" />
             <element signature="e#12844#13086#0" expanded="false" />
             <element signature="e#13114#13180#0" expanded="false" />
-            <element signature="e#13586#13780#0" expanded="false" />
-            <element signature="e#13828#14023#0" expanded="false" />
-            <element signature="e#14075#14297#0" expanded="false" />
-            <element signature="e#14894#15187#0" expanded="false" />
+            <element signature="e#13580#13774#0" expanded="false" />
+            <element signature="e#13822#14017#0" expanded="false" />
+            <element signature="e#14069#14291#0" expanded="false" />
+            <element signature="e#14888#15181#0" expanded="false" />
           </folding>
         </state>
       </provider>
