@@ -1,5 +1,5 @@
 from collector.mysql_connect import Mysql_Connect
-import json
+import simplejson as json
 
 class Cloud_Generator(object):
 
@@ -86,9 +86,12 @@ class Cloud_Generator(object):
 				c.day IN %s 
 				AND 
 				c.start_time > '%s' AND c.end_time < '%s' 
-			GROUP BY c.start_lat, c.start_lng, c.end_lat, c.end_lng
-			LIMIT 10000"""
-			#TODO pass args
+			GROUP BY 
+				c.start_lat, c.start_lng, c.end_lat, c.end_lng 
+			ORDER BY
+				weight DESC 
+			LIMIT 10000""" % (fv['rect']['elt'], fv['rect']['eln'], fv['rect']['slt'], fv['rect']['sln'],
+				fv['layer'], fv['days'], fv['time']['start'], fv['time']['end'])
 
 		return self._return_result(sql_dev)
 
@@ -102,15 +105,21 @@ class Cloud_Generator(object):
 			INNER JOIN cloud c
 				ON wc._cloud = c._id
 			WHERE
-				c.start_lat > '%s' AND c.start_lng > '%s'
-			    AND
-			    c.end_lat < '%s' AND c.end_lng < '%s'
+				c.start_lat < '%s' AND c.start_lng < '%s' 
+				AND
+				c.end_lat > '%s' AND c.end_lng > '%s' 
+				AND
+				c.layer = '%s' 
+				AND 
+				c.day IN %s 
+				AND 
+				c.start_time > '%s' AND c.end_time < '%s' 
 			GROUP BY
 				k._id
 			ORDER BY
-				weight DESC
-			LIMIT 10000"""
-			#pass args
+				weight DESC 
+			LIMIT 20""" % (fv['rect']['elt'], fv['rect']['eln'], fv['rect']['slt'], fv['rect']['sln'],
+				fv['layer'], fv['days'], fv['time']['start'], fv['time']['end'])
 
 		return self._return_result(sql_dev)
 
@@ -131,6 +140,5 @@ class Cloud_Generator(object):
 
 		results = cursor.fetchall()
 		db.close()
-		#print(sql)
 
-		return json.dumps(results)
+		return json.dumps(results, use_decimal=True)

@@ -54,7 +54,10 @@ def web_api(environ, start_response):
 	d = parse_qs(environ['QUERY_STRING'])
 
 	def GET(key):
+		#TODO default value if not exist
 		return escape(d.get(key, [''])[0])
+
+	days = GET('days').replace('[', '(').replace(']', ')').replace('"', '\'') #cast from ["x","y"] to ('x','y') for mysql WHERE IN
 
 	filterValue = {
 		'rect' : {
@@ -68,6 +71,8 @@ def web_api(environ, start_response):
 			'end' : GET('et'),
 			'recent': GET('re'),
 		},
+		'days': days,
+		'layer': GET('layer'),
 		'keyword': GET('keyword'),
 	}
 
@@ -82,7 +87,7 @@ def web_api(environ, start_response):
 	return [content] 
 
 def static_app(environ, start_response):
-	"""Serve static files from the directory named in STATIC_FILE_DIR"""
+	"""Serve static files from the directory named in STATIC_FILE_DIR (/public)"""
 
 	path = environ['PATH_INFO']
 	path = get_static_path(path)
