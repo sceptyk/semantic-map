@@ -49,7 +49,7 @@ class Cloud_Parser(object):
 		return preprocess(data)
 
 	def get_data(self):
-
+		#TODO connect to db
 		loc_cursor = self.conn.cursor()
 		chunk_size = 10
 		start = 0
@@ -64,11 +64,14 @@ class Cloud_Parser(object):
 					twt = Tweet()
 					twt.populate(row)
 					self.store_data(twt)
+					if self.store_data(twt)==0:
+						continue
 				start = end
 				end += chunk_size
 			except Exception, e:
-				print(str(e))
-				break
+				tweet = twt.dict()
+				print tweet['_id']
+				print str(e)
 
 	def get_grid(self):
 		loc_rix = []
@@ -101,7 +104,7 @@ class Cloud_Parser(object):
 		r_list = []
 		stop = self.stopwords()
 		for word in list:
-			if word.lower() in stop or len(word) <= 2:
+			if word.lower() in stop or len(word) <= 2 or self.has_numbers(word) or self.has_http(word):
 				continue
 			else:
 				r_list.append(word)
@@ -123,6 +126,12 @@ class Cloud_Parser(object):
 		for word in list:
 			clear_list.append(word.replace(" ", ""))
 		return clear_list
+
+	def has_numbers(self, word):
+		return any(ch.isdigit() for ch in word)
+
+	def has_http(self, word):
+		return word.startswith('http')
 	#END: word/char elimination
 
 	#START: Helper functions to calculate metres per 1 degree considering the Earth's elevation
@@ -249,9 +258,6 @@ class Cloud_Parser(object):
 	#START: Cloud Table
 
 	def point_in_cloud(self, p_lat, p_lng, day, t, layer):
-		def_day = "TUE"
-		def_time = time.strftime("12:00:00")
-		loc_cursor = self.conn.cursor()
 		fetch = self.help_point_in_cloud(t, day, layer)
 
 		for coords in range(0, len(fetch)):
@@ -283,7 +289,6 @@ class Cloud_Parser(object):
 					continue
 			else:
 				continue
-		#print "Not found"
 		return 0
 
 	def help_point_in_cloud(self, t, day, layer):
@@ -428,14 +433,18 @@ class Cloud_Parser(object):
 			loc_cursor.execute(query, layer)
 			fetch = loc_cursor.fetchall()
 		return fetch
+
+	def error_cloud(self):
+		loc_cursor = self.conn.cursor()
+		query = """insert into cloud """
 	#END: Cloud Table
 
 	# START: Tweet_keyword table
-	def insert_twt_keyword(self, tweet_id, kword):
+	def insert_twt_keyword(self, tweet_id, kword, date):
 		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_keyword (_tweet, _keyword) values ('%s', '%s')"""
+		query = """insert into tweet_keywords (_tweet, _keyword, date) values ('%s', '%s', %s)"""
 		try:
-			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
+			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword), date))
 			self.conn.commit()
 		except:
 			self.conn.rollback()
@@ -457,18 +466,25 @@ class Cloud_Parser(object):
 		query = """select _id from tweet_keyword where _tweet = '%s' and _keyword = '%s' """
 		loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
 		return loc_cursor.fetchall()[0]
+
+	def fetch_twt_kword_date(self, tweet_id, kword):
+		loc_cursor = self.conn.cursor()
+		query = """select date from tweet_keyword where _tweet = '%s' and _keyword = '%s' """
+		loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
+		return loc_cursor.fetchall()[0]
 	# END: Tweet_keyword table
 
 	def store_data(self, tweet):
 		tweet = tweet.dict()
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
+		dt = self.obtain_Date(str(tweet['time']))
 		cloud = []
 		self.insert_keyword(text)
 		for layer in range(0, 5):
 			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
 		if cloud[0] == 0:
-			return
+			return 0
 
 		for each in text:
 			for c in cloud:
@@ -478,9 +494,9 @@ class Cloud_Parser(object):
 			self.insert_location(tweet['lat'], tweet['lng'], wrd)
 
 		for kw in text:
-			self.insert_twt_keyword(tweet['_id'], kw)
+			self.insert_twt_keyword(tweet['_id'], kw, dt)
 
-		print("NExt tweet")
+		print "NExt tweet"
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
@@ -491,3 +507,6 @@ class Cloud_Parser(object):
 		wk = week_day[datetime.date(year, month, day).weekday() + 1]
 		t = time.strftime(timestamp[10:20])
 		return wk, t
+
+	def obtain_Date(self, timestamp):
+		return time.strftime(timestamp[0:10])
