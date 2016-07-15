@@ -77,10 +77,10 @@ class Cloud_Parser(object):
 	def get_grid(self):
 		loc_rix = []
 		start_lat = 53.39806981341725
-		for i in range(self.size_h):
+		for i in range(0, self.size_h):
 			loc_rix.append([])
 			start_lng = -6.3686370849609375
-			for j in range(self.size_w):
+			for j in range(0, self.size_w):
 				loc_rix[i].append((start_lat, start_lng))
 				start_lng += 0.00488173872
 			start_lat -= 0.003145015
@@ -241,7 +241,6 @@ class Cloud_Parser(object):
 			start_lng = "%20.15lf" % fetch[coords][2]
 			end_lat = "%20.15lf" % fetch[coords][3]
 			end_lng = "%20.15lf" % fetch[coords][4]
-			print "Fetched"
 			if start_lng == p_lng:
 				p_lng += self.EDGE
 			if start_lat == p_lat:
@@ -254,7 +253,6 @@ class Cloud_Parser(object):
 				if float(start_lat) > float(p_lat):
 					if float(end_lng) > float(p_lng):
 						if float(end_lat) < float(p_lat):
-							print "point found"
 							return id
 						else:
 							continue
@@ -417,7 +415,7 @@ class Cloud_Parser(object):
 	# START: Tweet_keyword table
 	def insert_twt_keyword(self, tweet_id, kword):
 		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_keywords (_tweet, _keyword, date) values ('%s', '%s')"""
+		query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s')"""
 		try:
 			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
 			self.conn.commit()
@@ -461,8 +459,6 @@ class Cloud_Parser(object):
 
 		for kw in text:
 			self.insert_twt_keyword(tweet['_id'], kw)
-
-		print "NExt tweet"
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
