@@ -3,10 +3,14 @@ var heatmap;
 var paths;
 var grid;
 
+var layer = 4;
 var boundary;
 var originBounds = [{lat: 53.447171, lng: -6.421509}, {lat: 53.189579, lng: -6.017761}];
 
 var scope = window.location.hash || '#heatmap'; //#heatmap, #gridmap, #movement
+
+var thread = 'free';
+var timer = null;
 
 function initMap() {
     boundary = new google.maps.LatLngBounds(originBounds[0], originBounds[1]);
@@ -20,32 +24,50 @@ function initMap() {
         mapTypeControl: false
     });
 
+    map.addListener('zoom_changed', function(){
+        var zoom = map.getZoom();
+        var _layer;
+
+        if(zoom < 11){
+            _layer = 4;
+        }
+        else if(zoom < 13){
+            _layer = 3;
+        }
+        else if(zoom < 15){
+            _layer = 2;
+        }
+        else if(zoom < 17){
+            _layer = 1;
+        }
+        else{
+            _layer = 0;
+        }
+
+        clearTimeout(timer);
+        timer = setTimeout(function(_layer){
+            console.log(_layer, layer);
+            if(_layer != layer){
+                layer = _layer;
+                onGridMap();
+            }
+        }, 2000, _layer);
+    });
+
+    map.addListener('bounds_changed', function(){
+        //TODO register update of word cloud
+        //
+        
+        boundary = map.getBounds();
+
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            console.log('create new WordCloud');
+            createWordCloud();
+        }, 2000);
+    });
+
    $(document).ready(function(){
-
-    function onHeatMap(){
-        reset();
-        createHeatMap();
-        createPopularityMap();
-        setUrl('#heatmap');
-
-        //TODO set url #heatmap
-
-        //hide word cloud container
-        $(".heatmap-show").show();
-        $(".gridmap-show").hide();
-    }
-
-    function onGridMap(){
-
-        reset();
-        createGridHeatMap();
-        createWordCloud();
-        setUrl('#gridmap');
-
-        $(".gridmap-show").show();
-        $(".heatmap-show").hide();
-    }
-
 
     $("input#radio1").click(function(){
 
@@ -85,12 +107,49 @@ function initMap() {
         $("input#radio2").click();
         onGridMap();
     }
-
-    
     
    });
 
    
+}
+
+/**********************************************
+ *
+ *---------------UI CHANGE
+ *
+ * ********************************************/
+
+function onHeatMap(){
+    if(thread == "free"){
+        thrad = "busy";
+        reset();
+        createHeatMap();
+        createPopularityMap();
+        setUrl('#heatmap');
+
+        //TODO set url #heatmap
+
+        //hide word cloud container
+        $(".heatmap-show").show();
+        $(".gridmap-show").hide();
+
+        thread = "free";
+    }
+}
+
+function onGridMap(){
+    if(thread == "free"){
+        thrad = "busy";
+
+        reset();
+        createGridHeatMap();
+        createWordCloud();
+        setUrl('#gridmap');
+
+        $(".gridmap-show").show();
+        $(".heatmap-show").hide();
+        thread = "free";
+    }
 }
 
 function reset(){
@@ -107,15 +166,15 @@ function reset(){
  * ********************************************/
 function createGridHeatMap(){
 
-    map.fitBounds(boundary);
+    //map.fitBounds(boundary);
 
     grid = [];
 
     query('grid', function(sqs){
 
         //sqs: [slat, slng, elat, elng, weight]
-        console.log(sqs);
-
+        //console.log(sqs);
+        
         var max = sqs[0][4];
         for(var i=1,l=sqs.length;i<l;i++){
             if(sqs[i][4] > max) max = sqs[i][4];
@@ -147,8 +206,9 @@ function createGridHeatMap(){
                 reset();
                 
                 boundary = this.getBounds();
+                map.fitBounds(boundary);
                 
-                createGridHeatMap();
+                //createGridHeatMap();
             });
         }
 
@@ -175,8 +235,10 @@ function createWordCloud(){
 
     query('cloud', function(keywords){
 
+        //console.log(keywords);
+
         var list = [];
-        console.log(keywords);
+        
         var minFontSize = 16;
         var min = keywords[0][1];
 
@@ -349,6 +411,12 @@ function removeMovementMap(){
 
 }
 
+/**********************************************
+ *
+ *--------------QUERY HELPERS
+ *
+ * ********************************************/
+
 function getFilters(filters){
     //FIXME get only needed values
 
@@ -381,8 +449,7 @@ function getFilters(filters){
     days = JSON.stringify(days);
 
     //get layer
-    layer = 3;
-    //TODO
+    // global layer changed by zoom change
 
     return {
         slt: boundary.getNorthEast().lat(),
@@ -417,6 +484,12 @@ function query(type, filters, success){
         }
     );
 }
+
+/**********************************************
+ *
+ *---------------URL HELPERS
+ *
+ * ********************************************/
 
 function setUrl(_scope){
     scope = _scope;
