@@ -13,10 +13,10 @@ twitter_stream = Twitter_Stream_Collector(
 	access_token = '737973216262639618-KPr0Fvuk6AUgsm8AjCTZbBhAe3fzLN4',
 	access_secret = 'TQHGxJIQ8ze01jtsy9o65FwThvIK8JdHCsFnvWkNB5yfs')
 connection = pars.Cloud_Parser()
+print "Parser initialized"
 #END: Initialize runners
-
 #START: Initialize clouds
-gen.Cloud_Generator(64,64)
+#gen.Cloud_Generator(64,64)
 #END: Initialize clouds
 
 #START: Multi-threading

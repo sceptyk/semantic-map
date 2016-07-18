@@ -188,15 +188,15 @@ class Cloud_Parser(object):
 		if self.fetch_counter_id(kword, cloud) is None:
 			loc_cursor.execute(query, (kword, cloud))
 			self.conn.commit()
-			self.incr_counter_count(self.fetch_counter_id(kword, cloud))
+			self.incr_counter_count(self.fetch_counter_id(kword, cloud), self.fetch_keyword_id(kword), cloud)
 		else:
-			self.incr_counter_count(self.fetch_counter_id(kword, cloud))
+			self.incr_counter_count(self.fetch_counter_id(kword, cloud), self.fetch_keyword_id(kword), cloud)
 
-	def incr_counter_count(self, id):
+	def incr_counter_count(self, id, kw,cloud):
 		loc_cursor = self.conn.cursor()
-		fetch = """update word_counter set count = count + 1 where _id = '%s'"""
+		fetch = """update word_counter set count = count + 1 where _id = '%s' and _keyword = '%s' and _cloud = '%s'"""
 		try:
-			loc_cursor.execute(fetch, id)
+			loc_cursor.execute(fetch, (id, kw,cloud))
 			self.conn.commit()
 		except:
 			self.conn.rollback()
