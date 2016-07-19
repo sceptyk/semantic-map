@@ -10,7 +10,7 @@ class Cloud_Generator(object):
         self.conn = Mysql_Connect().get_connection()
         self.Matrix = self.get_coords()
         self.init_glob_cloud()
-        #self.populate_clouds()
+        self.populate_clouds()
 
     def get_coords(self):
         loc_rix = []
