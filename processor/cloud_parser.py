@@ -157,12 +157,13 @@ class Cloud_Parser(object):
 		loc_cursor.execute(query,word.lower())
 		return loc_cursor.fetchall()[0][0]
 
-	def insert_keyword(self, list):
+	def insert_keyword(self, list, tweet_id):
 		loc_cursor = self.conn.cursor()
 		query = """INSERT IGNORE INTO keywords (word) VALUES (%s)"""
 		keywords = []
 		for i in range(len(list)):
 				keywords.append(list[i].lower())
+				self.insert_twt_keyword(tweet_id, i)
 		try:
 			loc_cursor.executemany(query, keywords)
 			self.conn.commit()
@@ -436,8 +437,9 @@ class Cloud_Parser(object):
 		tweet = tweet.dict()
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
+		tweet_id = tweet['_id']
 		cloud = []
-		self.insert_keyword(text)
+		self.insert_keyword(tweet_id, text)
 		for layer in range(0, 5):
 			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
 
@@ -448,8 +450,6 @@ class Cloud_Parser(object):
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each), c)
 
-		for kw in text:
-			self.insert_twt_keyword(tweet['_id'], kw)
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
