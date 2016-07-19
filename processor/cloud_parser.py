@@ -5,6 +5,7 @@ import string
 import math
 import datetime
 import os
+import Geohash
 
 
 class Cloud_Parser(object):
@@ -450,7 +451,6 @@ class Cloud_Parser(object):
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each), c)
 
-
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 		timestamp = str(timestamp)
@@ -460,5 +460,12 @@ class Cloud_Parser(object):
 		wk = week_day[datetime.date(year, month, day).weekday() + 1]
 		t = time.strftime(timestamp[10:20])
 		return wk, t
+
+	def geohash_encode(self, lat, lng):
+
+		pass
+
+	def geohash_decode(self, hash):
+		pass
 
 
