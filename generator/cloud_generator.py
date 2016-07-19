@@ -13,14 +13,14 @@ class Cloud_Generator(object):
 
     def get_coords(self):
         loc_rix = []
-        start_lat = 53.39806981341725
+        start_lat = 53.50152546260909
         for i in range(self.size_h):
             loc_rix.append([])
-            start_lng = -6.3686370849609375
+            start_lng = -6.391296386718749
             for j in range(self.size_w):
                 loc_rix[i].append((start_lat, start_lng))
-                start_lng += 0.00488173872
-            start_lat -= 0.003145015
+                start_lng += 0.0022580788
+            start_lat -= 0.00224643929
         return loc_rix
 
     def rlat(self, deg):
@@ -112,7 +112,8 @@ class Cloud_Generator(object):
 
     def populate_clouds(self):
         days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-        for j in range(0, 5):
+        layers = [0,2,4]
+        for j in layers:
             for i in days:
                 self.insert_layer(j, time.strftime('4:00:00'), time.strftime('11:59:59'), i)
                 self.insert_layer(j, time.strftime('12:00:00'), time.strftime('16:59:59'), i)

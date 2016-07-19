@@ -16,7 +16,7 @@ connection = pars.Cloud_Parser()
 print "Parser initialized"
 #END: Initialize runners
 #START: Initialize clouds
-#gen.Cloud_Generator(64,64)
+gen.Cloud_Generator(128,128)
 #END: Initialize clouds
 
 #START: Multi-threading

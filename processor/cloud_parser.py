@@ -64,8 +64,9 @@ class Cloud_Parser(object):
 				for row in results:
 					twt = Tweet()
 					twt.populate(row)
-					self.store_data(twt)
-					if self.store_data(twt)==0:
+					try:
+						self.store_data(twt)
+					except:
 						continue
 				start = end
 				end += chunk_size
@@ -161,24 +162,13 @@ class Cloud_Parser(object):
 		query = """INSERT IGNORE INTO keywords (word) VALUES (%s)"""
 		keywords = []
 		for i in range(len(list)):
-			if self.kword_exist(list[i]) != 1:
 				keywords.append(list[i].lower())
-			else:
-				continue
 		try:
 			loc_cursor.executemany(query, keywords)
 			self.conn.commit()
 		except:
 			self.conn.rollback()
 
-	def kword_exist(self, word):
-		loc_cursor = self.conn.cursor()
-		query = """select 1 from keywords where word = %s"""
-		loc_cursor.execute(query, word)
-		try:
-			return loc_cursor.fetchall()[0][0]
-		except:
-			return 0
 	#END: Keywords table
 
 	#START: Counter table
@@ -450,8 +440,9 @@ class Cloud_Parser(object):
 		self.insert_keyword(text)
 		for layer in range(0, 5):
 			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
+
 		if cloud[0] == 0:
-			return 0
+			raise LookupError("Cloud not found")
 
 		for each in text:
 			for c in cloud:
