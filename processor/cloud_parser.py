@@ -5,7 +5,7 @@ import string
 import math
 import datetime
 import os
-import Geohash
+import Geohash as geo
 
 
 class Cloud_Parser(object):
@@ -16,42 +16,7 @@ class Cloud_Parser(object):
 		self.conn = Mysql_Connect().get_connection()
 		self.cursor = self.conn.cursor()
 
-	def process(self, data):
-		emoticons_str = r"""
-		    (?:
-		        [:=;] # Eyes
-		        [oO\-]? # Nose (optional)
-		        [D\)\]\(\]/\\OpP] # Mouth
-		    )"""
-		 
-		regex_str = [
-		    emoticons_str,
-		    r'<[^>]+>', # HTML tags
-		    r'(?:@[\w_]+)', # @-mentions
-		    r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
-		    r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
-		 
-		    r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
-		    r"(?:[a-z][a-z'\-_]+[a-z])", # words with - and '
-		    r'(?:[\w_]+)', # other words
-		    r'(?:\S)' # anything else
-		]
-		    
-		tokens_re = regex_str.compile(r'('+'|'.join(regex_str)+')', regex_str.VERBOSE | regex_str.IGNORECASE)
-		emoticon_re = emoticons_str.compile(r'^'+emoticons_str+'$', emoticons_str.VERBOSE | emoticons_str.IGNORECASE)
-		 
-		def tokenize(s):
-			return tokens_re.findall(s)
-		 
-		def preprocess(s, lowercase=False):
-			tokens = tokenize(s)
-			if lowercase:
-				tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
-			return tokens
-		return preprocess(data)
-
 	def get_data(self):
-		#TODO connect to db
 		loc_cursor = self.conn.cursor()
 		chunk_size = 10
 		start = 0
@@ -87,14 +52,6 @@ class Cloud_Parser(object):
 				start_lng += 0.00488173872
 			start_lat -= 0.003145015
 		return loc_rix
-
-	def test_grid(self):
-		for i in range(self.size_h):
-			for j in range(self.size_w):
-				print(self.Matrix[i][j])
-		print("Test separate coords")
-		print(self.Matrix[0][0])
-		print(self.Matrix[0][0][1])
 
 	def reset_increment(self):
 		clear = """truncate table cloud"""
@@ -158,13 +115,12 @@ class Cloud_Parser(object):
 		loc_cursor.execute(query,word.lower())
 		return loc_cursor.fetchall()[0][0]
 
-	def insert_keyword(self, list, tweet_id):
+	def insert_keyword(self, list):
 		loc_cursor = self.conn.cursor()
 		query = """INSERT IGNORE INTO keywords (word) VALUES (%s)"""
 		keywords = []
 		for i in range(len(list)):
-				keywords.append(list[i].lower())
-				self.insert_twt_keyword(tweet_id, i)
+			keywords.append(list[i].lower())
 		try:
 			loc_cursor.executemany(query, keywords)
 			self.conn.commit()
@@ -174,31 +130,31 @@ class Cloud_Parser(object):
 	#END: Keywords table
 
 	#START: Counter table
-	def insert_counter(self, kword, cloud):
+	def insert_counter(self, kword, cloud, time_index, day):
 		loc_cursor = self.conn.cursor()
-		query = """insert into word_counter (_keyword, _cloud) values ('%s', '%s')"""
-		if self.fetch_counter_id(kword, cloud) is None:
-			loc_cursor.execute(query, (kword, cloud))
+		query = """insert into word_counter (_keyword, _cloud, time_index, day) values ('%s', '%s', '%s', %s)"""
+		if self.fetch_counter_id(kword, cloud, time_index, day) is None:
+			loc_cursor.execute(query, (kword, cloud, time_index, day))
 			self.conn.commit()
-			self.incr_counter_count(self.fetch_counter_id(kword, cloud), self.fetch_keyword_id(kword), cloud)
+			self.incr_counter_count(self.fetch_counter_id(kword, cloud, time_index, day), kword, cloud, time_index, day)
 		else:
-			self.incr_counter_count(self.fetch_counter_id(kword, cloud), self.fetch_keyword_id(kword), cloud)
+			self.incr_counter_count(self.fetch_counter_id(kword, cloud, time_index, day), kword, cloud, time_index, day)
 
-	def incr_counter_count(self, id, kw,cloud):
+	def incr_counter_count(self, id, kw,cloud, time_index, day):
 		loc_cursor = self.conn.cursor()
-		fetch = """update word_counter set count = count + 1 where _id = '%s' and _keyword = '%s' and _cloud = '%s'"""
+		fetch = """update word_counter set count = count + 1 where _id = '%s' and _keyword = '%s' and _cloud = '%s' and time_index = '%s' and day = %s"""
 		try:
-			loc_cursor.execute(fetch, (id, kw,cloud))
+			loc_cursor.execute(fetch, (id, kw,cloud, time_index, day))
 			self.conn.commit()
 		except:
 			self.conn.rollback()
 			raise Exception("Counter id doesnt exist")
 
-	def fetch_counter_id(self, word, cloud):
+	def fetch_counter_id(self, word, cloud, time_index, day):
 		loc_cursor = self.conn.cursor()
-		query = """select _id from word_counter where _keyword = '%s' and _cloud = '%s'"""
+		query = """select _id from word_counter where _keyword = '%s' and _cloud = '%s' and time_index = '%s' and day = %s"""
 		try:
-			loc_cursor.execute(query, (word, cloud))
+			loc_cursor.execute(query, (word, cloud, time_index, day))
 			return loc_cursor.fetchall()[0][0]
 		except:
 			return None
@@ -224,15 +180,19 @@ class Cloud_Parser(object):
 
 	#START: Cloud Table
 
-	def point_in_cloud(self, p_lat, p_lng, day, t, layer):
-		fetch = self.help_point_in_cloud(t, day, layer)
+	def point_in_cloud(self, p_lat, p_lng, layer):
+		fetch = self.help_point_in_cloud(layer)
 
 		for coords in range(0, len(fetch)):
 			id = fetch[coords][0]
-			start_lat = "%20.15lf" % fetch[coords][1]
-			start_lng = "%20.15lf" % fetch[coords][2]
-			end_lat = "%20.15lf" % fetch[coords][3]
-			end_lng = "%20.15lf" % fetch[coords][4]
+			decode_start = geo.decode(fetch[coords][1])
+			decode_end = geo.decode(fetch[coords][2])
+
+			start_lat = "%20.15lf" % float(decode_start[0])
+			start_lng = "%20.15lf" % float(decode_start[1])
+			end_lat = "%20.15lf" % float(decode_end[0])
+			end_lng = "%20.15lf" % float(decode_end[1])
+
 			if start_lng == p_lng:
 				p_lng += self.EDGE
 			if start_lat == p_lat:
@@ -256,11 +216,10 @@ class Cloud_Parser(object):
 				continue
 		return 0
 
-	def help_point_in_cloud(self, t, day, layer):
+	def help_point_in_cloud(self, layer):
 		loc_cursor = self.conn.cursor()
 		list = []
-		query = """select _id, start_lat, start_lng, end_lat, end_lng from cloud where start_time <= '%s' and end_time >= '%s' and day = '%s' and layer = '%s' """ % (
-		t, t, day, layer)
+		query = """select _id, start_crds, end_crds from cloud where layer = '%s' """ % layer
 		loc_cursor.execute(query)
 		for each in loc_cursor.fetchall():
 			list.append(each)
@@ -268,24 +227,22 @@ class Cloud_Parser(object):
 
 	def get_cloud_coords(self, id):
 		local_cursor = self.conn.cursor()
-		query = """select start_lat, start_lng, end_lat, end_lng from cloud where _id = '%s'""" % id
+		query = """select start_crds, end_crds from cloud where _id = '%s'""" % id
 		local_cursor.execute(query)
 		return local_cursor.fetchall()[0]
 
-	def cloud_exists(self, s_lat, s_lng, e_lat, e_lng):
+	def cloud_exists(self, start_crds, end_crds):
 		loc_cursor = self.conn.cursor()
-		query = """ select exists(select * from cloud where start_lat = '%s' and start_lng = '%s' and end_lat = '%s'
-																	and end_lng = '%s');"""
-		loc_cursor.execute(query, (s_lat, s_lng, e_lat, e_lng))
+		query = """ select exists(select * from cloud where start_crds = %s and end_crds = %s);"""
+		loc_cursor.execute(query, (start_crds, end_crds))
 		return loc_cursor.fetchall()[0][0]
 
-	def get_cloud_id(self, s_lat, s_lng, end_lat, end_lng, time, day, layer):
+	def get_cloud_id(self, start_crds, end_crds, layer):
 		loc_cursor = self.conn.cursor()
 		output = []
-		query = """select _id from cloud where start_lat = '%s' AND start_lng = '%s' and end_lat = '%s'
-																		and end_lng = '%s' and time = %s and day = %s and layer = '%s'"""
+		query = """select _id from cloud where start_crds = %s AND end_crds = %s and layer = '%s'"""
 		try:
-			loc_cursor.execute(query, (s_lat, s_lng, end_lat, end_lng, time, day, layer))
+			loc_cursor.execute(query, (start_crds, end_crds, layer))
 		except:
 			raise Exception("Cant fetch id - cloud doesnt exist")
 		out = loc_cursor.fetchall()
@@ -295,113 +252,19 @@ class Cloud_Parser(object):
 
 	def layers(self, layer):
 		loc_cursor = self.conn.cursor()
-		def_time = time.strftime("12:00:00")
-		def_day = "TUE"
-		query = """select start_lat, start_lng, end_lat, end_lng from cloud where start_time = %s and day = %s and layer = '%s' """
-		loc_cursor.execute(query, (def_time, def_day, layer))
+		query = """select start_crds, end_crds from cloud where layer = '%s' """
+		loc_cursor.execute(query, layer)
 		return loc_cursor.fetchall()
-
-	def clouds_in_clouds(self, cloud_id):
-		coords = self.get_cloud_coords(cloud_id) #[0] start_lat, [1] start_lng, [2] end_lat, [3] end_lng
-		loc_cursor = self.conn.cursor()
-		result = []
-		def_time = time.strftime("12:00:00")
-		def_day = "TUE"
-		query = """select _id from cloud where
-					start_lat >  '%s' and
-					start_lat <= '%s' and
-					start_lng <  '%s' and
-					start_lng >= '%s' and
-					end_lat   <  '%s' and
-					end_lat	  >= '%s' and
-					end_lng   >  '%s' and
-					end_lng   <= '%s' and
-					start_time =  %s  and
-					day = %s;
-					"""
-		try:
-			loc_cursor.execute(query, (coords[2], coords[0],coords[3],coords[1],coords[0],coords[2],coords[1],coords[3],
-									   def_time, def_day))
-		except:
-			raise Exception("Cloud doesnt exist")
-		out = loc_cursor.fetchall()
-		for i in range(0,len(out)):
-			result.append(out[i][0])
-		return result
-
-	def custom_cloud(self, start_lat, start_lng, end_lat,end_lng):  #useless atm - needs to be fixed
-		#10000% private method - user MUST NOT be able to access it under any circumstances !
-		loc_cursor = self.conn.cursor()
-		if self.coord_in_grid(start_lat, start_lng):
-			if self.coord_in_grid(end_lat,
-								  end_lng):  # Some calculations will be needed in order to identify the actual position
-				if float(start_lat) > float(end_lat):
-					if float(start_lng) < float(end_lng):
-						if self.cloud_exists(start_lat, start_lng, end_lat, end_lng) != 1:
-							# All checks passed - can make a safe query now
-							morning = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
-								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
-																								  end_lat, end_lng,
-																								  time.strftime(
-																									  '4:00:00'),
-																								  time.strftime(
-																									  '11:59:59'))
-							try:
-								loc_cursor.execute(morning)
-								self.conn.commit()
-							except:
-								self.conn.rollback()
-							a_noon = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
-								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
-																								  end_lat, end_lng,
-																								  time.strftime(
-																									  '12:00:00'),
-																								  time.strftime(
-																									  '16:59:59'))
-							try:
-								loc_cursor.execute(a_noon)
-								self.conn.commit()
-							except:
-								self.conn.rollback()
-							evenin = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
-								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
-																								  end_lat, end_lng,
-																								  time.strftime(
-																									  '17:00:00'),
-																								  time.strftime(
-																									  '21:59:59'))
-							try:
-								loc_cursor.execute(evenin)
-								self.conn.commit()
-							except:
-								self.conn.rollback()
-							night = """INSERT INTO cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time)
-								VALUES (%20.15lf, %20.15lf, %20.15lf, %20.15lf, '%s', '%s')""" % (start_lat, start_lng,
-																								  end_lat, end_lng,
-																								  time.strftime(
-																									  '22:00:00'),
-																								  time.strftime(
-																									  '3:59:59'))
-							try:
-								loc_cursor.execute(night)
-								self.conn.commit()
-							except:
-								self.conn.rollback()
-
-		return self.get_cloud_id(start_lat, start_lng, end_lat, end_lng)
 
 	def get_layer_coords(self, layer):
 		loc_cursor = self.conn.cursor()
 		fetch = []
 		if 0 <= layer < 5:
-			query = """select start_lat, start_lng, end_lat, end_lng from cloud where layer = '%s'"""
+			query = """select start_crds, end_crds from cloud where layer = '%s'"""
 			loc_cursor.execute(query, layer)
 			fetch = loc_cursor.fetchall()
 		return fetch
 
-	def error_cloud(self):
-		loc_cursor = self.conn.cursor()
-		query = """insert into cloud """
 	#END: Cloud Table
 
 	# START: Tweet_keyword table
@@ -438,34 +301,31 @@ class Cloud_Parser(object):
 		tweet = tweet.dict()
 		text = self.elim_useless(tweet['text'])
 		day = self.parse_timestamp(tweet['time'])
+		time_i = self.time_index(day[1])
+		lyrs = [0,2,4]
 		tweet_id = tweet['_id']
 		cloud = []
-		self.insert_keyword(tweet_id, text)
-		for layer in range(0, 5):
-			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], day[0], day[1], layer))
+		self.insert_keyword(text)
 
-		if cloud[0] == 0:
-			raise LookupError("Cloud not found")
-
+		for layer in lyrs:
+			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], layer))
+		if cloud[0] == 0: raise LookupError("Cloud not found")
 		for each in text:
 			for c in cloud:
-				self.insert_counter(self.fetch_keyword_id(each), c)
+				self.insert_counter(self.fetch_keyword_id(each),c ,time_i, day[0])
+		for word in text: self.insert_twt_keyword(tweet_id, word)
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 		timestamp = str(timestamp)
-		year = int(timestamp[0:4])
-		month = int(timestamp[5:7])
-		day = int(timestamp[8:10])
-		wk = week_day[datetime.date(year, month, day).weekday() + 1]
-		t = time.strftime(timestamp[10:20])
+		wk = week_day[datetime.date(int(timestamp[0:4]), int(timestamp[5:7]), int(timestamp[8:10])).weekday() + 1]
+		t = time.strftime(timestamp[11:20])
 		return wk, t
 
-	def geohash_encode(self, lat, lng):
-
-		pass
-
-	def geohash_decode(self, hash):
-		pass
-
+	def time_index(self, t):
+		if time.strftime('04:00:00') <= t <= time.strftime('11:59:59') : return 1
+		if time.strftime('12:00:00') <= t <= time.strftime('16:59:59'): return 2
+		if time.strftime('17:00:00') <= t <= time.strftime('21:59:59'): return 3
+		if time.strftime('22:00:00') <= t <= time.strftime('03:59:59') : return 4
+		else: return 0
 

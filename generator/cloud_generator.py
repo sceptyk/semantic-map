@@ -1,6 +1,7 @@
 import math
 from collector.mysql_connect import Mysql_Connect
 import time
+import Geohash as geo
 
 class Cloud_Generator(object):
     def __init__(self,x,y):
@@ -9,7 +10,7 @@ class Cloud_Generator(object):
         self.conn = Mysql_Connect().get_connection()
         self.Matrix = self.get_coords()
         self.init_glob_cloud()
-        self.populate_clouds()
+        #self.populate_clouds()
 
     def get_coords(self):
         loc_rix = []
@@ -21,6 +22,7 @@ class Cloud_Generator(object):
                 loc_rix[i].append((start_lat, start_lng))
                 start_lng += 0.0022580788
             start_lat -= 0.00224643929
+        print "Matrix obtained"
         return loc_rix
 
     def rlat(self, deg):
@@ -49,14 +51,9 @@ class Cloud_Generator(object):
 
         CREATE_CLOUD_TABLE = """CREATE TABLE  cloud  (
     		               _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
-    		               start_lat  DOUBLE(12,7) NULL COMMENT '',
-    		               start_lng  DOUBLE(12,7) NULL COMMENT '',
-    		               end_lat  DOUBLE(12,7) NULL COMMENT '',
-    		               end_lng  DOUBLE(12,7) NULL COMMENT '',
-    		               start_time  TIME NULL COMMENT '',
-    		               end_time  TIME NULL COMMENT '',
+    		               start_crds  CHAR(20) NULL COMMENT '',
+    		               end_crds  CHAR(20) NULL COMMENT '',
     		               layer INT(1) NULL COMMENT '',
-    		               day CHAR(3) NULL COMMENT '',
     		              PRIMARY KEY ( _id )  COMMENT '');"""
         try:
             loc_cursor.execute(CREATE_CLOUD_TABLE)
@@ -68,6 +65,8 @@ class Cloud_Generator(object):
     					   _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
     					   _keyword  BIGINT UNSIGNED NOT NULL COMMENT '',
     					   _cloud  BIGINT UNSIGNED NOT NULL COMMENT '',
+    					   time_index BIGINT NOT NULL COMMENT '',
+    					   day CHAR(3) NOT NULL COMMENT '',
     					   count  BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
     					  PRIMARY KEY ( _id )  COMMENT '',
     					  INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
@@ -111,29 +110,24 @@ class Cloud_Generator(object):
             self.conn.rollback()
 
     def populate_clouds(self):
-        days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
         layers = [0,2,4]
         for j in layers:
-            for i in days:
-                self.insert_layer(j, time.strftime('4:00:00'), time.strftime('11:59:59'), i)
-                self.insert_layer(j, time.strftime('12:00:00'), time.strftime('16:59:59'), i)
-                self.insert_layer(j, time.strftime('17:00:00'), time.strftime('21:59:59'), i)
-                self.insert_layer(j, time.strftime('22:00:00'), time.strftime('3:59:59'), i)
+            self.insert_layer(j)
 
-    def insert_layer(self, layer, s_time, e_time, day):  # 5 layers - 0 to 4 (timestamp - time.strftime('22:00:00'))
+    def insert_layer(self, layer):  # 5 layers - 0 to 4 (timestamp - time.strftime('22:00:00'))
         loc_cursor = self.conn.cursor()
         itr = int(math.pow(2, layer))
-        count = 0
-        query = """insert into cloud (start_lat, start_lng, end_lat, end_lng, start_time, end_time, layer, day)
-            values ('%s','%s','%s','%s', %s, %s, '%s', %s)"""
+        query = """insert into cloud (start_crds, end_crds, layer)
+            values (%s,%s,'%s')"""
         values = []
         for i in range(0, self.size_h - itr, itr):
             for j in range(0, self.size_w - itr, itr):
-                values.append((self.Matrix[i][j][0], self.Matrix[i][j][1], self.Matrix[i + itr][j + itr][0],
-                                self.Matrix[i + itr][j + itr][1], s_time, e_time, layer, day))
+                values.append((geo.encode(self.Matrix[i][j][0], self.Matrix[i][j][1], 20), geo.encode(self.Matrix[i + itr][j + itr][0],
+                                self.Matrix[i + itr][j + itr][1],20),layer))
         try:
             loc_cursor.executemany(query,values)
             self.conn.commit()
         except:
+            print "insert layer"
             self.conn.rollback()
 
