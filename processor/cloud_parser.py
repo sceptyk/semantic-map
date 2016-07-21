@@ -5,7 +5,6 @@ import string
 import math
 import datetime
 import os
-import Geohash as geo
 
 
 class Cloud_Parser(object):

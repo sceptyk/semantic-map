@@ -1,8 +1,7 @@
 import math
 from collector.mysql_connect import Mysql_Connect
 import time
-import Geohash as geo
-
+import geohash as geo
 class Cloud_Generator(object):
     def __init__(self,x,y):
         self.size_h = y
@@ -10,7 +9,7 @@ class Cloud_Generator(object):
         self.conn = Mysql_Connect().get_connection()
         self.Matrix = self.get_coords()
         self.init_glob_cloud()
-        self.populate_clouds()
+        #self.populate_clouds()
 
     def get_coords(self):
         loc_rix = []
@@ -64,21 +63,18 @@ class Cloud_Generator(object):
         CREATE_COUNTER_TABLE = """CREATE TABLE  word_counter  (
     					   _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
     					   _keyword  BIGINT UNSIGNED NOT NULL COMMENT '',
-    					   _cloud  BIGINT UNSIGNED NOT NULL COMMENT '',
+    					   _cloud  CHAR(10) UNSIGNED NOT NULL COMMENT '',
+    					   layer INT(1) NOT NULL COMMENT '',
     					   time_index BIGINT NOT NULL COMMENT '',
     					   day CHAR(3) NOT NULL COMMENT '',
     					   count  BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
     					  PRIMARY KEY ( _id )  COMMENT '',
-    					  INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
-    					  INDEX  cloud_idx  ( _cloud  ASC)  COMMENT '',
+    					  UNIQUE INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
+    					  UNIQUE INDEX  cloud_idx  ( _cloud  ASC)  COMMENT '',
+    					  UNIQUE INDEX layer_idx ( layer ASC) COMMENT '',
     					  CONSTRAINT  keyword
     						FOREIGN KEY ( _keyword )
     						REFERENCES  keywords  ( _id )
-    						ON DELETE NO ACTION
-    						ON UPDATE NO ACTION,
-    					  CONSTRAINT  cloud
-    						FOREIGN KEY (_cloud)
-    						REFERENCES cloud  ( _id )
     						ON DELETE NO ACTION
     						ON UPDATE NO ACTION);"""
         try:
@@ -91,8 +87,8 @@ class Cloud_Generator(object):
     		               _tweet  BIGINT UNSIGNED NOT NULL COMMENT '',
     		               _keyword  BIGINT UNSIGNED NOT NULL COMMENT '',
     		              PRIMARY KEY ( _id )  COMMENT '',
-    		              INDEX  tweet_idx  ( _tweet  ASC)  COMMENT '',
-    		              INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
+    		              UNIQUE INDEX  tweet_idx  ( _tweet  ASC)  COMMENT '',
+    		              UNIQUE INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
     		              CONSTRAINT  tweet
     		                FOREIGN KEY ( _tweet )
     		                REFERENCES  tweets  ( _id )
