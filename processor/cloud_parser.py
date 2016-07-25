@@ -5,6 +5,7 @@ import string
 import math
 import datetime
 import os
+import base64 as enc
 
 
 class Cloud_Parser(object):
@@ -39,18 +40,6 @@ class Cloud_Parser(object):
 				tweet = twt.dict()
 				print tweet['_id']
 				print str(e)
-
-	def get_grid(self):
-		loc_rix = []
-		start_lat = 53.39806981341725
-		for i in range(0, self.size_h):
-			loc_rix.append([])
-			start_lng = -6.3686370849609375
-			for j in range(0, self.size_w):
-				loc_rix[i].append((start_lat, start_lng))
-				start_lng += 0.00488173872
-			start_lat -= 0.003145015
-		return loc_rix
 
 	def reset_increment(self):
 		clear = """truncate table cloud"""
@@ -92,21 +81,43 @@ class Cloud_Parser(object):
 	def has_http(self, word):
 		return word.startswith('http')
 	#END: word/char elimination
+#START: precision to coord distance
+	def obtain_metres(self, precision):
+		if precision == 0.2:
+			return 250
+		elif precision == 0.6:
+			return 750
+		elif precision == 1.2:
+			return 1200
+		else:
+			return 0
 
-	#START: Helper functions to calculate metres per 1 degree considering the Earth's elevation
-	def rlat(self, deg):
+	def metres_per_lat(self, deg):
+		return 111132.92 - 559.82 * math.cos(2 * self.helper_coords(deg))
+
+	def obtain_deg(self, direction, pos, precision):
+		if direction == "lat":
+			return self.precision_to_metres(precision) / self.metres_per_lat(pos)
+		elif direction == "lng":
+			return self.precision_to_metres(precision) / self.metres_per_lng(pos)
+		else:
+			return 0
+
+	def helper_coords(self, deg):
 		return (deg * math.pi) / 180
 
-	def metres_per_lat(self, rlat):
-		return 111132.92 - 559.82 * math.cos(2 * rlat)
+	def metres_per_lng(self, deg):
+		return 111412.84 * math.cos(self.helper_coords(deg)) - 93.5 * math.cos(3 * self.helper_coords(deg))
 
-	def rlng(self, deg):
-		return (deg * math.pi) / 180
-
-	def metres_per_lng(self, rlng):
-		return 111412.84 * math.cos(rlng) - 93.5 * math.cos(3 * rlng)
-	#END: Helper functions to calculate metres per 1 degree considering the Earth's elevation
-
+	def precision_to_metres(self, precision):
+		if precision == 0.2:
+			return 250
+		elif precision == 0.6:
+			return 750
+		elif precision == 1.2:
+			return 1200
+		else:
+			return 0
 	#START: Keywords table
 	def fetch_keyword_id(self, word):
 		loc_cursor = self.conn.cursor()
@@ -177,95 +188,6 @@ class Cloud_Parser(object):
 			raise Exception("Counter doesnt exist")
 	#END: Counter table
 
-	#START: Cloud Table
-
-	def point_in_cloud(self, p_lat, p_lng, layer):
-		fetch = self.help_point_in_cloud(layer)
-
-		for coords in range(0, len(fetch)):
-			id = fetch[coords][0]
-			decode_start = geo.decode(fetch[coords][1])
-			decode_end = geo.decode(fetch[coords][2])
-
-			start_lat = "%20.15lf" % float(decode_start[0])
-			start_lng = "%20.15lf" % float(decode_start[1])
-			end_lat = "%20.15lf" % float(decode_end[0])
-			end_lng = "%20.15lf" % float(decode_end[1])
-
-			if start_lng == p_lng:
-				p_lng += self.EDGE
-			if start_lat == p_lat:
-				p_lat += self.EDGE
-			if end_lng == p_lng:
-				p_lng -= self.EDGE
-			if end_lat == p_lat:
-				p_lat -= self.EDGE
-			if float(start_lng) < float(p_lng):
-				if float(start_lat) > float(p_lat):
-					if float(end_lng) > float(p_lng):
-						if float(end_lat) < float(p_lat):
-							return id
-						else:
-							continue
-					else:
-						continue
-				else:
-					continue
-			else:
-				continue
-		return 0
-
-	def help_point_in_cloud(self, layer):
-		loc_cursor = self.conn.cursor()
-		list = []
-		query = """select _id, start_crds, end_crds from cloud where layer = '%s' """ % layer
-		loc_cursor.execute(query)
-		for each in loc_cursor.fetchall():
-			list.append(each)
-		return list
-
-	def get_cloud_coords(self, id):
-		local_cursor = self.conn.cursor()
-		query = """select start_crds, end_crds from cloud where _id = '%s'""" % id
-		local_cursor.execute(query)
-		return local_cursor.fetchall()[0]
-
-	def cloud_exists(self, start_crds, end_crds):
-		loc_cursor = self.conn.cursor()
-		query = """ select exists(select * from cloud where start_crds = %s and end_crds = %s);"""
-		loc_cursor.execute(query, (start_crds, end_crds))
-		return loc_cursor.fetchall()[0][0]
-
-	def get_cloud_id(self, start_crds, end_crds, layer):
-		loc_cursor = self.conn.cursor()
-		output = []
-		query = """select _id from cloud where start_crds = %s AND end_crds = %s and layer = '%s'"""
-		try:
-			loc_cursor.execute(query, (start_crds, end_crds, layer))
-		except:
-			raise Exception("Cant fetch id - cloud doesnt exist")
-		out = loc_cursor.fetchall()
-		for i in range(0, 4):
-			output.append(out[i][0])
-		return output
-
-	def layers(self, layer):
-		loc_cursor = self.conn.cursor()
-		query = """select start_crds, end_crds from cloud where layer = '%s' """
-		loc_cursor.execute(query, layer)
-		return loc_cursor.fetchall()
-
-	def get_layer_coords(self, layer):
-		loc_cursor = self.conn.cursor()
-		fetch = []
-		if 0 <= layer < 5:
-			query = """select start_crds, end_crds from cloud where layer = '%s'"""
-			loc_cursor.execute(query, layer)
-			fetch = loc_cursor.fetchall()
-		return fetch
-
-	#END: Cloud Table
-
 	# START: Tweet_keyword table
 	def insert_twt_keyword(self, tweet_id, kword):
 		loc_cursor = self.conn.cursor()
@@ -306,8 +228,8 @@ class Cloud_Parser(object):
 		cloud = []
 		self.insert_keyword(text)
 
-		for layer in lyrs:
-			cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], layer))
+		#for layer in lyrs:
+		#	cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], layer))
 		if cloud[0] == 0: raise LookupError("Cloud not found")
 		for each in text:
 			for c in cloud:
@@ -328,3 +250,22 @@ class Cloud_Parser(object):
 		if time.strftime('22:00:00') <= t <= time.strftime('03:59:59') : return 4
 		else: return 0
 
+	#START: Cloud - final
+
+	def pos_coords(self, lat, lng):
+		return lat +180, lng+180
+
+	def grid_coords(self, lat, lng, s_lat, s_lng):
+		return lat - s_lat, lng - s_lng
+
+	def apply_precision(self, lat, lng, prec):
+		return lat/prec, lng/prec
+
+	def col_count(self,s_lng, e_lng, prec_crds):
+		return (s_lng-e_lng)/prec_crds
+
+	def hashing(self, lat, lng, columns):
+		return enc.b64encode(lng*columns+lat)
+
+	def cloud_process(self, lat, lng, s_lat, s_lng, prec, crds_prec):
+		pass

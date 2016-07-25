@@ -7,34 +7,11 @@ class Cloud_Generator(object):
         self.size_h = y
         self.size_w = x
         self.conn = Mysql_Connect().get_connection()
-        self.Matrix = self.get_coords()
+       #self.Matrix = self.get_coords()
         self.init_glob_cloud()
         #self.populate_clouds()
 
-    def get_coords(self):
-        loc_rix = []
-        start_lat = 53.50152546260909
-        for i in range(self.size_h):
-            loc_rix.append([])
-            start_lng = -6.391296386718749
-            for j in range(self.size_w):
-                loc_rix[i].append((start_lat, start_lng))
-                start_lng += 0.0022580788
-            start_lat -= 0.00224643929
-        print "Matrix obtained"
-        return loc_rix
 
-    def rlat(self, deg):
-        return (deg * math.pi) / 180
-
-    def metres_per_lat(self, rlat):
-        return 111132.92 - 559.82 * math.cos(2 * rlat)
-
-    def rlng(self, deg):
-        return (50 * math.pi) / 180
-
-    def metres_per_lng(self, rlng):
-        return 111412.84 * math.cos(rlng) - 93.5 * math.cos(3 * rlng)
 
     def init_glob_cloud(self):
         loc_cursor = self.conn.cursor()
@@ -105,25 +82,12 @@ class Cloud_Generator(object):
         except:
             self.conn.rollback()
 
-    def populate_clouds(self):
-        layers = [0,2,4]
-        for j in layers:
-            self.insert_layer(j)
+    def create_cloud(self, hash):
+        loc_cursor = self.conn .cursor()
+        query = """INSERT IF NOT EXISTS INTO cloud (cloud) (%s)"""
 
-    def insert_layer(self, layer):  # 5 layers - 0 to 4 (timestamp - time.strftime('22:00:00'))
-        loc_cursor = self.conn.cursor()
-        itr = int(math.pow(2, layer))
-        query = """insert into cloud (start_crds, end_crds, layer)
-            values (%s,%s,'%s')"""
-        values = []
-        for i in range(0, self.size_h - itr, itr):
-            for j in range(0, self.size_w - itr, itr):
-                values.append((geo.encode(self.Matrix[i][j][0], self.Matrix[i][j][1], 20), geo.encode(self.Matrix[i + itr][j + itr][0],
-                                self.Matrix[i + itr][j + itr][1],20),layer))
-        try:
-            loc_cursor.executemany(query,values)
-            self.conn.commit()
-        except:
-            print "insert layer"
-            self.conn.rollback()
+        loc_cursor.execute(query, hash)
+        pass
+
+
 
