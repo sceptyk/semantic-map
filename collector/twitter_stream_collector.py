@@ -17,6 +17,9 @@ class Twitter_Stream_Collector(Twitter_Collector):
 
 			if _json['coordinates'] is None:
 				_json['coordinates'] = {'coordinates': [0.0,0.0]}
+			elif _json['coordinates']['coordinates'] == [53.3478,-6.2597]:
+				# if point from default dublin centre remove it
+				print(_json['coordinates']['coordinates'])
 			else:
 				parsed = self.outer.process_data(_json)
 				self.outer.store_data([parsed])
