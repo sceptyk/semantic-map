@@ -81,43 +81,7 @@ class Cloud_Parser(object):
 	def has_http(self, word):
 		return word.startswith('http')
 	#END: word/char elimination
-#START: precision to coord distance
-	def obtain_metres(self, precision):
-		if precision == 0.2:
-			return 250
-		elif precision == 0.6:
-			return 750
-		elif precision == 1.2:
-			return 1200
-		else:
-			return 0
 
-	def metres_per_lat(self, deg):
-		return 111132.92 - 559.82 * math.cos(2 * self.helper_coords(deg))
-
-	def obtain_deg(self, direction, pos, precision):
-		if direction == "lat":
-			return self.precision_to_metres(precision) / self.metres_per_lat(pos)
-		elif direction == "lng":
-			return self.precision_to_metres(precision) / self.metres_per_lng(pos)
-		else:
-			return 0
-
-	def helper_coords(self, deg):
-		return (deg * math.pi) / 180
-
-	def metres_per_lng(self, deg):
-		return 111412.84 * math.cos(self.helper_coords(deg)) - 93.5 * math.cos(3 * self.helper_coords(deg))
-
-	def precision_to_metres(self, precision):
-		if precision == 0.2:
-			return 250
-		elif precision == 0.6:
-			return 750
-		elif precision == 1.2:
-			return 1200
-		else:
-			return 0
 	#START: Keywords table
 	def fetch_keyword_id(self, word):
 		loc_cursor = self.conn.cursor()
@@ -251,21 +215,66 @@ class Cloud_Parser(object):
 		else: return 0
 
 	#START: Cloud - final
+	def obtain_metres(self, precision):
+		if precision == 0.2:
+			return 250
+		elif precision == 0.6:
+			return 750
+		elif precision == 1.2:
+			return 1200
+		else:
+			return 0
+
+	def metres_per_lat(self, deg):
+		return 111132.92 - 559.82 * math.cos(2 * self.helper_coords(deg))
+
+	def obtain_deg(self, direction, pos, precision):
+		if direction == "lat":
+			return self.precision_to_metres(precision) / self.metres_per_lat(pos)
+		elif direction == "lng":
+			return self.precision_to_metres(precision) / self.metres_per_lng(pos)
+		else:
+			return 0
+
+	def helper_coords(self, deg):
+		return (deg * math.pi) / 180
+
+	def metres_per_lng(self, deg):
+		return 111412.84 * math.cos(self.helper_coords(deg)) - 93.5 * math.cos(3 * self.helper_coords(deg))
+
+	def precision_to_metres(self, precision):
+		if precision == 0.2:
+			return 250
+		elif precision == 0.6:
+			return 750
+		elif precision == 1.2:
+			return 1200
+		else:
+			return 0
 
 	def pos_coords(self, lat, lng):
-		return lat +180, lng+180
+		return lat + 180, lng + 180
 
 	def grid_coords(self, lat, lng, s_lat, s_lng):
 		return lat - s_lat, lng - s_lng
 
 	def apply_precision(self, lat, lng, prec):
-		return lat/prec, lng/prec
+		return lat / prec, lng / prec
 
-	def col_count(self,s_lng, e_lng, prec_crds):
-		return (s_lng-e_lng)/prec_crds
+	def col_count(self, s_lng, e_lng, prec_crds):
+		if (e_lng - s_lng) / prec_crds == abs((e_lng - s_lng) / prec_crds):
+			return math.ceil((e_lng - s_lng) / prec_crds)
+		else:
+			return 0
 
 	def hashing(self, lat, lng, columns):
-		return enc.b64encode(lng*columns+lat)
+		print lat, lng, columns
+		return enc.b64encode(str(lat * columns + lng))
 
-	def cloud_process(self, lat, lng, s_lat, s_lng, prec, crds_prec):
-		pass
+	def cloud_process(self, lat, lng, s_lat, s_lng, prec, pos_lng, glob_e_lng):
+		grid_crds = self.grid_coords(self.pos_coords(lat, lng)[0], self.pos_coords(lat, lng)[1], s_lat, s_lng)
+		print grid_crds
+		apply_prec = self.apply_precision(grid_crds[0], grid_crds[1], prec)
+		print apply_prec
+		return self.hashing(math.floor(apply_prec[0]), math.floor(apply_prec[1]),
+					   self.col_count(s_lng, glob_e_lng, self.obtain_deg("lng", pos_lng, prec)))
