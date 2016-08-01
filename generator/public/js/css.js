@@ -1,32 +1,31 @@
 $(function() {
-    $("#slider-time").slider({
+
+    //SLIDER TIME
+    $("#input-time").slider({
         range: true,
         min: 0,
         max: 24,
         step: 1,
         values: [0, 24],
         slide: function(event, ui) {
-            $("#range-time").text(ui.values[0] + ":00 - " + ui.values[1] + ":00");
+            $("#input-time-value").text(ui.values[0] + ":00 - " + ui.values[1] + ":00");
         }
     });
     
-    $("#range-time").text($("#slider-time").slider("values", 0) + ":00 - " + $("#slider-time").slider("values", 1) + ":00");
-    
-    $("#slider-recent").slider({
-        range: "min",
-        min: 1,
-        max: 48,
-        value: 12,
+    $("#input-time-value").text($("#input-time").slider("values", 0) + ":00 - " + $("#input-time").slider("values", 1) + ":00");
+
+    //SLIDER DATE
+    $("#input-date").slider({
+        range: true,
+        min: 0,
+        max: 24,
+        step: 1,
+        values: [0, 24],
         slide: function(event, ui) {
-            $("#range-recent").text(ui.value);
+            $("#input-date-value").text(ui.values[0] + ":00 - " + ui.values[1] + ":00");
         }
     });
-
-    $("#range-recent").text($("#slider-recent").slider('value'));
-
-    $("#radio").buttonset();
-
-    $("input[type=checkbox]").checkboxradio({
-        icon: false
-    });
+    
+    $("#input-date-value").text($("#input-time").slider("values", 0) + ":00 - " + $("#input-time").slider("values", 1) + ":00");
+    
 });

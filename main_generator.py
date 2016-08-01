@@ -54,26 +54,16 @@ def web_api(environ, start_response):
 	d = parse_qs(environ['QUERY_STRING'])
 
 	def GET(key):
-		#TODO default value if not exist
 		return escape(d.get(key, [''])[0])
 
-	days = GET('days').replace('[', '(').replace(']', ')').replace('"', '\'') #cast from ["x","y"] to ('x','y') for mysql WHERE IN
-
 	filterValue = {
-		'rect' : {
-			'slt' : GET('slt'),
-			'sln' : GET('sln'),
-			'elt' : GET('elt'),
-			'eln' : GET('eln'),
-		},
-		'time' : {
-			'start' : GET('st'),
-			'end' : GET('et'),
-			'recent': GET('re'),
-		},
-		'days': days,
-		'layer': GET('layer'),
-		'keyword': GET('keyword'),
+		'boundary': GET('b'),
+		'time' : GET('t'),
+		'recent': GET('r'),
+		'date': GET('d'),
+		'days': GET('ds'),
+		'layer': GET('l'),
+		'keyword': GET('k'),
 	}
 
 	try:
@@ -92,7 +82,7 @@ def static_app(environ, start_response):
 	path = environ['PATH_INFO']
 	path = get_static_path(path)
 
-	#print("STATICC APP _________________")
+	#print("STATIC APP _________________")
 	#print(path)
 	#print(os.path.exists(path))
 

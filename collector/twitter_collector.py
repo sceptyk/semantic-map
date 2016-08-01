@@ -88,5 +88,3 @@ class Twitter_Collector(Collector):
 				time.sleep(960.0)#timeout 16mins to avoid twitter rate policy
 			else:
 				break
-
-		self.db.close()

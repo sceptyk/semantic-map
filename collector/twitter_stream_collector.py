@@ -46,4 +46,3 @@ class Twitter_Stream_Collector(Twitter_Collector):
 		print("running Twitter Stream Collector -----------")
 
 		self.client.filter(locations = [-6.421509, 53.189579, -6.017761, 53.447171], async=True)
-		self.db.close()

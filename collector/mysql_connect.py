@@ -34,20 +34,21 @@ class Mysql_Connect(object):
 			cursor = self.conn.cursor()
 			cursor.execute(sql)
 			self.conn.commit()
-		#except (AttributeError, MySQLdb.OperationalError):
-		#	try:
-		#		print("reconnected")
-		#		self.conn = self.connect()
-		#		cursor = self.conn.cursor()
-		#		cursor.execute(sql)
-		#		self.conn.commit()
-		#	except:
-		#		print("Exception on reconnect:")
-		#		#print(sql)
-		#		self.conn.rollback()
+		except (AttributeError, MySQLdb.OperationalError):
+			try:
+				print("reconnected")
+				self.conn = self.connect()
+				cursor = self.conn.cursor()
+				cursor.execute(sql)
+				self.conn.commit()
+			except Exception, e:
+				print("Exception on reconnect:")
+				print(str(e))
+				#print(sql)
+				self.conn.rollback()
 		except Exception, e:
-		#	print("Exception on first try:")
-		#	print(str(e))
+			print("Exception on first try:")
+			
 			#print(sql)
 			self.conn.rollback()
 
