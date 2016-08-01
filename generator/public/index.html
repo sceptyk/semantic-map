@@ -9,10 +9,12 @@
         <meta content="Filip Nowakowski @ UCD" name="author"/>
         <link rel="icon" href="favicon.ico" type="image/x-icon" />
         <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
         <link href="css/styles.css" rel="stylesheet"/>
         <script crossorigin="anonymous" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.0-rc.2/jquery-ui.min.js" integrity="sha256-55Jz3pBCF8z9jBO1qQ7cIf0L+neuPTD1u7Ytzrp2dqo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.0/Chart.min.js"></script>
         <!-- custom scripts -->
         <script src="lib/wordcloud2.js"></script>
         <script src="lib/stopwords.js"></script>
@@ -23,142 +25,111 @@
 	  <![endif]-->
     </head>
     <body>
-        <div class="wrapper container-fluid">
-            <div class="col-md-8">
-                <div id="map">
+        <div id="map"></div>
+        <div class="left-bottom-corner">
+            <div class="preview">
+                <h1>Word cloud</h1>
+            </div>
+            <div class="view">
+                <canvas id="canvas-word-cloud"></canvas>
+            </div>
+        </div>
+        <div class="left-top-corner">
+            <div class="preview">
+                <h1>Information</h1>
+            </div>
+            <div class="view">
+                <img src="http://www.ucd.ie/handball/images/ucd_brandmark_colour.gif"/>
+            </div>
+        </div>
+        <div class="right-bottom-corner">
+            <div class="preview">
+                <h1>Popularity</h1>
+            </div>
+            <div class="view">
+                <canvas id="canvas-popularity"></canvas>
+            </div>
+        </div>
+        <div class="right-top-corner">
+            <div class="menu">
+                <div class="filter">
+                    <div class="input-group">
+                        <input id="input-keywords" type="text" class="form-control" placeholder="Keywords"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                    
+                </div>
+                <div class="menu-icons">
+                    <span class="filter-time">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    </span>
+                    <span class="filter-day">
+                        <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                    </span>
+                    <span class="filter-date">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="toolbar">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Search by keyword:
-                            </h3>
-                        </div>
-                        <div class="panel-body heatmap-show">
-                            <div class="input-group">
-                                <input aria-describedby="basic-addon1" class="form-control" placeholder="Keyword..." type="text" id="keyword" />
-                                <span class="input-group-btn">
-						        <button class="btn btn-default" type="button" id="filter-keyword">Filter!</button>
-						      </span>
-                            </div>
-                        </div>
+            <div class="menu-item">
+                <div id="filter-day" class="menu-item-body">
+                    <span class="day">
+                        <span class="input-group-addon" >
+                            <input type="checkbox" id="input-day-mo" aria-label="...">
+                        </span>
+                        <p>Mo</p>
+                    </span>
+                    <span class="day">
+                        <span class="input-group-addon" >
+                            <input type="checkbox" id="input-day-tu" aria-label="...">
+                        </span>
+                        <p>Tu</p>
+                    </span>
+                    <span class="day">
+                        <span class="input-group-addon" >
+                            <input type="checkbox" id="input-day-we" aria-label="...">
+                        </span>
+                        <p>We</p>
+                    </span>
+                    <span class="day">
+                        <span class="input-group-addon" >
+                            <input type="checkbox" id="input-day-th" aria-label="...">
+                        </span>
+                        <p>Th</p>
+                    </span>
+                    <span class="day">
+                        <span class="input-group-addon" >
+                            <input type="checkbox" id="input-day-fr" aria-label="...">
+                        </span>
+                        <p>Fr</p>
+                    </span>
+                    <span class="day">
+                        <span class="input-group-addon" >
+                            <input type="checkbox" id="input-day-sa" aria-label="...">
+                        </span>
+                        <p>Sa</p>
+                    </span>
+                    <span class="day">
+                        <span class="input-group-addon" >
+                            <input type="checkbox" id="input-day-su" aria-label="...">
+                        </span>
+                        <p>Su</p>
+                    </span>
+                </div>
+                <div id="filter-time" class="menu-item-body">
+                    <div class="input-group">
+                      <span class="input-group-addon" id="input-time-value"></span>
+                      <input id="input-time" type="text" class="form-control" aria-describedby="input-time-value">
                     </div>
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Filter by time:
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="input-group">
-                            	<div id="range-time">12:00 - 18:00</div>
-                                <div id="slider-time"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Filter by day:
-                            </h3>
-                        </div>
-                        <div class="panel-body gridmap-show">
-                            <label for="checkbox-monday">Monday
-                              <input type="checkbox" name="checkbox-monday" id="checkbox-monday" checked>
-                            </label>
-                            <label for="checkbox-tuesday">Tuesday
-                              <input type="checkbox" name="checkbox-tuesday" id="checkbox-tuesday" checked>
-                            </label>
-                            <label for="checkbox-wednesday">Wednesday
-                              <input type="checkbox" name="checkbox-wednesday" id="checkbox-wednesday-3" checked>
-                            </label>
-                            <label for="checkbox-thursday">Thursday
-                              <input type="checkbox" name="checkbox-thursday" id="checkbox-thursday" checked>
-                            </label>
-                            <label for="checkbox-friday">Friday
-                              <input type="checkbox" name="checkbox-friday" id="checkbox-friday" checked>
-                            </label>
-                            <label for="checkbox-saturday">Saturday
-                              <input type="checkbox" name="checkbox-saturday" id="checkbox-saturday" checked>
-                            </label>
-                            <label for="checkbox-sunday">Sunday
-                              <input type="checkbox" name="checkbox-sunday" id="checkbox-sunday" checked>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Limit to recent:
-                                <input type="checkbox" id="recent-switch" />
-                            </h3>
-                            
-                        </div>
-                        <div class="panel-body heatmap-show">
-                            <div class="input-group">
-                                <div>
-                                    <span id="range-recent">12</span>
-                                    <span>h</span>
-                                </div>
-                                <div id="slider-recent"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Limit to period:
-                                <input type="checkbox" id="period-switch" />
-                            </h3>
-                        </div>
-                        <div class="panel-body gridmap-show">
-                            <div class="input-group">
-                                <input type="date" id="period-start" />
-                                <input type="date" id="period-end" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-default" id="wrapper-popularity">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Popularity:
-                            </h3>
-                        </div>
-                        <div class="panel-body heatmap-show">
-                            <div id="popularity-canvas"></div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default" id="wrapper-cloud">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Word cloud preview:
-                            </h3>
-                        </div>
-                        <div class="panel-body gridmap-show">
-                            <canvas id="cloud-canvas"></canvas>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Type:
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <form>
-							  <div id="radio">
-							    <input type="radio" id="radio1" name="radio"><label for="radio1">Heat</label>
-							    <input type="radio" id="radio2" name="radio"><label for="radio2">Grid</label>
-							    <input type="radio" id="radio3" name="radio"><label for="radio3">Movement</label>
-							  </div>
-							</form>
-                        </div>
+                </div>
+                <div id="filter-date" class="menu-item-body">
+                    <div class="input-group">
+                      <span class="input-group-addon" id="input-date-value"></span>
+                      <input id="input-date" type="text" class="form-control" aria-describedby="input-date-value">
                     </div>
                 </div>
             </div>

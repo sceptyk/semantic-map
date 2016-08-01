@@ -6,6 +6,8 @@ var grid;
 var layer = 4;
 var boundary;
 var originBounds = [{lat: 53.447171, lng: -6.421509}, {lat: 53.189579, lng: -6.017761}];
+var clickPoint = null;
+
 
 var scope = window.location.hash || '#heatmap'; //#heatmap, #gridmap, #movement
 
@@ -16,12 +18,13 @@ function initMap() {
     boundary = new google.maps.LatLngBounds(originBounds[0], originBounds[1]);
 
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 11,
+        zoom: 12,
         center: {
-            lat: 53.3169421,
-            lng: -6.210036
+            lat: 53.3478,
+            lng: -6.2597
         },
-        mapTypeControl: false
+        mapTypeControl: false,
+        disableDefaultUI: true
     });
 
     map.addListener('zoom_changed', function(){
@@ -62,52 +65,27 @@ function initMap() {
 
         clearTimeout(timer);
         timer = setTimeout(function(){
-            console.log('create new WordCloud');
-            createWordCloud();
+            //console.log('create new WordCloud');
+            //createWordCloud();
         }, 2000);
+    });
+
+    map.addListener('click', function(e){
+        var p = e.latLng;
+        var step = 0.01;
+
+        //console.log("Click");
+        boundary = new google.maps.LatLngBounds({lat: p.lat() + step, lng: p.lng() - step}, {lat: p.lat() - step, lng: p.lng() + step});
+        clickPoint = p;
+        onMovementMap();
     });
 
    $(document).ready(function(){
 
-    $("input#radio1").click(function(){
-
-        if($(this).is(":checked")){
-            onHeatMap();
-        }
-
-    });
-
-    $("input#radio2").click(function(){
-
-        if($(this).is(":checked")){
-            onGridMap();
-        }
-
-    });
-
-    $("input#radio3").click(function(){
-
-        if($(this).is(":checked")){
-            reset();
-            createMovementMap();
-        }
-
-    });
-
-    $("button#filter-keyword").click(function(){
-        $("input#radio1").click();
-    });
-
-    //START APP
-    if(scope == '#heatmap'){
-        $("input#radio1").click();
         onHeatMap();
-    }
-    else if (scope == '#gridmap'){
-        $("input#radio2").click();
-        onGridMap();
-    }
-    
+        //onGridMap();
+        //onWordCloud();
+        onPopularity();
    });
 
    
@@ -120,36 +98,30 @@ function initMap() {
  * ********************************************/
 
 function onHeatMap(){
-    if(thread == "free"){
-        thrad = "busy";
-        reset();
-        createHeatMap();
-        createPopularityMap();
-        setUrl('#heatmap');
-
-        //TODO set url #heatmap
-
-        //hide word cloud container
-        $(".heatmap-show").show();
-        $(".gridmap-show").hide();
-
-        thread = "free";
-    }
+    
+    
+    createHeatMap();
+    
 }
 
 function onGridMap(){
-    if(thread == "free"){
-        thrad = "busy";
+    
+    createGridHeatMap();
+}
 
-        reset();
-        createGridHeatMap();
-        createWordCloud();
-        setUrl('#gridmap');
+function onWordCloud(){
 
-        $(".gridmap-show").show();
-        $(".heatmap-show").hide();
-        thread = "free";
-    }
+    //reset word cloud
+    
+    //createwordcloud
+    createWordCloud();
+}
+
+function onPopularity(){
+
+    //reset popularity chart
+
+    createPopularityMap();
 }
 
 function reset(){
@@ -252,7 +224,7 @@ function createWordCloud(){
             list.push(keyword);
         }
 
-        WordCloud(document.getElementById('cloud-canvas'), { 
+        WordCloud(document.getElementById('canvas-word-cloud'), { 
             list: list
         }); 
     });
@@ -267,7 +239,9 @@ function createWordCloud(){
  *
  * ********************************************/
 function createHeatMap(){
-    query('heatmap', function(points){
+    query('heatmap', {
+        boundary: true
+    }, function(points){
 
         //console.log(points.length);
 
@@ -299,11 +273,30 @@ function removeHeatMap(){
  * ********************************************/
 function createPopularityMap(){
 
-    query('popularity', function(hours){
 
-        var max = 0;
-        var day = [];
-        for(var i=0;i<24;i++) day[i] = 0;
+
+    query('popularity', {
+        boundary: true
+    }, function(hours){
+
+        //split
+        var labels = [];
+        var data = [];
+
+        for(var i=0,l=hours.length;i<l;i++){
+            var hour = hours[i];
+            labels.push(hour[0]);
+            data.push(hour[1]);
+        }
+
+        //print graph
+        new Chart(document.getElementById('canvas-popularity'), {
+            type: 'line',
+            data: data,
+            labels: labels
+        });
+
+        /*var max = 0; //TODO
 
         for(var i=0,l=hours.length;i<l;i++){
 
@@ -324,9 +317,9 @@ function createPopularityMap(){
                 .addClass('column')
                 .text(i)
                 .height(day[i] / max * maxHeight)
-                .width(columnWidth)
+                .width(100/25 + "%") //columnWidth)
                 .appendTo($wrap);
-        }
+        }*/
 
     });
 
@@ -347,19 +340,32 @@ function createMovementMap(){
 
     paths = [];
     query('movement', function(points){
+        console.log("Movement map", points);
+        
+        /*var center = {lat:0,lng:0};
+        for(var i=0,l=points.length;i<l;i++){
+            var temp = points[0];
+            center.lat += temp[0];
+            center.lng += temp[1];
+        }
 
-        for(var i=0,l=points.length;i<l;){
+        center.lat /= points.length;
+        center.lng /= points.length;*/
+
+        for(var i=0,l=points.length;i<l;i++){
 
             var temp = points[i];
-            var gmPoints = [];
-            while(i<l && points[i][0] == temp[0]){
-                var next = points[i];
-                gmPoints.push({lat: next[1], lng: next[2]});
+            var gmPoints = [
+                clickPoint,
+                {lat: temp[0], lng: temp[1]},
+                {lat: temp[2], lng: temp[3]}
+            ];
 
-                i++;
+            if(temp[4] && temp[5]){
+                gmPoints.push({lat: temp[4], lng: temp[5]});
             }
 
-            var user = temp[0];
+            var user = temp[6];
             var r = user % 256;
             user = Math.floor(user/256);
             var g = user % 256;
@@ -368,33 +374,17 @@ function createMovementMap(){
 
             var color = 'rgb(' + r + ', ' + g + ', ' + b + ')';
 
+            //color = '#6789AB';
+
             var path = new google.maps.Polyline({
                 path: gmPoints,
                 geodesic: true,
                 strokeColor: color,
                 strokeOpacity: 0.5,
-                strokeWeight: 1
+                strokeWeight: 3
               });
             path.setMap(map);
             paths.push(path);
-
-            google.maps.event.addListener(path, 'mouseover', function (event) {
-                 this.setOptions({
-                     strokeOpacity: 1,
-                     strokeWeight: 3
-                 });
-             });
-
-             google.maps.event.addListener(path, 'mouseout', function (event) {
-                 this.setOptions({
-                     strokeOpacity: 0.5,
-                     strokeWeight: 1
-                 });
-             });
-
-             google.maps.event.addListener(path, 'click', function (event) {
-                 this.setMap(null);
-             });
         }
 
     });
@@ -417,52 +407,91 @@ function removeMovementMap(){
  *
  * ********************************************/
 
+function _formatDate(date){
+    var sDAte = date.toISOString();
+    sDate = sDate.split("T");
+    sDate = sDate[0] + " " + sDate[1].split(".")[0];
+
+    return sDate;
+}
+
 function getFilters(filters){
-    //FIXME get only needed values
 
-    //get times
-    var st = $( "#slider-time" ).slider( "values", 0 ) + ":00:00";
-    var et = $( "#slider-time" ).slider( "values", 1 ) + ":00:00";
+    var processed = {};
 
-    //get recent limit
-    var recent = new Date();
-    recent.setHours(recent.getHours() - $("#slider-recent").slider("value"));
+    if(filters !== undefined && filters != null){
 
-    var recStr = recent.toISOString();
-    recStr = recStr.split("T");
-    recStr = recStr[0] + " " + recStr[1].split(".")[0];
+        //get date
+        if(filters.date){
+            var date = {
+                start: _filterDate(new Date($( '#input-date' ).slider('values', 0))),
+                end: _filterDate(new Date($( '#input-date' ).slider('values', 1)))
+            }
+            processed.d = date;
+        }
 
-    var re = $( "#recent-switch" ).is(":checked") ? recStr : "0000-00-00 00:00:00";
+        //get times
+        if(filters.time){
+            var time = {
+                start: $( "#input-time" ).slider( "values", 0 ) + ":00:00",
+                end: $( "#input-time" ).slider( "values", 1 ) + ":00:00"
+            };
 
-    //get keyword
-    var keyword = $( "input#keyword" ).val();
+            processed.t = time;
+        }
 
-    //get days
-    var days = [];
-    if("input#checkbox-monday:checked") days.push("MON");
-    if("input#checkbox-tuesday:checked") days.push("TUE");
-    if("input#checkbox-wednesday:checked") days.push("WED");
-    if("input#checkbox-thursday:checked") days.push("THU");
-    if("input#checkbox-friday:checked") days.push("FRI");
-    if("input#checkbox-saturday:checked") days.push("SAT");
-    if("input#checkbox-sunday:checked") days.push("SUN");
-    days = JSON.stringify(days);
+        //get keyword
+        if(filters.keyword){
+            var keywords = $( "#input-keywords" ).val().split(/,*\s/);
+            processed.k = keywords;
+        }
 
-    //get layer
-    // global layer changed by zoom change
+        //get days
+        if(filters.day){
+            var days = [];
+            if("#input-day-mo:checked") days.push(1);
+            if("#input-day-tu:checked") days.push(2);
+            if("#input-day-we:checked") days.push(3);
+            if("#input-day-th:checked") days.push(4);
+            if("#input-day-fr:checked") days.push(5);
+            if("#input-day-sa:checked") days.push(6);
+            if("#input-day-su:checked") days.push(7);
 
-    return {
-        slt: boundary.getNorthEast().lat(),
-        sln: boundary.getSouthWest().lng(),
-        elt: boundary.getSouthWest().lat(),
-        eln: boundary.getNorthEast().lng(),
-        st: st,
-        et: et,
-        re: re,
-        days: days,
-        layer: layer,
-        keyword: keyword
-    };
+            processed.ds = days;
+        }
+
+        if(filters.boundary){
+            processed.b = boundary.toJSON();
+        }
+
+        if(filters.layer){
+
+            processed.l = layer;
+        }
+
+
+        for(var key in filters){
+            if(filters.hasOwnProperty(key) && processed.hasOwnProperty(key)){
+                var filter = filters[key];
+
+                if(typeof filter === 'function'){
+                    processed[key] = filter(processed[key]);
+                }else{
+                    processed[key] = filter;
+                }
+            }
+        }
+
+        for(var key in processed){
+            if(processed.hasOwnProperty(key)){
+                processed[key] = JSON.stringify(processed[key]);
+            }
+        }
+
+    }
+
+    console.log(processed);
+    return processed;
 }
 
 function query(type, filters, success){
