@@ -11,7 +11,7 @@ twitter_stream = Twitter_Stream_Collector(
 	access_token = '737973216262639618-KPr0Fvuk6AUgsm8AjCTZbBhAe3fzLN4',
 	access_secret = 'TQHGxJIQ8ze01jtsy9o65FwThvIK8JdHCsFnvWkNB5yfs')
 connection = pars.Cloud_Parser()
-gen.Cloud_Generator(128,128)
+gen.Cloud_Generator()
 
 #thread.start_new_thread(twitter_stream.run(), ("Collector",1,))
 #thread.start_new_thread(connection.get_data(), "Parser")

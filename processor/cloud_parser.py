@@ -1,32 +1,32 @@
 from model.tweet import Tweet
 from collector.mysql_connect import Mysql_Connect
+from util.util import Util
 import time
 import string
 import math
 import datetime
 import os
-import base64 as enc
-
 
 class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
-	size_w, size_h = 64, 64
-	EDGE = 0.00000000001
 	def __init__(self):
 		self.conn = Mysql_Connect().get_connection()
 		self.cursor = self.conn.cursor()
+		self.util = Util()
 
 	def get_data(self):
 		loc_cursor = self.conn.cursor()
-		chunk_size = 10
-		start = 0
-		end = chunk_size
+		chunk_size = 100
+		start_time = time.strftime("2016-06-08 00:00:00")
 		while True:
-			sql = """SELECT * FROM tweets ORDER BY _id LIMIT %s, %s"""
+			sql = """SELECT * FROM tweets where timestamp > '%s' LIMIT %s"""
 
 			try:
-				loc_cursor.execute(sql, (start, end))
+				loc_cursor.execute(sql, (start_time, chunk_size))
 				results = loc_cursor.fetchall()
+				if len(results)==0:
+					time.sleep(3600)
+					continue
 				for row in results:
 					twt = Tweet()
 					twt.populate(row)
@@ -34,12 +34,11 @@ class Cloud_Parser(object):
 						self.store_data(twt)
 					except:
 						continue
-				start = end
-				end += chunk_size
+				last = results[-1].dict()
+				start_time = last['time']
 			except Exception, e:
-				tweet = twt.dict()
-				print tweet['_id']
-				print str(e)
+				print e
+				time.sleep(3600) #if no new data - sleep for 1 hr
 
 	def reset_increment(self):
 		clear = """truncate table cloud"""
@@ -155,9 +154,12 @@ class Cloud_Parser(object):
 	# START: Tweet_keyword table
 	def insert_twt_keyword(self, tweet_id, kword):
 		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s')"""
+		update_query = """update tweet_keywords set _tweet = '%s' and _keyword = '%s' where _tweet =
+							(select _id from tweets WHERE timestamp <= DATE_SUB(NOW(), INTERVAL 2 WEEK limit 1)) limit 1;"""
+		insert_query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s');"""
+		check_query = """select 1 from tweets WHERE timestamp <= DATE_SUB(NOW(), INTERVAL 2 WEEK) limit 1;"""
 		try:
-			loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
+			loc_cursor.execute(update_query, (tweet_id, self.fetch_keyword_id(kword)))
 			self.conn.commit()
 		except:
 			self.conn.rollback()
@@ -182,23 +184,40 @@ class Cloud_Parser(object):
 
 	# END: Tweet_keyword table
 
-	def store_data(self, tweet):
-		tweet = tweet.dict()
-		text = self.elim_useless(tweet['text'])
-		day = self.parse_timestamp(tweet['time'])
-		time_i = self.time_index(day[1])
-		lyrs = [0,2,4]
-		tweet_id = tweet['_id']
-		cloud = []
-		self.insert_keyword(text)
+	#START: Cloud
 
-		#for layer in lyrs:
-		#	cloud.append(self.point_in_cloud(tweet['lat'], tweet['lng'], layer))
-		if cloud[0] == 0: raise LookupError("Cloud not found")
-		for each in text:
-			for c in cloud:
-				self.insert_counter(self.fetch_keyword_id(each),c ,time_i, day[0])
-		for word in text: self.insert_twt_keyword(tweet_id, word)
+	def insert_cloud(self, hash, precision):
+		loc_cursor = self.conn.cursor()
+		query = """insert into cloud (cloud, layer) values ('%s', '%s');"""
+		try:
+			loc_cursor.execute(query, (hash, self.index_precision(precision)))
+			self.conn.commit()
+		except:
+			self.conn.rollback()
+
+	def index_precision(self, precision):  # For scaling
+		if precision == 0.2:
+			return 1
+		elif precision == 0.6:
+			return 2
+		elif precision == 1.2:
+			return 3
+		else:
+			return 0
+
+	def fetch_layer(self, hash):
+		loc_cursor = self.conn.cursor()
+		query = """select layer from cloud where cloud = hash;"""
+		loc_cursor.execute(query, hash)
+		return self.cursor.fetchall()[0]
+
+	def fetch_clouds(self, layer):
+		loc_cursor = self.conn.cursor()
+		query = """select cloud from cloud where layer = layer;"""
+		loc_cursor.execute(query, layer)
+		return loc_cursor.fetchall()
+
+	#END: Cloud
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
@@ -214,67 +233,23 @@ class Cloud_Parser(object):
 		if time.strftime('22:00:00') <= t <= time.strftime('03:59:59') : return 4
 		else: return 0
 
-	#START: Cloud - final
-	def obtain_metres(self, precision):
-		if precision == 0.2:
-			return 250
-		elif precision == 0.6:
-			return 750
-		elif precision == 1.2:
-			return 1200
-		else:
-			return 0
+	def store_data(self, tweet): #id, usr, text, lat, lng, timestamp
+		tweet = tweet.dict()
+		tweet_id = tweet['_id']
+		text = self.elim_useless(tweet['text'])
+		day = self.parse_timestamp(tweet['time'])
+		time_i = self.time_index(day[1])
+		lyrs = [0.2,0.6,1.2] #scaling: 0.2 = 0.2*1km
+		cloud = [] #must be 3 hashed values
 
-	def metres_per_lat(self, deg):
-		return 111132.92 - 559.82 * math.cos(2 * self.helper_coords(deg))
+		self.insert_keyword(self.elim_useless(tweet['text']))
 
-	def obtain_deg(self, direction, pos, precision):
-		if direction == "lat":
-			return self.precision_to_metres(precision) / self.metres_per_lat(pos)
-		elif direction == "lng":
-			return self.precision_to_metres(precision) / self.metres_per_lng(pos)
-		else:
-			return 0
+		for each in lyrs:
+			cloud.append(self.util.hash_geo(tweet['lat'],tweet['lng'],each))
+			self.insert_cloud(hash, self.index_precision(each))
 
-	def helper_coords(self, deg):
-		return (deg * math.pi) / 180
+		for each in self.elim_useless(tweet['text']):
+			for c in cloud:
+				self.insert_counter(self.fetch_keyword_id(each),c ,time_i, day[0])
 
-	def metres_per_lng(self, deg):
-		return 111412.84 * math.cos(self.helper_coords(deg)) - 93.5 * math.cos(3 * self.helper_coords(deg))
-
-	def precision_to_metres(self, precision):
-		if precision == 0.2:
-			return 250
-		elif precision == 0.6:
-			return 750
-		elif precision == 1.2:
-			return 1200
-		else:
-			return 0
-
-	def pos_coords(self, lat, lng):
-		return lat + 180, lng + 180
-
-	def grid_coords(self, lat, lng, s_lat, s_lng):
-		return lat - s_lat, lng - s_lng
-
-	def apply_precision(self, lat, lng, prec):
-		return lat / prec, lng / prec
-
-	def col_count(self, s_lng, e_lng, prec_crds):
-		if (e_lng - s_lng) / prec_crds == abs((e_lng - s_lng) / prec_crds):
-			return math.ceil((e_lng - s_lng) / prec_crds)
-		else:
-			return 0
-
-	def hashing(self, lat, lng, columns):
-		print lat, lng, columns
-		return enc.b64encode(str(lat * columns + lng))
-
-	def cloud_process(self, lat, lng, s_lat, s_lng, prec, pos_lng, glob_e_lng):
-		grid_crds = self.grid_coords(self.pos_coords(lat, lng)[0], self.pos_coords(lat, lng)[1], s_lat, s_lng)
-		print grid_crds
-		apply_prec = self.apply_precision(grid_crds[0], grid_crds[1], prec)
-		print apply_prec
-		return self.hashing(math.floor(apply_prec[0]), math.floor(apply_prec[1]),
-					   self.col_count(s_lng, glob_e_lng, self.obtain_deg("lng", pos_lng, prec)))
+		for word in text: self.insert_twt_keyword(tweet_id, word)
