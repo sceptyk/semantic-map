@@ -11,23 +11,30 @@ class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
 	def __init__(self):
 		self.conn = Mysql_Connect().get_connection()
+		print "Connected"
 		self.cursor = self.conn.cursor()
+		print "Cursor initialized"
 		self.util = Util()
+		print "Utils initialized"
+		self.get_data()
 
 	def get_data(self):
+		print "Getting data"
 		loc_cursor = self.conn.cursor()
 		chunk_size = 100
 		start_time = time.strftime("2016-06-08 00:00:00")
 		while True:
-			sql = """SELECT * FROM tweets where timestamp > '%s' LIMIT '%s'"""
-
+			sql = """SELECT * FROM tweets where timestamp > %s LIMIT %s"""
+			print "Chunk selected"
 			try:
 				loc_cursor.execute(sql, (start_time, chunk_size))
 				results = loc_cursor.fetchall()
 				if len(results)==0:
+					print "Not enough twees - sleep 1hr"
 					time.sleep(3600)
 					continue
 				for row in results:
+					print "New tweet"
 					twt = Tweet()
 					twt.populate(row)
 					try:
@@ -66,7 +73,7 @@ class Cloud_Parser(object):
 		return clear_string
 
 	def stopwords(self):
-		with open(os.path.normpath("processor/stopwords.txt")) as input:
+		with open(os.path.normpath("stopwords.txt")) as input:
 			text = input.readline()
 		list = text.split(",")
 		clear_list = []
@@ -107,16 +114,19 @@ class Cloud_Parser(object):
 		loc_cursor = self.conn.cursor()
 		query = """insert ignore into word_counter (_keyword, _cloud, time_index, day) values ('%s', '%s', '%s', %s)"""
 		if self.fetch_counter_id(kword, cloud, time_index, day) is None:
+			print "Insert w_count"
 			loc_cursor.execute(query, (kword, cloud, time_index, day))
 			self.conn.commit()
 			self.incr_counter_count(self.fetch_counter_id(kword, cloud, time_index, day), kword, cloud, time_index, day)
 		else:
+			print "Update w_count"
 			self.incr_counter_count(self.fetch_counter_id(kword, cloud, time_index, day), kword, cloud, time_index, day)
 
 	def incr_counter_count(self, id, kw,cloud, time_index, day):
 		loc_cursor = self.conn.cursor()
 		fetch = """update word_counter set count = count + 1 where _id = '%s' and _keyword = '%s' and _cloud = '%s' and time_index = '%s' and day = %s"""
 		try:
+			print id, kw, cloud, time_index, day
 			loc_cursor.execute(fetch, (id, kw,cloud, time_index, day))
 			self.conn.commit()
 		except:
@@ -177,7 +187,6 @@ class Cloud_Parser(object):
 		query = """select _id from tweet_keywords where _tweet = '%s'"""
 		clear_list = self.clear_list_db(self.select_old_tweet())
 		for each in clear_list:
-			print each
 			loc_cursor.execute(query, each)
 			try:
 				out = loc_cursor.fetchone()[0]
@@ -218,7 +227,7 @@ class Cloud_Parser(object):
 
 	def insert_cloud(self, hash, precision):
 		loc_cursor = self.conn.cursor()
-		query = """insert ignore into cloud (cloud, layer) values ('%s', '%s');"""
+		query = """insert ignore into cloud (cloud, layer) values (%s, '%s');"""
 		try:
 			loc_cursor.execute(query, (hash, self.index_precision(precision)))
 			self.conn.commit()
@@ -237,16 +246,21 @@ class Cloud_Parser(object):
 
 	def fetch_layer(self, hash):
 		loc_cursor = self.conn.cursor()
-		query = """select layer from cloud where cloud = hash;"""
+		query = """select layer from cloud where cloud = %s;"""
 		loc_cursor.execute(query, hash)
-		return self.cursor.fetchall()[0]
+		return loc_cursor.fetchall()[0]
 
 	def fetch_clouds(self, layer):
 		loc_cursor = self.conn.cursor()
-		query = """select cloud from cloud where layer = layer;"""
+		query = """select cloud from cloud where layer = '%s';"""
 		loc_cursor.execute(query, layer)
 		return loc_cursor.fetchall()
 
+	def fetch_cloud_id(self, hash):
+		loc_cursor = self.conn.cursor()
+		query = """select _id from cloud where cloud = %s;"""
+		loc_cursor.execute(query, hash)
+		return loc_cursor.fetchall()[0][0]
 	#END: Cloud
 
 	def parse_timestamp(self, timestamp):  # 2016-06-07
@@ -263,27 +277,29 @@ class Cloud_Parser(object):
 		if time.strftime('22:00:00') <= t <= time.strftime('03:59:59') : return 4
 		else: return 0
 
-	#NB!: Major back-end method - responsible for parsing a tweet and divite it into tables in a db
+	#NB!: Major back-end method - responsible for parsing a tweet and divide it into tables in a db
 	def store_data(self, tweet): #id, usr, text, lat, lng, timestamp
-		tweet = tweet.dict()
-		tweet_id = tweet['_id']
-		text = self.elim_useless(tweet['text'])
-		day = self.parse_timestamp(tweet['time'])
+		twt = tweet.dict()
+		tweet_id = twt['_id']
+		text = self.elim_useless(twt['text'])
+		day = self.parse_timestamp(twt['time'])
 		time_i = self.time_index(day[1])
 		lyrs = [0.2,0.6,1.2] #scaling: 0.2 = 0.2*1km
 		cloud = [] #must be 3 hashed values
-		self.insert_keyword(self.elim_useless(text))
 
+		self.insert_keyword(text)
 		#Cloud calculation and insertion
 		for each in lyrs:
-			cloud.append(self.util.hash_geo(tweet['lat'],tweet['lng'],each)) #Will need it later
-			self.insert_cloud(self.util.hash_geo(tweet['lat'],tweet['lng'], each), self.index_precision(each))
+			hash = self.util.hash_geo(twt['lat'],twt['lng'],each)
+			cloud.append(hash) #Will need it later
+			self.insert_cloud(hash, each)
 
 		#Word counter
-		for each in self.elim_useless(text):
+		for each in text:
 			for c in cloud:
-				self.insert_counter(self.fetch_keyword_id(each),c ,time_i, day[0])
+				self.insert_counter(self.fetch_keyword_id(each),self.fetch_cloud_id(c) ,time_i, day[0])
 
+		print "Insert twt_kword"
 		for word in text:
 			replace = self.select_old_id_twt_kword()
 			if replace != 0:
@@ -292,6 +308,11 @@ class Cloud_Parser(object):
 				self.insert_twt_kword(tweet_id, word)
 
 test = Cloud_Parser()
-print test.select_old_id_twt_kword()
-print test.select_old_tweet()
-
+text = "Maybe late, but I've just found from here that you can simply omit the external select and alias, and just have"
+#test.insert_keyword(test.elim_useless(text))
+#test.elim_useless(text)
+#print test.index_precision(0.2)
+#list = [0.2, 0.6, 1.2]
+#for each in list:
+#	print test.index_precision(each)
+print test.fetch_cloud_id("U4oYcV")

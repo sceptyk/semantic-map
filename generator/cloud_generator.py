@@ -4,8 +4,7 @@ class Cloud_Generator(object):
     def __init__(self):
         self.conn = Mysql_Connect().get_connection()
         self.init_glob_cloud()
-
-
+        print "Tables created"
 
     def init_glob_cloud(self):
         loc_cursor = self.conn.cursor()
@@ -40,8 +39,6 @@ class Cloud_Generator(object):
     					   day CHAR(3) NOT NULL COMMENT '',
     					   count  BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
     					  PRIMARY KEY ( _id )  COMMENT '',
-    					  UNIQUE INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
-    					  UNIQUE INDEX  cloud_idx  ( _cloud  ASC)  COMMENT '',
     					  CONSTRAINT  keyword
     						FOREIGN KEY ( _keyword )
     						REFERENCES  keywords  ( _id )

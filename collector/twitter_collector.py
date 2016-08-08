@@ -15,7 +15,6 @@ class Twitter_Collector(Collector):
 			lat DOUBLE(12,7),
 			lng DOUBLE(12,7),
 			timestamp TIMESTAMP,
-			dropped TINYINT(1) DEFAULT 0,
 			PRIMARY KEY ( _id )
 		)"""
 		self.cursor.execute(sql)
