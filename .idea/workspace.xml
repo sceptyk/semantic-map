@@ -10,9 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/collector/mysql_connect.py" afterPath="$PROJECT_DIR$/collector/mysql_connect.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/collector/twitter_collector.py" afterPath="$PROJECT_DIR$/collector/twitter_collector.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generator/cloud_generator.py" afterPath="$PROJECT_DIR$/generator/cloud_generator.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/runner.py" afterPath="$PROJECT_DIR$/runner.py" />
     </list>
@@ -35,39 +32,52 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="293" column="50" selection-start-line="293" selection-start-column="50" selection-end-line="293" selection-end-column="50" />
+            <state relative-caret-position="316">
+              <caret line="284" column="27" selection-start-line="284" selection-start-column="27" selection-end-line="284" selection-end-column="27" />
               <folding>
-                <element signature="e#0#29#0" expanded="true" />
-                <element signature="e#505#1203#0" expanded="false" />
-                <element signature="e#1236#1283#0" expanded="false" />
-                <element signature="e#1347#1633#0" expanded="false" />
-                <element signature="e#1673#1836#0" expanded="false" />
-                <element signature="e#1759#1814#0" expanded="false" />
-                <element signature="e#1862#2070#0" expanded="false" />
-                <element signature="e#2104#2143#0" expanded="false" />
-                <element signature="e#2174#2204#0" expanded="false" />
-                <element signature="e#2499#2783#0" expanded="false" />
-                <element signature="e#4309#4536#0" expanded="false" />
-                <element signature="e#4416#4483#0" expanded="false" />
-                <element signature="e#4576#4805#0" expanded="false" />
-                <element signature="e#4683#4750#0" expanded="false" />
-                <element signature="e#4900#5100#0" expanded="false" />
-                <element signature="e#5133#5341#0" expanded="false" />
-                <element signature="e#5399#5604#0" expanded="false" />
-                <element signature="e#5644#6010#0" expanded="false" />
-                <element signature="e#6046#6131#0" expanded="false" />
-                <element signature="e#6177#6371#0" expanded="false" />
-                <element signature="e#6419#6614#0" expanded="false" />
-                <element signature="e#6666#6888#0" expanded="false" />
-                <element signature="e#6979#7218#0" expanded="false" />
-                <element signature="e#7276#7402#0" expanded="false" />
-                <element signature="e#8051#8302#0" expanded="false" />
-                <element signature="e#8332#8648#0" expanded="false" />
+                <element signature="e#1164#1211#0" expanded="false" />
+                <element signature="e#1408#1545#0" expanded="false" />
+                <element signature="e#1687#1742#0" expanded="false" />
+                <element signature="e#1790#1998#0" expanded="false" />
+                <element signature="e#2032#2071#0" expanded="false" />
+                <element signature="e#2102#2132#0" expanded="false" />
+                <element signature="e#2134#2161#0" expanded="false" />
+                <element signature="e#2224#2390#0" expanded="false" />
+                <element signature="e#2427#2711#0" expanded="false" />
+                <element signature="e#2613#2674#0" expanded="false" />
+                <element signature="e#2711#2731#0" expanded="false" />
+                <element signature="e#3410#3760#0" expanded="false" />
+                <element signature="e#3600#3680#0" expanded="false" />
+                <element signature="e#3694#3760#0" expanded="false" />
+                <element signature="e#3823#4105#0" expanded="false" />
+                <element signature="e#3985#4080#0" expanded="false" />
+                <element signature="e#4145#4372#0" expanded="false" />
+                <element signature="e#4252#4319#0" expanded="false" />
+                <element signature="e#4412#4641#0" expanded="false" />
+                <element signature="e#4519#4586#0" expanded="false" />
+                <element signature="e#5866#6060#0" expanded="false" />
+                <element signature="e#6108#6303#0" expanded="false" />
+                <element signature="e#6355#6577#0" expanded="false" />
+                <element signature="e#6965#7091#0" expanded="false" />
+                <element signature="e#7125#7282#0" expanded="false" />
+                <element signature="e#7318#7475#0" expanded="false" />
+                <element signature="e#7740#7991#0" expanded="false" />
+                <element signature="e#8021#8337#0" expanded="false" />
+                <marker date="1470666576950" expanded="false" signature="7509:7670" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tweet.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/tweet.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="206">
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -106,7 +116,7 @@
         <entry file="file://$PROJECT_DIR$/runner.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="85">
-              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
               <folding>
                 <element signature="e#21#58#0" expanded="true" />
               </folding>
@@ -114,11 +124,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cloud_generator.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cloud_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="40" column="58" selection-start-line="40" selection-start-column="58" selection-end-line="40" selection-end-column="58" />
+            <state relative-caret-position="278">
+              <caret line="45" column="52" selection-start-line="45" selection-start-column="52" selection-end-line="45" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -151,9 +161,9 @@
         <option value="$PROJECT_DIR$/util/util.py" />
         <option value="$PROJECT_DIR$/collector/mysql_connect.py" />
         <option value="$PROJECT_DIR$/collector/twitter_collector.py" />
+        <option value="$PROJECT_DIR$/generator/cloud_generator.py" />
         <option value="$PROJECT_DIR$/runner.py" />
         <option value="$PROJECT_DIR$/processor/cloud_parser.py" />
-        <option value="$PROJECT_DIR$/generator/cloud_generator.py" />
       </list>
     </option>
   </component>
@@ -220,94 +230,7 @@
     </navigator>
     <panes>
       <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="util" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="processor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="generator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="semantic-map" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="collector" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
+        <subPane />
       </pane>
       <pane id="Scope" />
       <pane id="Scratches" />
@@ -328,7 +251,7 @@
       <recent name="C:\Users\Vsev Montes\Desktop\scmp2016\semantic-map\processor" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.cloud_generator">
+  <component name="RunManager" selected="Python.runner">
     <configuration default="false" name="main_parse" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -557,9 +480,9 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.cloud_generator" />
+        <item index="0" class="java.lang.String" itemvalue="Python.runner" />
         <item index="1" class="java.lang.String" itemvalue="Python.cloud_parser" />
-        <item index="2" class="java.lang.String" itemvalue="Python.runner" />
+        <item index="2" class="java.lang.String" itemvalue="Python.cloud_generator" />
         <item index="3" class="java.lang.String" itemvalue="Python.util" />
         <item index="4" class="java.lang.String" itemvalue="Python.main_parse" />
       </list>
@@ -585,7 +508,7 @@
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22254759" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22254759" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -639,21 +562,36 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>297</line>
-          <option name="timeStamp" value="121" />
+          <line>287</line>
+          <option name="timeStamp" value="126" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>298</line>
-          <option name="timeStamp" value="122" />
+          <line>289</line>
+          <option name="timeStamp" value="128" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
-          <line>299</line>
-          <option name="timeStamp" value="123" />
+          <line>290</line>
+          <option name="timeStamp" value="129" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
+          <line>292</line>
+          <option name="timeStamp" value="130" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
+          <line>291</line>
+          <option name="timeStamp" value="131" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/processor/cloud_parser.py</url>
+          <line>285</line>
+          <option name="timeStamp" value="132" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="124" />
+      <option name="time" value="133" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -896,14 +834,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/tweet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/collector/collector.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -948,14 +878,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/processor/stopwords.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python27/Lib/site-packages/MySQLdb/connections.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="380">
@@ -972,56 +894,75 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
+    <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="293" column="50" selection-start-line="293" selection-start-column="50" selection-end-line="293" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#505#1203#0" expanded="false" />
-            <element signature="e#1236#1283#0" expanded="false" />
-            <element signature="e#1347#1633#0" expanded="false" />
-            <element signature="e#1673#1836#0" expanded="false" />
-            <element signature="e#1759#1814#0" expanded="false" />
-            <element signature="e#1862#2070#0" expanded="false" />
-            <element signature="e#2104#2143#0" expanded="false" />
-            <element signature="e#2174#2204#0" expanded="false" />
-            <element signature="e#2499#2783#0" expanded="false" />
-            <element signature="e#4309#4536#0" expanded="false" />
-            <element signature="e#4416#4483#0" expanded="false" />
-            <element signature="e#4576#4805#0" expanded="false" />
-            <element signature="e#4683#4750#0" expanded="false" />
-            <element signature="e#4900#5100#0" expanded="false" />
-            <element signature="e#5133#5341#0" expanded="false" />
-            <element signature="e#5399#5604#0" expanded="false" />
-            <element signature="e#5644#6010#0" expanded="false" />
-            <element signature="e#6046#6131#0" expanded="false" />
-            <element signature="e#6177#6371#0" expanded="false" />
-            <element signature="e#6419#6614#0" expanded="false" />
-            <element signature="e#6666#6888#0" expanded="false" />
-            <element signature="e#6979#7218#0" expanded="false" />
-            <element signature="e#7276#7402#0" expanded="false" />
-            <element signature="e#8051#8302#0" expanded="false" />
-            <element signature="e#8332#8648#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="278">
+          <caret line="45" column="52" selection-start-line="45" selection-start-column="52" selection-end-line="45" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/tweet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processor/stopwords.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/runner.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
           <folding>
             <element signature="e#21#58#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
+    <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="40" column="58" selection-start-line="40" selection-start-column="58" selection-end-line="40" selection-end-column="58" />
-          <folding />
+        <state relative-caret-position="316">
+          <caret line="284" column="27" selection-start-line="284" selection-start-column="27" selection-end-line="284" selection-end-column="27" />
+          <folding>
+            <element signature="e#1164#1211#0" expanded="false" />
+            <element signature="e#1408#1545#0" expanded="false" />
+            <element signature="e#1687#1742#0" expanded="false" />
+            <element signature="e#1790#1998#0" expanded="false" />
+            <element signature="e#2032#2071#0" expanded="false" />
+            <element signature="e#2102#2132#0" expanded="false" />
+            <element signature="e#2134#2161#0" expanded="false" />
+            <element signature="e#2224#2390#0" expanded="false" />
+            <element signature="e#2427#2711#0" expanded="false" />
+            <element signature="e#2613#2674#0" expanded="false" />
+            <element signature="e#2711#2731#0" expanded="false" />
+            <element signature="e#3410#3760#0" expanded="false" />
+            <element signature="e#3600#3680#0" expanded="false" />
+            <element signature="e#3694#3760#0" expanded="false" />
+            <element signature="e#3823#4105#0" expanded="false" />
+            <element signature="e#3985#4080#0" expanded="false" />
+            <element signature="e#4145#4372#0" expanded="false" />
+            <element signature="e#4252#4319#0" expanded="false" />
+            <element signature="e#4412#4641#0" expanded="false" />
+            <element signature="e#4519#4586#0" expanded="false" />
+            <element signature="e#5866#6060#0" expanded="false" />
+            <element signature="e#6108#6303#0" expanded="false" />
+            <element signature="e#6355#6577#0" expanded="false" />
+            <element signature="e#6965#7091#0" expanded="false" />
+            <element signature="e#7125#7282#0" expanded="false" />
+            <element signature="e#7318#7475#0" expanded="false" />
+            <element signature="e#7740#7991#0" expanded="false" />
+            <element signature="e#8021#8337#0" expanded="false" />
+            <marker date="1470666576950" expanded="false" signature="7509:7670" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>

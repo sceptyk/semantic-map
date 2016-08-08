@@ -11,21 +11,16 @@ class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
 	def __init__(self):
 		self.conn = Mysql_Connect().get_connection()
-		print "Connected"
 		self.cursor = self.conn.cursor()
-		print "Cursor initialized"
 		self.util = Util()
-		print "Utils initialized"
 		self.get_data()
 
 	def get_data(self):
-		print "Getting data"
 		loc_cursor = self.conn.cursor()
-		chunk_size = 100
+		chunk_size = 500
 		start_time = time.strftime("2016-06-08 00:00:00")
 		while True:
 			sql = """SELECT * FROM tweets where timestamp > %s LIMIT %s"""
-			print "Chunk selected"
 			try:
 				loc_cursor.execute(sql, (start_time, chunk_size))
 				results = loc_cursor.fetchall()
@@ -33,12 +28,13 @@ class Cloud_Parser(object):
 					print "Not enough twees - sleep 1hr"
 					time.sleep(3600)
 					continue
+				replace = self.select_old_id_twt_kword()
 				for row in results:
 					print "New tweet"
 					twt = Tweet()
 					twt.populate(row)
 					try:
-						self.store_data(twt)
+						self.store_data(twt, replace)
 					except:
 						continue
 				last = self.last_tweet(results[-1]).dict()
@@ -114,19 +110,16 @@ class Cloud_Parser(object):
 		loc_cursor = self.conn.cursor()
 		query = """insert ignore into word_counter (_keyword, _cloud, time_index, day) values ('%s', '%s', '%s', %s)"""
 		if self.fetch_counter_id(kword, cloud, time_index, day) is None:
-			print "Insert w_count"
 			loc_cursor.execute(query, (kword, cloud, time_index, day))
 			self.conn.commit()
 			self.incr_counter_count(self.fetch_counter_id(kword, cloud, time_index, day), kword, cloud, time_index, day)
 		else:
-			print "Update w_count"
 			self.incr_counter_count(self.fetch_counter_id(kword, cloud, time_index, day), kword, cloud, time_index, day)
 
 	def incr_counter_count(self, id, kw,cloud, time_index, day):
 		loc_cursor = self.conn.cursor()
 		fetch = """update word_counter set count = count + 1 where _id = '%s' and _keyword = '%s' and _cloud = '%s' and time_index = '%s' and day = %s"""
 		try:
-			print id, kw, cloud, time_index, day
 			loc_cursor.execute(fetch, (id, kw,cloud, time_index, day))
 			self.conn.commit()
 		except:
@@ -162,6 +155,7 @@ class Cloud_Parser(object):
 	#END: Counter table
 
 	# START: Tweet_keyword table
+
 	def insert_twt_kword(self, ntwt, nkwrd):
 		loc_cursor = self.conn.cursor()
 		query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s')"""
@@ -178,31 +172,23 @@ class Cloud_Parser(object):
 
 	def update_twt_kword(self, ntwt, nkwrd, replace_id):
 		loc_cursor = self.conn.cursor()
-		query = """update tweet_keywords set _tweet = '%s', _keyword = '%s' where _id = '%s' limit 1"""
-		loc_cursor.execute(query, (ntwt, nkwrd, replace_id))
+		query = """update tweet_keywords set _tweet = '%s', _keyword = '%s' where _id = '%s'"""
+		loc_cursor.execute(query, (ntwt, self.fetch_keyword_id(nkwrd), replace_id))
 		self.conn.commit()
 
 	def select_old_id_twt_kword(self):
 		loc_cursor = self.conn.cursor()
-		query = """select _id from tweet_keywords where _tweet = '%s'"""
-		clear_list = self.clear_list_db(self.select_old_tweet())
-		for each in clear_list:
-			loc_cursor.execute(query, each)
-			try:
-				out = loc_cursor.fetchone()[0]
-			except:
-				continue
-			if out != 0:
-				return "Can be replaced: ", out
-			else: continue
-		return 0
-
-	def clear_list_db(self, list):
-		clear_list = []
-		for each in list:
-			clear_list.append(each[0])
-		return clear_list
-
+		query = """
+				SELECT tk._id FROM tweet_keywords tk
+				INNER JOIN tweets t ON t._id = tk._tweet
+				WHERE t.timestamp < DATE_SUB(NOW(), INTERVAL 2 WEEK)
+				ORDER BY t.timestamp DESC
+				LIMIT 1"""
+		loc_cursor.execute(query)
+		try:
+			return loc_cursor.fetchall()[0]
+		except:
+			return 0
 	def fetch_twt_kword__tweet(self, kword):
 		loc_cursor = self.conn.cursor()
 		query = """select _tweet from tweet_keyword where _keyword = '%s'"""
@@ -278,7 +264,7 @@ class Cloud_Parser(object):
 		else: return 0
 
 	#NB!: Major back-end method - responsible for parsing a tweet and divide it into tables in a db
-	def store_data(self, tweet): #id, usr, text, lat, lng, timestamp
+	def store_data(self, tweet, replace): #id, usr, text, lat, lng, timestamp
 		twt = tweet.dict()
 		tweet_id = twt['_id']
 		text = self.elim_useless(twt['text'])
@@ -299,20 +285,9 @@ class Cloud_Parser(object):
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each),self.fetch_cloud_id(c) ,time_i, day[0])
 
-		print "Insert twt_kword"
 		for word in text:
 			replace = self.select_old_id_twt_kword()
 			if replace != 0:
-				self.update_twt_kword(tweet_id, word, replace)
+				self.update_twt_kword(tweet_id, word, replace[0])
 			else:
 				self.insert_twt_kword(tweet_id, word)
-
-test = Cloud_Parser()
-text = "Maybe late, but I've just found from here that you can simply omit the external select and alias, and just have"
-#test.insert_keyword(test.elim_useless(text))
-#test.elim_useless(text)
-#print test.index_precision(0.2)
-#list = [0.2, 0.6, 1.2]
-#for each in list:
-#	print test.index_precision(each)
-print test.fetch_cloud_id("U4oYcV")
