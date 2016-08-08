@@ -10,14 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/util/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/util/util.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/collector/mysql_connect.py" afterPath="$PROJECT_DIR$/collector/mysql_connect.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/collector/twitter_collector.py" afterPath="$PROJECT_DIR$/collector/twitter_collector.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generator/cloud_generator.py" afterPath="$PROJECT_DIR$/generator/cloud_generator.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/runner.py" afterPath="$PROJECT_DIR$/runner.py" />
     </list>
     <ignored path="semantic-map.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -41,41 +36,44 @@
       <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+            <state relative-caret-position="269">
+              <caret line="32" column="24" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <element signature="e#1066#1129#0" expanded="false" />
-                <element signature="e#1193#1479#0" expanded="false" />
-                <element signature="e#1326#1463#0" expanded="false" />
-                <element signature="e#1519#1682#0" expanded="false" />
-                <element signature="e#1605#1660#0" expanded="false" />
-                <element signature="e#1708#1926#0" expanded="false" />
-                <element signature="e#1960#1999#0" expanded="false" />
-                <element signature="e#2030#2060#0" expanded="false" />
-                <element signature="e#2152#2318#0" expanded="false" />
-                <element signature="e#2355#2639#0" expanded="false" />
-                <element signature="e#2541#2602#0" expanded="false" />
-                <element signature="e#2744#3265#0" expanded="false" />
-                <element signature="e#2953#3145#0" expanded="false" />
-                <element signature="e#3331#3681#0" expanded="false" />
-                <element signature="e#3521#3601#0" expanded="false" />
-                <element signature="e#3615#3681#0" expanded="false" />
-                <element signature="e#3744#4026#0" expanded="false" />
-                <element signature="e#3906#4001#0" expanded="false" />
-                <element signature="e#4066#4293#0" expanded="false" />
-                <element signature="e#4173#4240#0" expanded="false" />
-                <element signature="e#4333#4562#0" expanded="false" />
-                <element signature="e#4440#4507#0" expanded="false" />
-                <element signature="e#5274#5468#0" expanded="false" />
-                <element signature="e#5516#5711#0" expanded="false" />
-                <element signature="e#5763#5985#0" expanded="false" />
-                <element signature="e#6076#6310#0" expanded="false" />
-                <element signature="e#6368#6494#0" expanded="false" />
-                <element signature="e#6528#6688#0" expanded="false" />
-                <element signature="e#6724#6882#0" expanded="false" />
-                <element signature="e#6953#7204#0" expanded="false" />
-                <element signature="e#7234#7550#0" expanded="false" />
+                <element signature="e#1032#1079#0" expanded="false" />
+                <element signature="e#1143#1429#0" expanded="false" />
+                <element signature="e#1276#1413#0" expanded="false" />
+                <element signature="e#1469#1632#0" expanded="false" />
+                <element signature="e#1555#1610#0" expanded="false" />
+                <element signature="e#1658#1876#0" expanded="false" />
+                <element signature="e#1910#1949#0" expanded="false" />
+                <element signature="e#1980#2010#0" expanded="false" />
+                <element signature="e#2102#2268#0" expanded="false" />
+                <element signature="e#2305#2589#0" expanded="false" />
+                <element signature="e#2491#2552#0" expanded="false" />
+                <element signature="e#2910#3102#0" expanded="false" />
+                <element signature="e#3288#3638#0" expanded="false" />
+                <element signature="e#3478#3558#0" expanded="false" />
+                <element signature="e#3572#3638#0" expanded="false" />
+                <element signature="e#3701#3983#0" expanded="false" />
+                <element signature="e#3863#3958#0" expanded="false" />
+                <element signature="e#4023#4250#0" expanded="false" />
+                <element signature="e#4130#4197#0" expanded="false" />
+                <element signature="e#4290#4519#0" expanded="false" />
+                <element signature="e#4397#4464#0" expanded="false" />
+                <element signature="e#4614#4814#0" expanded="false" />
+                <element signature="e#4847#5055#0" expanded="false" />
+                <element signature="e#5113#5318#0" expanded="false" />
+                <element signature="e#5358#5738#0" expanded="false" />
+                <element signature="e#5774#5859#0" expanded="false" />
+                <element signature="e#5905#6099#0" expanded="false" />
+                <element signature="e#6147#6342#0" expanded="false" />
+                <element signature="e#6394#6616#0" expanded="false" />
+                <element signature="e#7006#7132#0" expanded="false" />
+                <element signature="e#7166#7326#0" expanded="false" />
+                <element signature="e#7362#7520#0" expanded="false" />
+                <element signature="e#7591#7842#0" expanded="false" />
+                <element signature="e#7872#8188#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -94,7 +92,7 @@
       <file leaf-file-name="util.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/util/util.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="79">
+            <state relative-caret-position="493">
               <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
               <folding />
             </state>
@@ -104,7 +102,7 @@
       <file leaf-file-name="runner.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/runner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
+            <state relative-caret-position="153">
               <caret line="13" column="20" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="20" />
               <folding>
                 <element signature="e#21#58#0" expanded="true" />
@@ -116,8 +114,8 @@
       <file leaf-file-name="cloud_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="50" column="52" selection-start-line="50" selection-start-column="52" selection-end-line="50" selection-end-column="52" />
+            <state relative-caret-position="300">
+              <caret line="43" column="78" selection-start-line="43" selection-start-column="78" selection-end-line="43" selection-end-column="78" />
               <folding />
             </state>
           </provider>
@@ -151,8 +149,8 @@
         <option value="$PROJECT_DIR$/util/util.py" />
         <option value="$PROJECT_DIR$/collector/twitter_collector.py" />
         <option value="$PROJECT_DIR$/runner.py" />
-        <option value="$PROJECT_DIR$/generator/cloud_generator.py" />
         <option value="$PROJECT_DIR$/processor/cloud_parser.py" />
+        <option value="$PROJECT_DIR$/generator/cloud_generator.py" />
       </list>
     </option>
   </component>
@@ -163,9 +161,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="683" />
-    <option name="width" value="683" />
-    <option name="height" value="768" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="784" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -277,10 +276,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="collector" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -298,24 +311,7 @@
       <recent name="C:\Users\Vsev Montes\Desktop\scmp2016\semantic-map\processor" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.runner">
-    <configuration default="false" name="pantas_tut" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/ML-Summer2016" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="ML-Summer2016" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/ML-Summer2016/pantas_tut.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.cloud_generator">
     <configuration default="false" name="main_parse" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -380,6 +376,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="semantic-map" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/util/util.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="cloud_generator" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/generator" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="semantic-map" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/generator/cloud_generator.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -519,19 +532,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.pantas_tut" />
-      <item index="1" class="java.lang.String" itemvalue="Python.main_parse" />
-      <item index="2" class="java.lang.String" itemvalue="Python.runner" />
-      <item index="3" class="java.lang.String" itemvalue="Python.cloud_parser" />
-      <item index="4" class="java.lang.String" itemvalue="Python.util" />
+      <item index="0" class="java.lang.String" itemvalue="Python.main_parse" />
+      <item index="1" class="java.lang.String" itemvalue="Python.runner" />
+      <item index="2" class="java.lang.String" itemvalue="Python.cloud_parser" />
+      <item index="3" class="java.lang.String" itemvalue="Python.util" />
+      <item index="4" class="java.lang.String" itemvalue="Python.cloud_generator" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.runner" />
-        <item index="1" class="java.lang.String" itemvalue="Python.util" />
-        <item index="2" class="java.lang.String" itemvalue="Python.cloud_parser" />
-        <item index="3" class="java.lang.String" itemvalue="Python.main_parse" />
-        <item index="4" class="java.lang.String" itemvalue="Python.pantas_tut" />
+        <item index="0" class="java.lang.String" itemvalue="Python.cloud_generator" />
+        <item index="1" class="java.lang.String" itemvalue="Python.cloud_parser" />
+        <item index="2" class="java.lang.String" itemvalue="Python.runner" />
+        <item index="3" class="java.lang.String" itemvalue="Python.util" />
+        <item index="4" class="java.lang.String" itemvalue="Python.main_parse" />
       </list>
     </recent_temporary>
   </component>
@@ -552,15 +565,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="683" y="0" width="683" height="768" extended-state="0" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35232383" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12005857" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31914893" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26557863" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -871,31 +884,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/util/util">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="62" selection-start-line="13" selection-start-column="62" selection-end-line="13" selection-end-column="62" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parseutil/util">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/util/util" />
+    <entry file="file://$PROJECT_DIR$/parseutil/util" />
     <entry file="file://$PROJECT_DIR$/collector/twitter_collector.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -909,7 +906,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/util/util.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="79">
+        <state relative-caret-position="493">
           <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
           <folding />
         </state>
@@ -917,19 +914,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/runner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
+        <state relative-caret-position="153">
           <caret line="13" column="20" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="20" />
           <folding>
             <element signature="e#21#58#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="50" column="52" selection-start-line="50" selection-start-column="52" selection-end-line="50" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -941,43 +930,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="43" column="78" selection-start-line="43" selection-start-column="78" selection-end-line="43" selection-end-column="78" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="269">
+          <caret line="32" column="24" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1066#1129#0" expanded="false" />
-            <element signature="e#1193#1479#0" expanded="false" />
-            <element signature="e#1326#1463#0" expanded="false" />
-            <element signature="e#1519#1682#0" expanded="false" />
-            <element signature="e#1605#1660#0" expanded="false" />
-            <element signature="e#1708#1926#0" expanded="false" />
-            <element signature="e#1960#1999#0" expanded="false" />
-            <element signature="e#2030#2060#0" expanded="false" />
-            <element signature="e#2152#2318#0" expanded="false" />
-            <element signature="e#2355#2639#0" expanded="false" />
-            <element signature="e#2541#2602#0" expanded="false" />
-            <element signature="e#2744#3265#0" expanded="false" />
-            <element signature="e#2953#3145#0" expanded="false" />
-            <element signature="e#3331#3681#0" expanded="false" />
-            <element signature="e#3521#3601#0" expanded="false" />
-            <element signature="e#3615#3681#0" expanded="false" />
-            <element signature="e#3744#4026#0" expanded="false" />
-            <element signature="e#3906#4001#0" expanded="false" />
-            <element signature="e#4066#4293#0" expanded="false" />
-            <element signature="e#4173#4240#0" expanded="false" />
-            <element signature="e#4333#4562#0" expanded="false" />
-            <element signature="e#4440#4507#0" expanded="false" />
-            <element signature="e#5274#5468#0" expanded="false" />
-            <element signature="e#5516#5711#0" expanded="false" />
-            <element signature="e#5763#5985#0" expanded="false" />
-            <element signature="e#6076#6310#0" expanded="false" />
-            <element signature="e#6368#6494#0" expanded="false" />
-            <element signature="e#6528#6688#0" expanded="false" />
-            <element signature="e#6724#6882#0" expanded="false" />
-            <element signature="e#6953#7204#0" expanded="false" />
-            <element signature="e#7234#7550#0" expanded="false" />
+            <element signature="e#1032#1079#0" expanded="false" />
+            <element signature="e#1143#1429#0" expanded="false" />
+            <element signature="e#1276#1413#0" expanded="false" />
+            <element signature="e#1469#1632#0" expanded="false" />
+            <element signature="e#1555#1610#0" expanded="false" />
+            <element signature="e#1658#1876#0" expanded="false" />
+            <element signature="e#1910#1949#0" expanded="false" />
+            <element signature="e#1980#2010#0" expanded="false" />
+            <element signature="e#2102#2268#0" expanded="false" />
+            <element signature="e#2305#2589#0" expanded="false" />
+            <element signature="e#2491#2552#0" expanded="false" />
+            <element signature="e#2910#3102#0" expanded="false" />
+            <element signature="e#3288#3638#0" expanded="false" />
+            <element signature="e#3478#3558#0" expanded="false" />
+            <element signature="e#3572#3638#0" expanded="false" />
+            <element signature="e#3701#3983#0" expanded="false" />
+            <element signature="e#3863#3958#0" expanded="false" />
+            <element signature="e#4023#4250#0" expanded="false" />
+            <element signature="e#4130#4197#0" expanded="false" />
+            <element signature="e#4290#4519#0" expanded="false" />
+            <element signature="e#4397#4464#0" expanded="false" />
+            <element signature="e#4614#4814#0" expanded="false" />
+            <element signature="e#4847#5055#0" expanded="false" />
+            <element signature="e#5113#5318#0" expanded="false" />
+            <element signature="e#5358#5738#0" expanded="false" />
+            <element signature="e#5774#5859#0" expanded="false" />
+            <element signature="e#5905#6099#0" expanded="false" />
+            <element signature="e#6147#6342#0" expanded="false" />
+            <element signature="e#6394#6616#0" expanded="false" />
+            <element signature="e#7006#7132#0" expanded="false" />
+            <element signature="e#7166#7326#0" expanded="false" />
+            <element signature="e#7362#7520#0" expanded="false" />
+            <element signature="e#7591#7842#0" expanded="false" />
+            <element signature="e#7872#8188#0" expanded="false" />
           </folding>
         </state>
       </provider>

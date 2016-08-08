@@ -36,14 +36,12 @@ class Cloud_Generator(object):
     					   _id  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
     					   _keyword  BIGINT UNSIGNED NOT NULL COMMENT '',
     					   _cloud  CHAR(10) NOT NULL COMMENT '',
-    					   layer INT(1) NOT NULL COMMENT '',
     					   time_index BIGINT NOT NULL COMMENT '',
     					   day CHAR(3) NOT NULL COMMENT '',
     					   count  BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
     					  PRIMARY KEY ( _id )  COMMENT '',
     					  UNIQUE INDEX  keyword_idx  ( _keyword  ASC)  COMMENT '',
     					  UNIQUE INDEX  cloud_idx  ( _cloud  ASC)  COMMENT '',
-    					  UNIQUE INDEX layer_idx ( layer ASC) COMMENT '',
     					  CONSTRAINT  keyword
     						FOREIGN KEY ( _keyword )
     						REFERENCES  keywords  ( _id )
@@ -65,5 +63,4 @@ class Cloud_Generator(object):
             self.conn.rollback()
 
 
-
-
+test = Cloud_Generator()

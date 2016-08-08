@@ -19,7 +19,7 @@ class Cloud_Parser(object):
 		chunk_size = 100
 		start_time = time.strftime("2016-06-08 00:00:00")
 		while True:
-			sql = """SELECT * FROM tweets where timestamp > '%s' LIMIT %s"""
+			sql = """SELECT * FROM tweets where timestamp > '%s' LIMIT '%s'"""
 
 			try:
 				loc_cursor.execute(sql, (start_time, chunk_size))
@@ -34,15 +34,15 @@ class Cloud_Parser(object):
 						self.store_data(twt)
 					except:
 						continue
-				last = results[-1].dict()
+				last = self.last_tweet(results[-1]).dict()
 				start_time = last['time']
 			except Exception, e:
 				print e
-				time.sleep(3600) #if no new data - sleep for 1 hr
 
-	def reset_increment(self):
-		clear = """truncate table cloud"""
-		self.cursor.execute(clear)
+	def last_tweet(self, list):
+		twt = Tweet()
+		twt.populate(list)
+		return twt
 
 #START: word/char elimination
 	def elim_useless(self, txt):
@@ -105,7 +105,7 @@ class Cloud_Parser(object):
 	#START: Counter table
 	def insert_counter(self, kword, cloud, time_index, day):
 		loc_cursor = self.conn.cursor()
-		query = """insert into word_counter (_keyword, _cloud, time_index, day) values ('%s', '%s', '%s', %s)"""
+		query = """insert ignore into word_counter (_keyword, _cloud, time_index, day) values ('%s', '%s', '%s', %s)"""
 		if self.fetch_counter_id(kword, cloud, time_index, day) is None:
 			loc_cursor.execute(query, (kword, cloud, time_index, day))
 			self.conn.commit()
@@ -152,17 +152,47 @@ class Cloud_Parser(object):
 	#END: Counter table
 
 	# START: Tweet_keyword table
-	def insert_twt_keyword(self, tweet_id, kword):
+	def insert_twt_kword(self, ntwt, nkwrd):
 		loc_cursor = self.conn.cursor()
-		update_query = """update tweet_keywords set _tweet = '%s' and _keyword = '%s' where _tweet =
-							(select _id from tweets WHERE timestamp <= DATE_SUB(NOW(), INTERVAL 2 WEEK limit 1)) limit 1;"""
-		insert_query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s');"""
-		check_query = """select 1 from tweets WHERE timestamp <= DATE_SUB(NOW(), INTERVAL 2 WEEK) limit 1;"""
+		query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s')"""
+		loc_cursor.execute(query, (ntwt, self.fetch_keyword_id(nkwrd)))
+		self.conn.commit()
+
+	def select_old_tweet(self):
+		loc_cursor = self.conn.cursor()
+		query = """select _id from tweets where timestamp <= DATE_SUB(NOW(), INTERVAL 2 WEEK)"""
+		loc_cursor.execute(query)
 		try:
-			loc_cursor.execute(update_query, (tweet_id, self.fetch_keyword_id(kword)))
-			self.conn.commit()
-		except:
-			self.conn.rollback()
+			return loc_cursor.fetchall()
+		except: return 0
+
+	def update_twt_kword(self, ntwt, nkwrd, replace_id):
+		loc_cursor = self.conn.cursor()
+		query = """update tweet_keywords set _tweet = '%s', _keyword = '%s' where _id = '%s' limit 1"""
+		loc_cursor.execute(query, (ntwt, nkwrd, replace_id))
+		self.conn.commit()
+
+	def select_old_id_twt_kword(self):
+		loc_cursor = self.conn.cursor()
+		query = """select _id from tweet_keywords where _tweet = '%s'"""
+		clear_list = self.clear_list_db(self.select_old_tweet())
+		for each in clear_list:
+			print each
+			loc_cursor.execute(query, each)
+			try:
+				out = loc_cursor.fetchone()[0]
+			except:
+				continue
+			if out != 0:
+				return "Can be replaced: ", out
+			else: continue
+		return 0
+
+	def clear_list_db(self, list):
+		clear_list = []
+		for each in list:
+			clear_list.append(each[0])
+		return clear_list
 
 	def fetch_twt_kword__tweet(self, kword):
 		loc_cursor = self.conn.cursor()
@@ -188,7 +218,7 @@ class Cloud_Parser(object):
 
 	def insert_cloud(self, hash, precision):
 		loc_cursor = self.conn.cursor()
-		query = """insert into cloud (cloud, layer) values ('%s', '%s');"""
+		query = """insert ignore into cloud (cloud, layer) values ('%s', '%s');"""
 		try:
 			loc_cursor.execute(query, (hash, self.index_precision(precision)))
 			self.conn.commit()
@@ -233,6 +263,7 @@ class Cloud_Parser(object):
 		if time.strftime('22:00:00') <= t <= time.strftime('03:59:59') : return 4
 		else: return 0
 
+	#NB!: Major back-end method - responsible for parsing a tweet and divite it into tables in a db
 	def store_data(self, tweet): #id, usr, text, lat, lng, timestamp
 		tweet = tweet.dict()
 		tweet_id = tweet['_id']
@@ -241,15 +272,26 @@ class Cloud_Parser(object):
 		time_i = self.time_index(day[1])
 		lyrs = [0.2,0.6,1.2] #scaling: 0.2 = 0.2*1km
 		cloud = [] #must be 3 hashed values
+		self.insert_keyword(self.elim_useless(text))
 
-		self.insert_keyword(self.elim_useless(tweet['text']))
-
+		#Cloud calculation and insertion
 		for each in lyrs:
-			cloud.append(self.util.hash_geo(tweet['lat'],tweet['lng'],each))
-			self.insert_cloud(hash, self.index_precision(each))
+			cloud.append(self.util.hash_geo(tweet['lat'],tweet['lng'],each)) #Will need it later
+			self.insert_cloud(self.util.hash_geo(tweet['lat'],tweet['lng'], each), self.index_precision(each))
 
-		for each in self.elim_useless(tweet['text']):
+		#Word counter
+		for each in self.elim_useless(text):
 			for c in cloud:
 				self.insert_counter(self.fetch_keyword_id(each),c ,time_i, day[0])
 
-		for word in text: self.insert_twt_keyword(tweet_id, word)
+		for word in text:
+			replace = self.select_old_id_twt_kword()
+			if replace != 0:
+				self.update_twt_kword(tweet_id, word, replace)
+			else:
+				self.insert_twt_kword(tweet_id, word)
+
+test = Cloud_Parser()
+print test.select_old_id_twt_kword()
+print test.select_old_tweet()
+
