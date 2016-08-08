@@ -15,10 +15,10 @@ class Cloud_Generator(object):
 			@param filterValue {Object} 
 		"""
 		
-		filterValue = self._validateFilters(filterValue)
+		filterValue = self._validate_filters(filterValue)
 
-		print("Values filtered")
-		print(json.dumps(filterValue))
+		#print("Values filtered")
+		#print(json.dumps(filterValue))
 
 		if type == 'heatmap':
 			return self._get_heat_map(filterValue)
@@ -39,21 +39,22 @@ class Cloud_Generator(object):
 			raise Exception('Type of procedure is not defined')
 
 
-	def _validateFilters(self, fv):
+	def _validate_filters(self, fv):
 		"""Validate filters and set default values"""
 
 		filters = {}
 
 		#keywords
-		keywords = json.loads(fv.get('k', '["%"]'))
+		keywords = json.loads(fv.get('k', '["(.*)"]'))
+		regex = ''
 		if len(keywords) > 5:
 			raise Exception('Too many keywords')
 		for i in range(len(keywords)):
 			keyword = keywords[i]
 			if len(keyword) > 10:
 				raise Exception('Too long keyword')
-			keywords[i] = escape(keyword)
-		keywords = json.dumps(keywords).replace('[', '(').replace(']', ')')
+			regex += escape(keyword) + '|'
+		keywords = regex[:-1]
 		filters['keywords'] = keywords
 
 		#boundary
@@ -70,7 +71,7 @@ class Cloud_Generator(object):
 
 
 		#date
-		date = json.loads(fv.get('d', '{"start": "2099-01-01 00:00:00", "end": "0000-00-00 00:00:00"}'))
+		date = json.loads(fv.get('d', '{"start": "0000-00-00 00:00:00", "end": "2099-01-01 00:00:00"}'))
 		for key, value in date.items():
 			try:
 				re.match(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}', value)
@@ -119,12 +120,12 @@ class Cloud_Generator(object):
 		sql_dev = """SELECT lat, lng 
 			FROM tweets 
 			WHERE 
-				text IN %s 
+				text REGEXP '%s'
 				AND
 				CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
 			ORDER BY timestamp DESC 
-			LIMIT 10000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
-
+			LIMIT 2000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
+			#LIMIT 10000
 		#FIXME use parsed keywords
 
 		return self._return_result(sql_dev)
@@ -135,12 +136,12 @@ class Cloud_Generator(object):
 		sql_dev = """SELECT HOUR(timestamp), count(HOUR(timestamp))
 			FROM tweets 
 			WHERE 
-				text IN %s 
+				text REGEXP '%s' 
 				AND
 				CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
 			GROUP BY HOUR(timestamp)
-			ORDER BY timestamp ASC 
-			LIMIT 10000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
+			ORDER BY HOUR(timestamp) ASC 
+			LIMIT 2000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
 
 		return self._return_result(sql_dev)
 

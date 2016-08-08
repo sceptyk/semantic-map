@@ -52,7 +52,8 @@ function initMap() {
             console.log(_layer, layer);
             if(_layer != layer){
                 layer = _layer;
-                onGridMap();
+
+                //onWordCloud();
             }
         }, 2000, _layer);
     });
@@ -67,6 +68,8 @@ function initMap() {
         timer = setTimeout(function(){
             //console.log('create new WordCloud');
             //createWordCloud();
+            //onHeatMap();
+            //onPopularity();
         }, 2000);
     });
 
@@ -77,14 +80,14 @@ function initMap() {
         //console.log("Click");
         boundary = new google.maps.LatLngBounds({lat: p.lat() + step, lng: p.lng() - step}, {lat: p.lat() - step, lng: p.lng() + step});
         clickPoint = p;
-        onMovementMap();
+
+        //onMovement();
     });
 
    $(document).ready(function(){
 
         onHeatMap();
-        //onGridMap();
-        //onWordCloud();
+        onWordCloud();
         onPopularity();
    });
 
@@ -102,11 +105,6 @@ function onHeatMap(){
     
     createHeatMap();
     
-}
-
-function onGridMap(){
-    
-    createGridHeatMap();
 }
 
 function onWordCloud(){
@@ -140,6 +138,7 @@ function createGridHeatMap(){
 
     //map.fitBounds(boundary);
 
+    //TODO remove it, catch onclick event send for movement and wordcloud update
     grid = [];
 
     query('grid', function(sqs){
@@ -205,29 +204,62 @@ function removeGridHeatMap(){
  * ********************************************/
 function createWordCloud(){
 
-    query('cloud', function(keywords){
+    //query('cloud', function(keywords){
+
+        function rand(){
+            return Math.random() * 10000 + 100;
+        }
+
+        var keywords = [
+            ["satisfy", rand()],
+            ["silent", rand()],
+            ["rabid", rand()],
+            ["simplistic", rand()],
+            ["magical", rand()],
+            ["frequent", rand()],
+            ["undress", rand()],
+            ["wing", rand()],
+            ["excited", rand()],
+            ["pest", rand()],
+            ["juicy", rand()],
+            ["close", rand()]
+        ];
+        
+        var max = 0;
+
+        var preview = $('#canvas-word-cloud-preview');
+        var view = $('#canvas-word-cloud-view');
+
+        for(var i=0,l=keywords.length;i<l;i++){
+            if(keywords[i][1] > max) max = keywords[i][1];
+        }
 
         //console.log(keywords);
+        console.log(preview.height()*0.2*keywords[0][1]/max+preview.height()*0.1);
 
-        var list = [];
-        
-        var minFontSize = 16;
-        var min = keywords[0][1];
-
-        for(var i=0,l=keywords.length;i<l;i++){
-            if(keywords[i][1] < min) min = keywords[i][1];
+        function setCanvas($el){
+            var h = $el.height();
+            WordCloud($el.get(0), { 
+                list: keywords,
+                weightFactor: function(size){
+                    return h*0.2*size/max+h*0.01;
+                }
+            });
         }
 
-        for(var i=0,l=keywords.length;i<l;i++){
-            var keyword = keywords[i];
-            keyword[1] = keyword[1] / min * minFontSize;
-            list.push(keyword);
-        }
+        setCanvas(preview);
 
-        WordCloud(document.getElementById('canvas-word-cloud'), { 
-            list: list
-        }); 
-    });
+        var OnHoverToken = null;
+        $("#word-cloud.preview").hover(function(){
+
+            clearTimeout(OnHoverToken);
+            preview.hide();
+            OnHoverToken = setTimeout(function(){
+                preview.show();
+                setCanvas(preview);
+            }, 1000);
+        });
+    //});
 
     
 }
@@ -243,7 +275,7 @@ function createHeatMap(){
         boundary: true
     }, function(points){
 
-        //console.log(points.length);
+        //console.log(points);
 
         var gmPoints = [];
         for(var i=0,l=points.length;i<l;i++){
@@ -273,8 +305,6 @@ function removeHeatMap(){
  * ********************************************/
 function createPopularityMap(){
 
-
-
     query('popularity', {
         boundary: true
     }, function(hours){
@@ -289,11 +319,31 @@ function createPopularityMap(){
             data.push(hour[1]);
         }
 
-        //print graph
-        new Chart(document.getElementById('canvas-popularity'), {
-            type: 'line',
-            data: data,
-            labels: labels
+        //console.log(labels);
+
+        //print preview chart
+        new Chart(document.getElementById('canvas-popularity-preview'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: 'rgba(49,157,38,0.7)'
+                }]
+            },
+            options: {
+                tooltips: {
+                    enabled: false
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        display: false
+                    }]
+                }
+            }
         });
 
         /*var max = 0; //TODO
@@ -490,7 +540,7 @@ function getFilters(filters){
 
     }
 
-    console.log(processed);
+    //console.log(processed);
     return processed;
 }
 
@@ -503,11 +553,13 @@ function query(type, filters, success){
 
     var data = getFilters(filters);
 
+    //console.log("Query: ", type);
+
     $.get(
         'json/' + type,
         data,
         function(data){
-            console.log("Success:");
+            console.log("Success: ", type);
             //console.log(data);
             success(data);
         }
