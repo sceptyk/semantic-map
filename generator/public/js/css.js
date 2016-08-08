@@ -28,4 +28,21 @@ $(function() {
     
     $("#input-date-value").text($("#input-time").slider("values", 0) + ":00 - " + $("#input-time").slider("values", 1) + ":00");
     
+    $("#toggle-filters").click(function(){
+        $(".menu-items").slideToggle();
+    });
+
+    /*var PINNED = false;
+    $(".preview").click(function(){
+        PINNED = PINNED ? false : true;
+    });
+    $(".preview").hover(function(){
+        if(!PINNED){
+            $(this).siblings('.view').show();
+        }
+    }, function(){
+        if(!PINNED){
+            $(this).siblings('.view').hide();
+        }
+    });*/
 });
