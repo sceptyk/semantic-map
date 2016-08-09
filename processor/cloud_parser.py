@@ -106,33 +106,33 @@ class Cloud_Parser(object):
 	#END: Keywords table
 
 	#START: Counter table
-	def insert_counter(self, kword, cloud, time_index, day):
+	def insert_counter(self, kword, cloud,layer, day_time, day):
 		loc_cursor = self.conn.cursor()
-		query = """insert ignore into word_counter (_keyword, _cloud, time_index, day) values ('%s', '%s', '%s', %s)"""
-		if self.fetch_counter_id(kword, cloud, time_index, day) is None:
-			loc_cursor.execute(query, (kword, cloud, time_index, day))
+		query = """insert ignore into word_counter (_keyword, _cloud, _layer, day_time, day) values ('%s', %s, '%s', '%s', %s)"""
+		if self.fetch_counter_id(kword, cloud, layer, day_time, day) is None:
+			loc_cursor.execute(query, (kword, cloud, layer, day_time, day))
 			self.conn.commit()
-			self.incr_counter_count(self.fetch_counter_id(kword, cloud, time_index, day), kword, cloud, time_index, day)
+			self.incr_counter_count(self.fetch_counter_id(kword, cloud, layer, day_time, day))
 		else:
-			self.incr_counter_count(self.fetch_counter_id(kword, cloud, time_index, day), kword, cloud, time_index, day)
+			self.incr_counter_count(self.fetch_counter_id(kword, cloud, layer, day_time, day))
 
-	def incr_counter_count(self, id, kw,cloud, time_index, day):
+	def incr_counter_count(self, tkw_id):
 		loc_cursor = self.conn.cursor()
-		fetch = """update word_counter set count = count + 1 where _id = '%s' and _keyword = '%s' and _cloud = '%s' and time_index = '%s' and day = %s"""
+		fetch = """update word_counter set count = count + 1 where _id = '%s'"""
 		try:
-			loc_cursor.execute(fetch, (id, kw,cloud, time_index, day))
+			loc_cursor.execute(fetch, tkw_id)
 			self.conn.commit()
 		except:
 			self.conn.rollback()
 			raise Exception("Counter id doesnt exist")
 
-	def fetch_counter_id(self, word, cloud, time_index, day):
+	def fetch_counter_id(self, word, cloud, layer, day_time, day):
 		loc_cursor = self.conn.cursor()
-		query = """select _id from word_counter where _keyword = '%s' and _cloud = '%s' and time_index = '%s' and day = %s"""
+		query = """select _id from word_counter where _keyword = '%s' and _cloud = %s and _layer = '%s' and day_time = '%s' and day = %s"""
 		try:
-			loc_cursor.execute(query, (word, cloud, time_index, day))
-			return loc_cursor.fetchall()[0][0]
-		except:
+			loc_cursor.execute(query, (word, cloud, layer, day_time, day))
+			return loc_cursor.fetchall()[0]
+		except :
 			return None
 
 	def fetch_counter_cloud(self, id):
@@ -189,6 +189,7 @@ class Cloud_Parser(object):
 			return loc_cursor.fetchall()[0]
 		except:
 			return 0
+
 	def fetch_twt_kword__tweet(self, kword):
 		loc_cursor = self.conn.cursor()
 		query = """select _tweet from tweet_keyword where _keyword = '%s'"""
@@ -209,46 +210,6 @@ class Cloud_Parser(object):
 
 	# END: Tweet_keyword table
 
-	#START: Cloud
-
-	def insert_cloud(self, hash, precision):
-		loc_cursor = self.conn.cursor()
-		query = """insert ignore into cloud (cloud, layer) values (%s, '%s');"""
-		try:
-			loc_cursor.execute(query, (hash, self.index_precision(precision)))
-			self.conn.commit()
-		except:
-			self.conn.rollback()
-
-	def index_precision(self, precision):  # For scaling
-		if precision == 0.2:
-			return 1
-		elif precision == 0.6:
-			return 2
-		elif precision == 1.2:
-			return 3
-		else:
-			return 0
-
-	def fetch_layer(self, hash):
-		loc_cursor = self.conn.cursor()
-		query = """select layer from cloud where cloud = %s;"""
-		loc_cursor.execute(query, hash)
-		return loc_cursor.fetchall()[0]
-
-	def fetch_clouds(self, layer):
-		loc_cursor = self.conn.cursor()
-		query = """select cloud from cloud where layer = '%s';"""
-		loc_cursor.execute(query, layer)
-		return loc_cursor.fetchall()
-
-	def fetch_cloud_id(self, hash):
-		loc_cursor = self.conn.cursor()
-		query = """select _id from cloud where cloud = %s;"""
-		loc_cursor.execute(query, hash)
-		return loc_cursor.fetchall()[0][0]
-	#END: Cloud
-
 	def parse_timestamp(self, timestamp):  # 2016-06-07
 		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 		timestamp = str(timestamp)
@@ -256,11 +217,20 @@ class Cloud_Parser(object):
 		t = time.strftime(timestamp[11:20])
 		return wk, t
 
-	def time_index(self, t):
+	def day_time(self, t):
 		if time.strftime('04:00:00') <= t <= time.strftime('11:59:59') : return 1
 		if time.strftime('12:00:00') <= t <= time.strftime('16:59:59'): return 2
 		if time.strftime('17:00:00') <= t <= time.strftime('21:59:59'): return 3
 		if time.strftime('22:00:00') <= t <= time.strftime('03:59:59') : return 4
+		else: return 0
+
+	def layer_index(self, precision):
+		if precision == 0.2:
+			return 1
+		elif precision == 0.6:
+			return 2
+		elif precision == 1.2:
+			return 3
 		else: return 0
 
 	#NB!: Major back-end method - responsible for parsing a tweet and divide it into tables in a db
@@ -269,21 +239,18 @@ class Cloud_Parser(object):
 		tweet_id = twt['_id']
 		text = self.elim_useless(twt['text'])
 		day = self.parse_timestamp(twt['time'])
-		time_i = self.time_index(day[1])
+		time_i = self.day_time(day[1])
 		lyrs = [0.2,0.6,1.2] #scaling: 0.2 = 0.2*1km
 		cloud = [] #must be 3 hashed values
 
 		self.insert_keyword(text)
 		#Cloud calculation and insertion
 		for each in lyrs:
-			hash = self.util.hash_geo(twt['lat'],twt['lng'],each)
-			cloud.append(hash) #Will need it later
-			self.insert_cloud(hash, each)
-
+			cloud.append(self.util.hash_geo(twt['lat'],twt['lng'],each)) #Will need it later
 		#Word counter
 		for each in text:
-			for c in cloud:
-				self.insert_counter(self.fetch_keyword_id(each),self.fetch_cloud_id(c) ,time_i, day[0])
+			for index in range(0,3,1):
+				self.insert_counter(self.fetch_keyword_id(each), cloud[index], self.layer_index(lyrs[index]), time_i, day[0])
 
 		for word in text:
 			replace = self.select_old_id_twt_kword()
@@ -291,3 +258,5 @@ class Cloud_Parser(object):
 				self.update_twt_kword(tweet_id, word, replace[0])
 			else:
 				self.insert_twt_kword(tweet_id, word)
+
+test = Cloud_Parser()
