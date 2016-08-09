@@ -1,9 +1,8 @@
 #!usr/bin/env python
 
-from processor.cloud_parser import Cloud_Parser
+from processor.cloud_parser import Cloud_Parser as pars
 import thread
+import generator.cloud_generator as gen
 
-parser = Cloud_Parser()
-
-print("Cloud parser-----------------------")
-thread.start_new_thread(parser.get_data, ())
+gen.Cloud_Generator()
+pars.Cloud_Parser()
