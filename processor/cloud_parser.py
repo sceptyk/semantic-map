@@ -13,7 +13,6 @@ class Cloud_Parser(object):
 		self.conn = Mysql_Connect().get_connection()
 		self.cursor = self.conn.cursor()
 		self.util = Util()
-		self.get_data()
 
 	def get_data(self):
 		loc_cursor = self.conn.cursor()
@@ -258,5 +257,3 @@ class Cloud_Parser(object):
 				self.update_twt_kword(tweet_id, word, replace[0])
 			else:
 				self.insert_twt_kword(tweet_id, word)
-
-test = Cloud_Parser()

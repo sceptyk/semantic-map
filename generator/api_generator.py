@@ -35,6 +35,9 @@ class Cloud_Generator(object):
 		elif type == 'movement':
 			return self._get_global_movement(filterValue)
 
+		elif type == 'chain':
+			return self._get_activity_chain(filterValue)
+
 		else:
 			raise Exception('Type of procedure is not defined')
 
@@ -111,6 +114,10 @@ class Cloud_Generator(object):
 			raise Exception('Layer must be in range <0,4>')
 		filters['layer'] = layer
 
+		#geohash
+		#TODO process fv['center']
+		##TODO day_time as index
+
 		return filters
 
 	def _get_heat_map(self, fv):
@@ -174,27 +181,24 @@ class Cloud_Generator(object):
 		"""Get keywords of global cloud
 			@return array of keywords"""
 
-		sql_dev = """SELECT k.word, SUM(wc.count) as weight FROM keywords k
-			INNER JOIN word_counter wc 
-				ON wc._keyword = k._id
-			INNER JOIN cloud c
-				ON wc._cloud = c._id
+		print(fv)
+
+		sql_dev = """SELECT count FROM word_counter
 			WHERE
-				c.start_lat < '%s' AND c.start_lng < '%s' 
-				AND
-				c.end_lat > '%s' AND c.end_lng > '%s' 
-				AND
-				c.layer = '%s' 
+				hash = '%s'
 				AND 
-				c.day IN %s 
+				layer = '%s' 
 				AND 
-				c.start_time > '%s' AND c.end_time < '%s' 
+				day IN %s 
+				AND 
+				day_time = '%s' 
 			GROUP BY
 				k._id
 			ORDER BY
-				weight DESC 
-			LIMIT 20""" % (fv['rect']['elt'], fv['rect']['eln'], fv['rect']['slt'], fv['rect']['sln'],
-				fv['layer'], fv['days'], fv['time']['start'], fv['time']['end'])
+				count DESC 
+			LIMIT 20""" % (fv['geohash'], fv['layer'], fv['days'], fv['time']['part'])
+
+		print(sql_dev)
 
 		return self._return_result(sql_dev)
 
@@ -221,6 +225,14 @@ class Cloud_Generator(object):
 			ORDER BY x.timestamp DESC
 			LIMIT 20
 			""" % (fv['rect']['elt'], fv['rect']['eln'], fv['rect']['slt'], fv['rect']['sln'])
+
+		return self._return_result(sql_dev)
+
+	def _get_activity_chain(self, fv):
+		"""Get movement chains of users
+			@return array of points"""
+
+		sql_dev = """pass""" 
 
 		return self._return_result(sql_dev)
 

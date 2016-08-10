@@ -24,9 +24,11 @@ function initMap() {
             lng: -6.2597
         },
         mapTypeControl: false,
-        disableDefaultUI: true
+        disableDefaultUI: true,
+        draggableCursor: 'crosshair'
     });
 
+    var timer_1 = null;
     map.addListener('zoom_changed', function(){
         var zoom = map.getZoom();
         var _layer;
@@ -47,30 +49,15 @@ function initMap() {
             _layer = 0;
         }
 
-        clearTimeout(timer);
-        timer = setTimeout(function(_layer){
+        clearTimeout(timer_1);
+        timer_1 = setTimeout(function(_layer){
             console.log(_layer, layer);
             if(_layer != layer){
                 layer = _layer;
 
-                //onWordCloud();
+                onWordCloud();
             }
-        }, 2000, _layer);
-    });
-
-    map.addListener('bounds_changed', function(){
-        //TODO register update of word cloud
-        //
-        
-        boundary = map.getBounds();
-
-        clearTimeout(timer);
-        timer = setTimeout(function(){
-            //console.log('create new WordCloud');
-            //createWordCloud();
-            //onHeatMap();
-            //onPopularity();
-        }, 2000);
+        }, 500, _layer);
     });
 
     map.addListener('click', function(e){
@@ -78,6 +65,7 @@ function initMap() {
         var step = 0.01;
 
         //console.log("Click");
+        ////TODO boundary based on layer
         boundary = new google.maps.LatLngBounds({lat: p.lat() + step, lng: p.lng() - step}, {lat: p.lat() - step, lng: p.lng() + step});
         clickPoint = p;
 
@@ -204,9 +192,14 @@ function removeGridHeatMap(){
  * ********************************************/
 function createWordCloud(){
 
-    //query('cloud', function(keywords){
+    query('cloud', {
+        boundary: true,
+        layer: true,
+        days: true,
+        time: true
+    },function(keywords){
 
-        function rand(){
+        /*function rand(){
             return Math.random() * 10000 + 100;
         }
 
@@ -223,7 +216,7 @@ function createWordCloud(){
             ["pest", rand()],
             ["juicy", rand()],
             ["close", rand()]
-        ];
+        ];*/
         
         var max = 0;
 
@@ -234,8 +227,7 @@ function createWordCloud(){
             if(keywords[i][1] > max) max = keywords[i][1];
         }
 
-        //console.log(keywords);
-        console.log(preview.height()*0.2*keywords[0][1]/max+preview.height()*0.1);
+        console.log(keywords);
 
         function setCanvas($el){
             var h = $el.height();
@@ -259,7 +251,7 @@ function createWordCloud(){
                 setCanvas(preview);
             }, 1000);
         });
-    //});
+    });
 
     
 }
