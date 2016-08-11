@@ -25,7 +25,28 @@ function initMap() {
         },
         mapTypeControl: false,
         disableDefaultUI: true,
-        draggableCursor: 'crosshair'
+        draggableCursor: 'crosshair',
+        styles: [
+            {
+                featureType: 'all',
+                stylers: [
+                    { saturation: -80 }
+                ]
+            },{
+            featureType: 'road.arterial',
+            elementType: 'geometry',
+            stylers: [
+                { hue: '#00ffee' },
+                { saturation: 50 }
+            ]
+            },{
+                featureType: 'poi.business',
+                elementType: 'labels',
+                stylers: [
+                    { visibility: 'off' }
+                ]
+            }
+        ]
     });
 
     var timer_1 = null;
@@ -279,7 +300,23 @@ function createHeatMap(){
         heatmap = new google.maps.visualization.HeatmapLayer({
             data: gmPoints,
             map: map,
-            maxIntensity: 5
+            maxIntensity: 5,
+            gradient: [
+                'rgba(0, 255, 255, 0)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(235, 235, 255, 1)',
+                'rgba(196, 196, 255, 1)',
+                'rgba(157, 157, 255, 1)',
+                'rgba(118, 118, 255, 1)',
+                'rgba(78, 78, 255, 1)',
+                'rgba(39, 39, 255, 1)',
+                'rgba(0, 0, 255, 1)',
+                'rgba(0, 0, 216, 1)',
+                'rgba(0, 0, 177, 1)',
+                'rgba(0, 0, 137, 1)',
+                'rgba(0, 0, 98, 1)',
+                'rgba(0, 0, 59, 1)'
+            ]
         });
     });    
 }

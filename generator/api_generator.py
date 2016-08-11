@@ -17,7 +17,7 @@ class Cloud_Generator(object):
 			@param filterValue {Object} 
 		"""
 		
-		#TODO 
+		#TODO request limit per IP
 
 		filterValue = self._validate_filters(filterValue)
 
@@ -36,11 +36,8 @@ class Cloud_Generator(object):
 		elif type == 'popularity':
 			return self._get_popularity(filterValue)
 
-		elif type == 'movement':
-			return self._get_global_movement(filterValue)
-
-		elif type == 'chain':
-			return self._get_activity_chain(filterValue)
+		elif type == 'grid_popularity':
+			return self._get_grid_popularity(filterValue)
 
 		else:
 			raise Exception('Type of procedure is not defined')
@@ -177,7 +174,7 @@ class Cloud_Generator(object):
 			    wc._layer = '%s'
 			GROUP BY wc._cloud , wc._layer
 			ORDER BY sum(wc.count) DESC
-			LIMIT 1000""" % (fv['layer'],)
+			LIMIT 10000""" % (fv['layer'],)
 
 		return self._return_result(sql_dev)
 
