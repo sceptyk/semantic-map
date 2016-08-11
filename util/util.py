@@ -1,5 +1,5 @@
 import math
-
+import time
 class Util(object):
     def __init__(self):
         pass
@@ -53,3 +53,42 @@ class Util(object):
 
         # return {string}
         return hash
+
+    def day_time(self, t):
+        if time.strftime('04:00:00') <= t <= time.strftime('11:59:59'): return 1
+        if time.strftime('12:00:00') <= t <= time.strftime('16:59:59'): return 2
+        if time.strftime('17:00:00') <= t <= time.strftime('21:59:59'): return 3
+        if time.strftime('22:00:00') <= t <= time.strftime('03:59:59'):
+            return 4
+        else:
+            return 0
+
+    def layer_index(self, precision):
+        if precision == 0.2:
+            return 1
+        elif precision == 0.6:
+            return 2
+        elif precision == 1.2:
+            return 3
+        elif precision == 50.0:
+            return 4
+        else:
+            return 0
+
+    def day_index(self, day):
+        if day == "MON":
+            return 1
+        elif day == "TUE":
+            return 2
+        elif day == "WED":
+            return 3
+        elif day == "THU":
+            return 4
+        elif day == "FRI":
+            return 5
+        elif day == "SAT":
+            return 6
+        elif day == "SUN":
+            return 7
+        else:
+            return 0

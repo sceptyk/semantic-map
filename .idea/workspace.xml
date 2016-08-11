@@ -12,7 +12,10 @@
     <list default="true" id="8845d4f2-fc8d-45bc-b6c9-5bfc2334fbcb" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generator/cloud_generator.py" afterPath="$PROJECT_DIR$/generator/cloud_generator.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_parse.py" afterPath="$PROJECT_DIR$/main_parse.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processor/cloud_parser.py" afterPath="$PROJECT_DIR$/processor/cloud_parser.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/runner.py" afterPath="$PROJECT_DIR$/runner.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/util/util.py" afterPath="$PROJECT_DIR$/util/util.py" />
     </list>
     <ignored path="semantic-map.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,90 +36,68 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
+      <file leaf-file-name="cloud_generator.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="244" column="0" selection-start-line="244" selection-start-column="0" selection-end-line="244" selection-end-column="0" />
+            <state relative-caret-position="314">
+              <caret line="26" column="35" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="util.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/util/util.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="93" column="20" selection-start-line="93" selection-start-column="20" selection-end-line="93" selection-end-column="20" />
               <folding>
-                <element signature="e#285#403#0" expanded="false" />
-                <element signature="e#623#1095#0" expanded="false" />
-                <element signature="e#738#810#0" expanded="false" />
-                <element signature="e#885#1018#0" expanded="false" />
-                <element signature="e#1164#1211#0" expanded="false" />
-                <element signature="e#1275#1561#0" expanded="false" />
-                <element signature="e#1408#1545#0" expanded="false" />
-                <element signature="e#1601#1764#0" expanded="false" />
-                <element signature="e#1687#1742#0" expanded="false" />
-                <element signature="e#1790#1998#0" expanded="false" />
-                <element signature="e#2032#2071#0" expanded="false" />
-                <element signature="e#2102#2132#0" expanded="false" />
-                <element signature="e#2134#2161#0" expanded="false" />
-                <element signature="e#2427#2711#0" expanded="false" />
-                <element signature="e#2613#2674#0" expanded="false" />
-                <element signature="e#2711#2731#0" expanded="false" />
+                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#76#80#0" expanded="false" />
+                <element signature="e#121#227#0" expanded="false" />
+                <element signature="e#262#790#0" expanded="false" />
+                <element signature="e#830#845#0" expanded="false" />
+                <element signature="e#890#928#0" expanded="false" />
+                <element signature="e#983#1549#0" expanded="false" />
+                <element signature="e#1586#1948#0" expanded="false" />
+                <element signature="e#1996#2229#0" expanded="false" />
+                <element signature="e#2269#2629#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cloud_generator.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
+      <file leaf-file-name="main_parse.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main_parse.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="27" column="63" selection-start-line="27" selection-start-column="63" selection-end-line="27" selection-end-column="63" />
+            <state relative-caret-position="85">
+              <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tweet.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/tweet.py">
+      <file leaf-file-name="cloud_parser.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="connections.py" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Python27/Lib/site-packages/MySQLdb/connections.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="242" column="0" selection-start-line="242" selection-start-column="0" selection-end-line="242" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cursors.py" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Python27/Lib/site-packages/MySQLdb/cursors.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="stopwords.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/processor/stopwords.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="runner.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/runner.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
+            <state relative-caret-position="348">
+              <caret line="119" column="69" selection-start-line="119" selection-start-column="69" selection-end-line="119" selection-end-column="69" />
               <folding>
-                <element signature="e#21#58#0" expanded="true" />
+                <element signature="e#0#29#0" expanded="true" />
+                <element signature="e#1268#1554#0" expanded="false" />
+                <element signature="e#1401#1538#0" expanded="false" />
+                <element signature="e#1594#1757#0" expanded="false" />
+                <element signature="e#1680#1735#0" expanded="false" />
+                <element signature="e#1783#1991#0" expanded="false" />
+                <element signature="e#2025#2064#0" expanded="false" />
+                <element signature="e#2095#2125#0" expanded="false" />
+                <element signature="e#2127#2154#0" expanded="false" />
+                <element signature="e#2217#2383#0" expanded="false" />
+                <element signature="e#2420#2704#0" expanded="false" />
+                <element signature="e#2704#2724#0" expanded="false" />
+                <element signature="e#3741#3968#0" expanded="false" />
+                <element signature="e#4008#4237#0" expanded="false" />
+                <element signature="e#4566#4774#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -141,16 +122,16 @@
         <option value="$USER_HOME$/PycharmProjects/ML-Summer2016/pantas_tut.py" />
         <option value="$USER_HOME$/PycharmProjects/ML-Summer2016/nearest.py" />
         <option value="$PROJECT_DIR$/model/tweet.py" />
-        <option value="$PROJECT_DIR$/main_parse.py" />
         <option value="$PROJECT_DIR$/collector/twitter_stream_collector.py" />
         <option value="$PROJECT_DIR$/collector/collector.py" />
         <option value="$PROJECT_DIR$/util/util" />
         <option value="$PROJECT_DIR$/parseutil/util" />
-        <option value="$PROJECT_DIR$/util/util.py" />
         <option value="$PROJECT_DIR$/collector/mysql_connect.py" />
         <option value="$PROJECT_DIR$/collector/twitter_collector.py" />
         <option value="$PROJECT_DIR$/runner.py" />
+        <option value="$PROJECT_DIR$/main_parse.py" />
         <option value="$PROJECT_DIR$/generator/cloud_generator.py" />
+        <option value="$PROJECT_DIR$/util/util.py" />
         <option value="$PROJECT_DIR$/processor/cloud_parser.py" />
       </list>
     </option>
@@ -217,7 +198,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -236,9 +216,52 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="processor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semantic-map" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="generator" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -256,7 +279,7 @@
       <recent name="C:\Users\Vsev Montes\Desktop\scmp2016\semantic-map\processor" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.cloud_parser">
+  <component name="RunManager" selected="Python.main_parse">
     <configuration default="false" name="main_parse" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -485,11 +508,11 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.cloud_parser" />
-        <item index="1" class="java.lang.String" itemvalue="Python.cloud_generator" />
-        <item index="2" class="java.lang.String" itemvalue="Python.runner" />
-        <item index="3" class="java.lang.String" itemvalue="Python.util" />
-        <item index="4" class="java.lang.String" itemvalue="Python.main_parse" />
+        <item index="0" class="java.lang.String" itemvalue="Python.main_parse" />
+        <item index="1" class="java.lang.String" itemvalue="Python.cloud_parser" />
+        <item index="2" class="java.lang.String" itemvalue="Python.cloud_generator" />
+        <item index="3" class="java.lang.String" itemvalue="Python.runner" />
+        <item index="4" class="java.lang.String" itemvalue="Python.util" />
       </list>
     </recent_temporary>
   </component>
@@ -513,12 +536,12 @@
     <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.06295754" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24377745" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26557863" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27596438" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -688,13 +711,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stopwords.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/generator/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -786,29 +802,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_collect.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_parse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/util/util" />
     <entry file="file://$PROJECT_DIR$/parseutil/util" />
-    <entry file="file://$PROJECT_DIR$/util/util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/collector/collector.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -861,19 +856,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/runner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
-          <folding>
-            <element signature="e#21#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python27/Lib/site-packages/MySQLdb/connections.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
+        <state relative-caret-position="4029">
           <caret line="242" column="0" selection-start-line="242" selection-start-column="0" selection-end-line="242" selection-end-column="0" />
           <folding />
         </state>
@@ -881,41 +866,91 @@
     </entry>
     <entry file="file://C:/Python27/Lib/site-packages/MySQLdb/cursors.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
+        <state relative-caret-position="816">
           <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_collect.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stopwords.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util/util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="93" column="20" selection-start-line="93" selection-start-column="20" selection-end-line="93" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#76#80#0" expanded="false" />
+            <element signature="e#121#227#0" expanded="false" />
+            <element signature="e#262#790#0" expanded="false" />
+            <element signature="e#830#845#0" expanded="false" />
+            <element signature="e#890#928#0" expanded="false" />
+            <element signature="e#983#1549#0" expanded="false" />
+            <element signature="e#1586#1948#0" expanded="false" />
+            <element signature="e#1996#2229#0" expanded="false" />
+            <element signature="e#2269#2629#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_parse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/generator/cloud_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="27" column="63" selection-start-line="27" selection-start-column="63" selection-end-line="27" selection-end-column="63" />
+        <state relative-caret-position="314">
+          <caret line="26" column="35" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/processor/cloud_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="244" column="0" selection-start-line="244" selection-start-column="0" selection-end-line="244" selection-end-column="0" />
+        <state relative-caret-position="348">
+          <caret line="119" column="69" selection-start-line="119" selection-start-column="69" selection-end-line="119" selection-end-column="69" />
           <folding>
-            <element signature="e#285#403#0" expanded="false" />
-            <element signature="e#623#1095#0" expanded="false" />
-            <element signature="e#738#810#0" expanded="false" />
-            <element signature="e#885#1018#0" expanded="false" />
-            <element signature="e#1164#1211#0" expanded="false" />
-            <element signature="e#1275#1561#0" expanded="false" />
-            <element signature="e#1408#1545#0" expanded="false" />
-            <element signature="e#1601#1764#0" expanded="false" />
-            <element signature="e#1687#1742#0" expanded="false" />
-            <element signature="e#1790#1998#0" expanded="false" />
-            <element signature="e#2032#2071#0" expanded="false" />
-            <element signature="e#2102#2132#0" expanded="false" />
-            <element signature="e#2134#2161#0" expanded="false" />
-            <element signature="e#2427#2711#0" expanded="false" />
-            <element signature="e#2613#2674#0" expanded="false" />
-            <element signature="e#2711#2731#0" expanded="false" />
+            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#1268#1554#0" expanded="false" />
+            <element signature="e#1401#1538#0" expanded="false" />
+            <element signature="e#1594#1757#0" expanded="false" />
+            <element signature="e#1680#1735#0" expanded="false" />
+            <element signature="e#1783#1991#0" expanded="false" />
+            <element signature="e#2025#2064#0" expanded="false" />
+            <element signature="e#2095#2125#0" expanded="false" />
+            <element signature="e#2127#2154#0" expanded="false" />
+            <element signature="e#2217#2383#0" expanded="false" />
+            <element signature="e#2420#2704#0" expanded="false" />
+            <element signature="e#2704#2724#0" expanded="false" />
+            <element signature="e#3741#3968#0" expanded="false" />
+            <element signature="e#4008#4237#0" expanded="false" />
+            <element signature="e#4566#4774#0" expanded="false" />
           </folding>
         </state>
       </provider>

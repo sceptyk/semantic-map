@@ -3,7 +3,6 @@ from collector.mysql_connect import Mysql_Connect
 from util.util import Util
 import time
 import string
-import math
 import datetime
 import os
 
@@ -13,14 +12,13 @@ class Cloud_Parser(object):
 		self.conn = Mysql_Connect().get_connection()
 		self.cursor = self.conn.cursor()
 		self.util = Util()
-		self.get_data()
 
 	def get_data(self):
 		loc_cursor = self.conn.cursor()
-		chunk_size = 500
+		chunk_size = 10
 		start_time = time.strftime("2016-06-08 00:00:00")
 		while True:
-			sql = """SELECT * FROM tweets where timestamp > %s LIMIT %s"""
+			sql = """SELECT * FROM tweets where timestamp > %s order by timestamp desc LIMIT %s"""
 			try:
 				loc_cursor.execute(sql, (start_time, chunk_size))
 				results = loc_cursor.fetchall()
@@ -106,34 +104,26 @@ class Cloud_Parser(object):
 	#END: Keywords table
 
 	#START: Counter table
-	def insert_counter(self, kword, cloud,layer, day_time, day):
+	def insert_counter(self, kword, cloud, layer, day_time, day):
 		loc_cursor = self.conn.cursor()
 		query = """insert ignore into word_counter (_keyword, _cloud, _layer, day_time, day) values ('%s', %s, '%s', '%s', %s)"""
-		if self.fetch_counter_id(kword, cloud, layer, day_time, day) is None:
+		try:
 			loc_cursor.execute(query, (kword, cloud, layer, day_time, day))
 			self.conn.commit()
-			self.incr_counter_count(self.fetch_counter_id(kword, cloud, layer, day_time, day))
-		else:
-			self.incr_counter_count(self.fetch_counter_id(kword, cloud, layer, day_time, day))
-
-	def incr_counter_count(self, tkw_id):
-		loc_cursor = self.conn.cursor()
-		fetch = """update word_counter set count = count + 1 where _id = '%s'"""
-		try:
-			loc_cursor.execute(fetch, tkw_id)
-			self.conn.commit()
+			self.incr_counter_count(kword, cloud, layer, day_time, day)
 		except:
-			self.conn.rollback()
-			raise Exception("Counter id doesnt exist")
+			self.incr_counter_count(kword, cloud, layer, day_time, day)
 
-	def fetch_counter_id(self, word, cloud, layer, day_time, day):
+	def incr_counter_count(self, kword, cloud, layer, day_time, day):
 		loc_cursor = self.conn.cursor()
-		query = """select _id from word_counter where _keyword = '%s' and _cloud = %s and _layer = '%s' and day_time = '%s' and day = %s"""
+		fetch = """update word_counter w set w.count = w.count + 1 where w._id =
+				(select * from (select _id from word_counter wc where wc._keyword = '%s' and wc._cloud = %s and wc._layer = '%s' and wc.day_time = '%s' and wc.day = %s) tblTemp)"""
 		try:
-			loc_cursor.execute(query, (word, cloud, layer, day_time, day))
-			return loc_cursor.fetchall()[0]
-		except :
-			return None
+			loc_cursor.execute(fetch, (kword, cloud, layer, day_time, day))
+			self.conn.commit()
+		except Exception, e:
+			print e
+			self.conn.rollback()
 
 	def fetch_counter_cloud(self, id):
 		loc_cursor = self.conn.cursor()
@@ -217,30 +207,14 @@ class Cloud_Parser(object):
 		t = time.strftime(timestamp[11:20])
 		return wk, t
 
-	def day_time(self, t):
-		if time.strftime('04:00:00') <= t <= time.strftime('11:59:59') : return 1
-		if time.strftime('12:00:00') <= t <= time.strftime('16:59:59'): return 2
-		if time.strftime('17:00:00') <= t <= time.strftime('21:59:59'): return 3
-		if time.strftime('22:00:00') <= t <= time.strftime('03:59:59') : return 4
-		else: return 0
-
-	def layer_index(self, precision):
-		if precision == 0.2:
-			return 1
-		elif precision == 0.6:
-			return 2
-		elif precision == 1.2:
-			return 3
-		else: return 0
-
 	#NB!: Major back-end method - responsible for parsing a tweet and divide it into tables in a db
 	def store_data(self, tweet, replace): #id, usr, text, lat, lng, timestamp
 		twt = tweet.dict()
 		tweet_id = twt['_id']
 		text = self.elim_useless(twt['text'])
 		day = self.parse_timestamp(twt['time'])
-		time_i = self.day_time(day[1])
-		lyrs = [0.2,0.6,1.2] #scaling: 0.2 = 0.2*1km
+		time_i = self.util.day_time(day[1])
+		lyrs = [0.2,0.6,1.2,50.0] #scaling: 0.2 = 0.2*1km
 		cloud = [] #must be 3 hashed values
 
 		self.insert_keyword(text)
@@ -248,9 +222,11 @@ class Cloud_Parser(object):
 		for each in lyrs:
 			cloud.append(self.util.hash_geo(twt['lat'],twt['lng'],each)) #Will need it later
 		#Word counter
+
 		for each in text:
-			for index in range(0,3,1):
-				self.insert_counter(self.fetch_keyword_id(each), cloud[index], self.layer_index(lyrs[index]), time_i, day[0])
+			for index in range(0,4,1):
+				self.insert_counter(self.fetch_keyword_id(each), cloud[index],
+									self.util.layer_index(lyrs[index]), time_i, self.util.day_index(day[0]))
 
 		for word in text:
 			replace = self.select_old_id_twt_kword()
@@ -258,5 +234,3 @@ class Cloud_Parser(object):
 				self.update_twt_kword(tweet_id, word, replace[0])
 			else:
 				self.insert_twt_kword(tweet_id, word)
-
-test = Cloud_Parser()

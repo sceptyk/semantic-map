@@ -24,7 +24,7 @@ class Cloud_Generator(object):
     					   _cloud  CHAR(10) NOT NULL COMMENT '',
     					   _layer INT NOT NULL COMMENT '',
     					   day_time INT NOT NULL COMMENT '',
-    					   day CHAR(3) NOT NULL COMMENT '',
+    					   day INT NOT NULL COMMENT '',
     					   count  BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
     					  PRIMARY KEY ( _id )  COMMENT '',
     					  UNIQUE KEY entry_unq (_keyword, _cloud, _layer, day_time, day)  COMMENT '',

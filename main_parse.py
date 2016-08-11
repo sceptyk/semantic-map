@@ -3,5 +3,5 @@ import generator.cloud_generator as gen
 
 
 connection = pars.Cloud_Parser()
-enerator = gen.Cloud_Generator(64,64)
+generator = gen.Cloud_Generator()
 connection.get_data()
