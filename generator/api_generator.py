@@ -1,4 +1,5 @@
 from collector.mysql_connect import Mysql_Connect
+from util.util import Util
 from cgi import escape
 import time
 import re
@@ -8,13 +9,16 @@ class Cloud_Generator(object):
 
 	def __init__(self):
 		self.db = Mysql_Connect()
-		pass
+		self.util = Util()
+		
 
 	def generate(self, type = 'heatmap', filterValue = None):
 		"""	@param type {string} = heatmap | cloud
 			@param filterValue {Object} 
 		"""
 		
+		#TODO 
+
 		filterValue = self._validate_filters(filterValue)
 
 		#print("Values filtered")
@@ -88,6 +92,7 @@ class Cloud_Generator(object):
 			if not re.match(r'\d{2}:\d{2}:\d{2}', value):
 				raise Exception('Time is not in format')
 		filters['time'] = time
+		filters['daytime'] = {'start': self.util.day_time(time['start']), 'end': self.util.day_time(time['end'])}
 
 		#days
 		days = json.loads(fv.get('ds', '[1,2,3,4,5,6,7]'))
@@ -115,8 +120,9 @@ class Cloud_Generator(object):
 		filters['layer'] = layer
 
 		#geohash
-		#TODO process fv['center']
-		##TODO day_time as index
+		center = json.loads(fv.get('c', '[53.3385255,-6.2473989]'))
+		filters['geohash'] = self.hash(center[0], center[1], self.util.layer_precision(layer))
+		
 
 		return filters
 
@@ -152,28 +158,26 @@ class Cloud_Generator(object):
 
 		return self._return_result(sql_dev)
 
-	def _get_grid_map(self, fv):
+	def _get_grid_popularity(self, fv):
+		"""Get day time frequency from word counters"""
+		
+		sql_dev = """SELECT wc.day_time, sum(wc.count) FROM word_counter wc
+			WHERE
+			    wc._layer = '1'
+			GROUP BY wc._cloud , wc._layer, wc.day_time
+			ORDER BY wc._layer DESC"""
 
-		sql_dev = """SELECT c.start_lat, c.start_lng, c.end_lat, c.end_lng, SUM(count) as weight 
-			FROM word_counter wc 
-			INNER JOIN cloud c 
-				ON c._id = wc._cloud 
-			WHERE 
-				c.start_lat < '%s' AND c.start_lng < '%s' 
-				AND
-				c.end_lat > '%s' AND c.end_lng > '%s' 
-				AND
-				c.layer = '%s' 
-				AND 
-				c.day IN %s 
-				AND 
-				c.start_time > '%s' AND c.end_time < '%s' 
-			GROUP BY 
-				c.start_lat, c.start_lng, c.end_lat, c.end_lng 
-			ORDER BY
-				weight DESC 
-			LIMIT 10000""" % (fv['rect']['elt'], fv['rect']['eln'], fv['rect']['slt'], fv['rect']['sln'],
-				fv['layer'], fv['days'], fv['time']['start'], fv['time']['end'])
+		return self._return_result(sql_dev)
+
+	def _get_grid_map(self, fv):
+		"""Get most word clouds grid"""
+
+		sql_dev = """SELECT wc._cloud, sum(wc.count) FROM word_counter wc
+			WHERE
+			    wc._layer = '%s'
+			GROUP BY wc._cloud , wc._layer
+			ORDER BY sum(wc.count) DESC
+			LIMIT 1000""" % (fv['layer'],)
 
 		return self._return_result(sql_dev)
 
@@ -181,24 +185,17 @@ class Cloud_Generator(object):
 		"""Get keywords of global cloud
 			@return array of keywords"""
 
-		print(fv)
-
-		sql_dev = """SELECT count FROM word_counter
+		sql_dev = """SELECT k.word, sum(wc.count) FROM word_counter wc
+			        INNER JOIN
+			    keywords k ON k._id = wc._keyword
 			WHERE
-				hash = '%s'
-				AND 
-				layer = '%s' 
-				AND 
-				day IN %s 
-				AND 
-				day_time = '%s' 
-			GROUP BY
-				k._id
-			ORDER BY
-				count DESC 
-			LIMIT 20""" % (fv['geohash'], fv['layer'], fv['days'], fv['time']['part'])
-
-		print(sql_dev)
+			    wc._cloud = '%s'
+			    AND wc._layer = '%s'
+			    AND wc.day_time >= '%s'
+			    AND wc.day_time <= '%s'
+			GROUP BY wc._keyword , wc._cloud , wc._layer
+			ORDER BY sum(wc.count) DESC
+			LIMIT 20""" % (fv['geohash'], fv['layer'], fv['daytime']['start'], fv['daytime']['end'])
 
 		return self._return_result(sql_dev)
 

@@ -45,3 +45,23 @@ class Util(object):
 
 		#return {string}
 		return hash
+
+	def day_time(self, t):
+		if time.strftime('04:00:00') <= t <= time.strftime('11:59:59') : return 1
+		if time.strftime('12:00:00') <= t <= time.strftime('16:59:59'): return 2
+		if time.strftime('17:00:00') <= t <= time.strftime('21:59:59'): return 3
+		if time.strftime('22:00:00') <= t <= time.strftime('03:59:59') : return 4
+		else: return 0
+
+	def layer_index(self, precision):
+		if precision == 0.2:
+			return 1
+		elif precision == 0.6:
+			return 2
+		elif precision == 1.2:
+			return 3
+		else: return 0
+
+	def layer_precision(self, index):
+		precisions = [0, 0.2, 0.6, 1.2]
+		return precisions[index]
