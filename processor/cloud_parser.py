@@ -231,8 +231,6 @@ class Cloud_Parser(object):
 		for word in text:
 			replace = self.select_old_id_twt_kword()
 			if replace != 0:
-				print "update"
 				self.update_twt_kword(tweet_id, word, replace[0])
 			else:
-				print "insert"
 				self.insert_twt_kword(tweet_id, word)
