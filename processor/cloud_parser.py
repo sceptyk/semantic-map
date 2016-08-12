@@ -15,7 +15,7 @@ class Cloud_Parser(object):
 
 	def get_data(self):
 		loc_cursor = self.conn.cursor()
-		chunk_size = 10
+		chunk_size = 500
 		start_time = time.strftime("2016-06-08 00:00:00")
 		while True:
 			sql = """SELECT * FROM tweets where timestamp > %s order by timestamp asc LIMIT %s"""
