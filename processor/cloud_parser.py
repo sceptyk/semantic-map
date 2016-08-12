@@ -18,17 +18,16 @@ class Cloud_Parser(object):
 		chunk_size = 10
 		start_time = time.strftime("2016-06-08 00:00:00")
 		while True:
-			sql = """SELECT * FROM tweets where timestamp > %s order by timestamp desc LIMIT %s"""
+			sql = """SELECT * FROM tweets where timestamp > %s order by timestamp asc LIMIT %s"""
 			try:
 				loc_cursor.execute(sql, (start_time, chunk_size))
 				results = loc_cursor.fetchall()
 				if len(results)==0:
-					print "Not enough twees - sleep 1hr"
+					print "Not enough tweets - sleep 1hr"
 					time.sleep(3600)
 					continue
 				replace = self.select_old_id_twt_kword()
 				for row in results:
-					print "New tweet"
 					twt = Tweet()
 					twt.populate(row)
 					try:
@@ -173,7 +172,8 @@ class Cloud_Parser(object):
 				INNER JOIN tweets t ON t._id = tk._tweet
 				WHERE t.timestamp < DATE_SUB(NOW(), INTERVAL 2 WEEK)
 				ORDER BY t.timestamp DESC
-				LIMIT 1"""
+				LIMIT 1
+				"""
 		loc_cursor.execute(query)
 		try:
 			return loc_cursor.fetchall()[0]
@@ -231,6 +231,8 @@ class Cloud_Parser(object):
 		for word in text:
 			replace = self.select_old_id_twt_kword()
 			if replace != 0:
+				print "update"
 				self.update_twt_kword(tweet_id, word, replace[0])
 			else:
+				print "insert"
 				self.insert_twt_kword(tweet_id, word)

@@ -56,6 +56,3 @@ class Cloud_Generator(object):
             loc_cursor.execute(CREATE_TWEET_KEYWORDS_TABLE)
         except:
             self.conn.rollback()
-
-
-test = Cloud_Generator()
