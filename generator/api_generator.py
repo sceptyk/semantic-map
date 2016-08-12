@@ -5,7 +5,7 @@ import time
 import re
 import simplejson as json
 
-class Cloud_Generator(object):
+class Api_Generator(object):
 
 	def __init__(self):
 		self.db = Mysql_Connect()
@@ -107,19 +107,18 @@ class Cloud_Generator(object):
 		filters['days'] = days
 
 		#layer
-		layer = json.loads(fv.get('l', '0'))
+		layer = json.loads(fv.get('l', '4'))
 		try:
 			layer = int(layer)
 		except:
 			raise Exception('Layer must be a number')
-		if layer < 0 or layer > 4:
-			raise Exception('Layer must be in range <0,4>')
+		if layer < 1 or layer > 4:
+			raise Exception('Layer must be in range <1,4>')
 		filters['layer'] = layer
 
 		#geohash
 		center = json.loads(fv.get('c', '[53.3385255,-6.2473989]'))
-		filters['geohash'] = self.hash(center[0], center[1], self.util.layer_precision(layer))
-		
+		filters['geohash'] = self.util.hash_geo(center[0], center[1], self.util.layer_precision(layer))
 
 		return filters
 
@@ -134,7 +133,7 @@ class Cloud_Generator(object):
 				AND
 				CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
 			ORDER BY timestamp DESC 
-			LIMIT 2000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
+			LIMIT 5000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
 			#LIMIT 10000
 		#FIXME use parsed keywords
 
@@ -183,8 +182,7 @@ class Cloud_Generator(object):
 			@return array of keywords"""
 
 		sql_dev = """SELECT k.word, sum(wc.count) FROM word_counter wc
-			        INNER JOIN
-			    keywords k ON k._id = wc._keyword
+			INNER JOIN keywords k ON k._id = wc._keyword
 			WHERE
 			    wc._cloud = '%s'
 			    AND wc._layer = '%s'

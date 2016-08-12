@@ -3,234 +3,123 @@ from collector.mysql_connect import Mysql_Connect
 from util.util import Util
 import time
 import string
-import datetime
 import os
 
 class Cloud_Parser(object):
 	"""Parse collected data, retrieve keywords and store them"""
 	def __init__(self):
-		self.conn = Mysql_Connect().get_connection()
-		self.cursor = self.conn.cursor()
+		self.conn = Mysql_Connect()
 		self.util = Util()
 
+		self.stopwords = self._get_stopwords()
+
 	def get_data(self):
-		loc_cursor = self.conn.cursor()
 		chunk_size = 500
-		start_time = time.strftime("2016-06-08 00:00:00")
+		start_time = self._get_last_twt_kword("2000-01-01 00:00:00")
+
+		query = """SELECT * FROM tweets WHERE timestamp > '%s' ORDER BY timestamp ASC LIMIT %d"""
+
 		while True:
-			sql = """SELECT * FROM tweets where timestamp > %s order by timestamp asc LIMIT %s"""
+			
 			try:
-				loc_cursor.execute(sql, (start_time, chunk_size))
-				results = loc_cursor.fetchall()
-				if len(results)==0:
+				cursor = self.conn.execute(query % (start_time, chunk_size))
+				
+				if cursor.rowcount == 0:
 					print "Not enough tweets - sleep 1hr"
 					time.sleep(3600)
 					continue
-				replace = self.select_old_id_twt_kword()
+
+				results = cursor.fetchall()
+
+				twt = Tweet()
 				for row in results:
-					twt = Tweet()
 					twt.populate(row)
 					try:
-						self.store_data(twt, replace)
-					except:
+						self.store_data(twt)
+					except Exception, e:
+						print(str(e))
 						continue
-				last = self.last_tweet(results[-1]).dict()
-				start_time = last['time']
+				start_time = twt.dict()['time']
+
+				break
 			except Exception, e:
-				print e
+				print(str(e))
 
-	def last_tweet(self, list):
-		twt = Tweet()
-		twt.populate(list)
-		return twt
+#PARSE START
+	def _parse_timestamp(self, timestamp):
+		return timestamp.strftime('%H:%M:%S'), int(timestamp.strftime('%w'))+1
 
-#START: word/char elimination
-	def elim_useless(self, txt):
-		clear_txt = self.clear_punctuation(txt)
-		list = clear_txt.split(' ')
-		r_list = []
-		stop = self.stopwords()
-		for word in list:
-			if word.lower() in stop or len(word) <= 2 or self.has_numbers(word) or self.has_http(word):
-				continue
-			else:
-				r_list.append(word)
-		return r_list
+	def _get_keywords(self, txt):
+		#clear and split the text
+		list = txt.translate(string.maketrans("", ""), string.punctuation).split(' ')
+		#return just meaningful words
+		return [w for i, w in enumerate(list) if not (w.lower() in self.stopwords
+			or len(w) <= 2 
+			or any(ch.isdigit() for ch in w)
+			or w.startswith('http'))]
 
-	def clear_punctuation(self, text):
-		clear_string = ""
-		delimiters = string.punctuation + "\n\t"
-		for symbol in text:
-			if symbol not in delimiters:
-				clear_string += symbol
-		return clear_string
-
-	def stopwords(self):
-		with open(os.path.normpath("stopwords.txt")) as input:
+	def _get_stopwords(self):
+		with open(os.path.normpath("processor/stopwords.txt")) as input:
 			text = input.readline()
-		list = text.split(",")
-		clear_list = []
-		for word in list:
-			clear_list.append(word.replace(" ", ""))
-		return clear_list
 
-	def has_numbers(self, word):
-		return any(ch.isdigit() for ch in word)
+		return text.split(", ")
 
-	def has_http(self, word):
-		return word.startswith('http')
-	#END: word/char elimination
+#INSERTS START
+	def insert_keywords(self, list):
+		query = """INSERT IGNORE INTO keywords (word) VALUES %s"""
+		values = ""
 
-	#START: Keywords table
-	def fetch_keyword_id(self, word):
-		loc_cursor = self.conn.cursor()
-		query = """select _id from keywords where word = %s"""
-		loc_cursor.execute(query,word.lower())
-		return loc_cursor.fetchall()[0][0]
+		for w in list:
+			values += "('%s'), " % w.lower()
+		
+		self.conn.execute(query % values[:-2]) #remove the last coma
 
-	def insert_keyword(self, list):
-		loc_cursor = self.conn.cursor()
-		query = """INSERT IGNORE INTO keywords (word) VALUES (%s)"""
-		keywords = []
-		for i in range(len(list)):
-			keywords.append(list[i].lower())
-		try:
-			loc_cursor.executemany(query, keywords)
-			self.conn.commit()
-		except:
-			self.conn.rollback()
+	def insert_counters(self, keywords, lat, lng, date):
+		query = """INSERT INTO word_counter (_keyword, _cloud, _layer, day_time, day) 
+			VALUES %s ON DUPLICATE KEY UPDATE count = count + 1"""
+		
+		for k in keywords:
+			values = ""
+			for layer in range(1, 5):
+				values += "((SELECT _id FROM keywords WHERE word = '%s'), '%s', %d, %d, %d), " % (k, self.util.hash_geo(lat, lng, self.util.layer_precision(layer)), layer, self.util.day_time(date[0]), date[1])
 
-	#END: Keywords table
+			self.conn.execute(query % values[:-2]) #remove the last coma
+			
+	def insert_twt_kwords(self, keywords, tweet_id):
+		delete = """DELETE tk.* FROM tweet_keywords tk
+			INNER JOIN tweets t ON tk._tweet = t._id
+			WHERE t.timestamp < DATE_SUB(NOW(), INTERVAL 2 WEEK)"""
 
-	#START: Counter table
-	def insert_counter(self, kword, cloud, layer, day_time, day):
-		loc_cursor = self.conn.cursor()
-		query = """insert ignore into word_counter (_keyword, _cloud, _layer, day_time, day) values ('%s', %s, '%s', '%s', %s)"""
-		try:
-			loc_cursor.execute(query, (kword, cloud, layer, day_time, day))
-			self.conn.commit()
-			self.incr_counter_count(kword, cloud, layer, day_time, day)
-		except:
-			self.incr_counter_count(kword, cloud, layer, day_time, day)
+		insert = """INSERT INTO tweet_keywords (_tweet, _keyword) 
+			VALUES ('%s', (SELECT _id FROM keywords WHERE word = '%s'))"""
 
-	def incr_counter_count(self, kword, cloud, layer, day_time, day):
-		loc_cursor = self.conn.cursor()
-		fetch = """update word_counter w set w.count = w.count + 1 where w._id =
-				(select * from (select _id from word_counter wc where wc._keyword = '%s' and wc._cloud = %s and wc._layer = '%s' and wc.day_time = '%s' and wc.day = %s) tblTemp)"""
-		try:
-			loc_cursor.execute(fetch, (kword, cloud, layer, day_time, day))
-			self.conn.commit()
-		except Exception, e:
-			print e
-			self.conn.rollback()
+		self.conn.execute(delete)
 
-	def fetch_counter_cloud(self, id):
-		loc_cursor = self.conn.cursor()
-		query = """select _cloud from word_counter where _id = '%s'"""
-		try:
-			loc_cursor.execute(query, id)
-			return loc_cursor.fetchall()[0][0]
-		except:
-			raise Exception("Counter doesnt exist")
+		for k in keywords:
+			self.conn.execute(insert % (tweet_id, k))
+				
+	def _get_last_twt_kword(self, default):
 
-	def fetch_counter_kword(self, id):
-		loc_cursor = self.conn.cursor()
-		query = """select _kword from word_counter where _id = '%s'"""
-		try:
-			loc_cursor.execute(query, id)
-			return loc_cursor.fetchall()[0][0]
-		except:
-			raise Exception("Counter doesnt exist")
-	#END: Counter table
+		query = """SELECT timestamp FROM tweets 
+			WHERE _id = IFNULL((
+				SELECT _tweet FROM tweet_keywords ORDER BY _id DESC LIMIT 1
+			), -1)
+			LIMIT 1"""
+		cursor = self.conn.execute(query)
+		if cursor.rowcount != 0:
+			default = cursor.fetchone()[0].strftime("%Y-%m-%d %H:%M:%S")
 
-	# START: Tweet_keyword table
-
-	def insert_twt_kword(self, ntwt, nkwrd):
-		loc_cursor = self.conn.cursor()
-		query = """insert into tweet_keywords (_tweet, _keyword) values ('%s', '%s')"""
-		loc_cursor.execute(query, (ntwt, self.fetch_keyword_id(nkwrd)))
-		self.conn.commit()
-
-	def select_old_tweet(self):
-		loc_cursor = self.conn.cursor()
-		query = """select _id from tweets where timestamp <= DATE_SUB(NOW(), INTERVAL 2 WEEK)"""
-		loc_cursor.execute(query)
-		try:
-			return loc_cursor.fetchall()
-		except: return 0
-
-	def update_twt_kword(self, ntwt, nkwrd, replace_id):
-		loc_cursor = self.conn.cursor()
-		query = """update tweet_keywords set _tweet = '%s', _keyword = '%s' where _id = '%s'"""
-		loc_cursor.execute(query, (ntwt, self.fetch_keyword_id(nkwrd), replace_id))
-		self.conn.commit()
-
-	def select_old_id_twt_kword(self):
-		loc_cursor = self.conn.cursor()
-		query = """
-				SELECT tk._id FROM tweet_keywords tk
-				INNER JOIN tweets t ON t._id = tk._tweet
-				WHERE t.timestamp < DATE_SUB(NOW(), INTERVAL 2 WEEK)
-				ORDER BY t.timestamp DESC
-				LIMIT 1
-				"""
-		loc_cursor.execute(query)
-		try:
-			return loc_cursor.fetchall()[0]
-		except:
-			return 0
-
-	def fetch_twt_kword__tweet(self, kword):
-		loc_cursor = self.conn.cursor()
-		query = """select _tweet from tweet_keyword where _keyword = '%s'"""
-		loc_cursor.execute(query, self.fetch_keyword_id(kword))
-		return loc_cursor.fetchall()[0]
-
-	def fetch_twt_kword_kword(self, tweet_id):
-		loc_cursor = self.conn.cursor()
-		query = """select _tweet from tweet_keyword where _tweet = '%s'"""
-		loc_cursor.execute(query, self.fetch_keyword_id(tweet_id))
-		return loc_cursor.fetchall()[0]
-
-	def fetch_twt_kword_id(self, tweet_id, kword):
-		loc_cursor = self.conn.cursor()
-		query = """select _id from tweet_keyword where _tweet = '%s' and _keyword = '%s' """
-		loc_cursor.execute(query, (tweet_id, self.fetch_keyword_id(kword)))
-		return loc_cursor.fetchall()[0]
-
-	# END: Tweet_keyword table
-
-	def parse_timestamp(self, timestamp):  # 2016-06-07
-		week_day = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-		timestamp = str(timestamp)
-		wk = week_day[datetime.date(int(timestamp[0:4]), int(timestamp[5:7]), int(timestamp[8:10])).weekday() + 1]
-		t = time.strftime(timestamp[11:20])
-		return wk, t
+		return default
 
 	#NB!: Major back-end method - responsible for parsing a tweet and divide it into tables in a db
-	def store_data(self, tweet, replace): #id, usr, text, lat, lng, timestamp
+	def store_data(self, tweet): #id, usr, text, lat, lng, timestamp
 		twt = tweet.dict()
-		tweet_id = twt['_id']
-		text = self.elim_useless(twt['text'])
-		day = self.parse_timestamp(twt['time'])
-		time_i = self.util.day_time(day[1])
-		lyrs = [0.2,0.6,1.2,50.0] #scaling: 0.2 = 0.2*1km
-		cloud = [] #must be 3 hashed values
+		keywords = self._get_keywords(twt['text'])
+		date = self._parse_timestamp(twt['time'])
 
-		self.insert_keyword(text)
-		#Cloud calculation and insertion
-		for each in lyrs:
-			cloud.append(self.util.hash_geo(twt['lat'],twt['lng'],each)) #Will need it later
-		#Word counter
-
-		for each in text:
-			for index in range(0,4,1):
-				self.insert_counter(self.fetch_keyword_id(each), cloud[index],
-									self.util.layer_index(lyrs[index]), time_i, self.util.day_index(day[0]))
-
-		for word in text:
-			replace = self.select_old_id_twt_kword()
-			if replace != 0:
-				self.update_twt_kword(tweet_id, word, replace[0])
-			else:
-				self.insert_twt_kword(tweet_id, word)
+		#insert keywords
+		self.insert_keywords(keywords)
+		#insert clouds
+		self.insert_counters(keywords, twt['lat'], twt['lng'], date)
+		#insert tweet_keyword relation
+		self.insert_twt_kwords(keywords, twt['_id'])

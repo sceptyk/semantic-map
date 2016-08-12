@@ -214,7 +214,7 @@ function removeGridHeatMap(){
 function createWordCloud(){
 
     query('cloud', {
-        boundary: true,
+        center: true,
         layer: true,
         days: true,
         time: true
@@ -256,7 +256,8 @@ function createWordCloud(){
                 list: keywords,
                 weightFactor: function(size){
                     return h*0.2*size/max+h*0.01;
-                }
+                },
+                color: 'rgba(0, 0, 59, 1)'
             });
         }
 
@@ -302,7 +303,7 @@ function createHeatMap(){
             map: map,
             maxIntensity: 5,
             gradient: [
-                'rgba(0, 255, 255, 0)',
+                'rgba(255, 255, 255, 0)',
                 'rgba(255, 255, 255, 1)',
                 'rgba(235, 235, 255, 1)',
                 'rgba(196, 196, 255, 1)',
@@ -357,7 +358,7 @@ function createPopularityMap(){
                 labels: labels,
                 datasets: [{
                     data: data,
-                    backgroundColor: 'rgba(49,157,38,0.7)'
+                    backgroundColor: 'rgba(0, 0, 59, 1)'
                 }]
             },
             options: {
@@ -546,6 +547,19 @@ function getFilters(filters){
         if(filters.layer){
 
             processed.l = layer;
+        }
+
+        if(filters.center){
+            var ceneter = null;
+            if(!clickPoint){
+                center = map.getCenter();
+            }else{
+                center = [clickPoint.lat, clickPoint.lng];
+            }
+
+            console.log(center);
+
+            processed.c = center;
         }
 
 

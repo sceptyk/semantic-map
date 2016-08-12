@@ -3,7 +3,7 @@ import os
 
 import json
 from cgi import parse_qs, escape
-from generator.api_generator import Cloud_Generator
+from generator.api_generator import Api_Generator
 
 STATIC_FILE_DIR = os.path.normpath('generator/public')
 
@@ -17,7 +17,7 @@ MIME_TABLE = {
 	'.ico': 'image/x-icon'
 }
 
-GENERATOR = Cloud_Generator()
+GENERATOR = Api_Generator()
 
 def content_type(path):
 	"""Return a guess at the mime type for this path based on the file extension"""

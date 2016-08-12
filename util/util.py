@@ -1,5 +1,6 @@
 import math
 import time
+
 class Util(object):
     def __init__(self):
         pass
@@ -41,6 +42,7 @@ class Util(object):
         # degs = self._to_degrees(precision)
         deg_lat = self.to_deg_lat(precision)
         deg_lng = self.to_deg_lng(int(lat), precision)
+
         lat = int(lat / deg_lat)
         lng = int(lng / deg_lng)
 
@@ -55,40 +57,16 @@ class Util(object):
         return hash
 
     def day_time(self, t):
-        if time.strftime('04:00:00') <= t <= time.strftime('11:59:59'): return 1
-        if time.strftime('12:00:00') <= t <= time.strftime('16:59:59'): return 2
-        if time.strftime('17:00:00') <= t <= time.strftime('21:59:59'): return 3
-        if time.strftime('22:00:00') <= t <= time.strftime('03:59:59'):
-            return 4
-        else:
-            return 0
+        if '04:00:00' <= t < '12:00:00': return 1
+        if '12:00:00' <= t < '17:00:00': return 2
+        if '17:00:00' <= t < '22:00:00': return 3
+        if '22:00:00' <= t < '04:00:00': return 4
+        else: return 0
+
+    precisions = [0, 0.2, 0.6, 1.2, 50.0]
 
     def layer_index(self, precision):
-        if precision == 0.2:
-            return 1
-        elif precision == 0.6:
-            return 2
-        elif precision == 1.2:
-            return 3
-        elif precision == 50.0:
-            return 4
-        else:
-            return 0
+        return Util.precisions.index(precision)
 
-    def day_index(self, day):
-        if day == "MON":
-            return 1
-        elif day == "TUE":
-            return 2
-        elif day == "WED":
-            return 3
-        elif day == "THU":
-            return 4
-        elif day == "FRI":
-            return 5
-        elif day == "SAT":
-            return 6
-        elif day == "SUN":
-            return 7
-        else:
-            return 0
+    def layer_precision(self, index):
+        return Util.precisions[index]
