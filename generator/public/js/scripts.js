@@ -8,6 +8,7 @@ var boundary;
 var originBounds = [{lat: 53.447171, lng: -6.421509}, {lat: 53.189579, lng: -6.017761}];
 var clickPoint = null;
 
+var Utils = utils();
 
 var scope = window.location.hash || '#heatmap'; //#heatmap, #gridmap, #movement
 
@@ -95,6 +96,8 @@ function initMap() {
 
    $(document).ready(function(){
 
+        initMenu();
+
         onHeatMap();
         onWordCloud();
         onPopularity();
@@ -109,11 +112,33 @@ function initMap() {
  *
  * ********************************************/
 
+function initMenu(){
+
+    var timer_2 = null;
+    function updateWithKeywords(){
+
+        clearTimeout(timer_2);
+        timer_2 = setTimeout(function(){
+            console.log("updateWithKeywords")
+            //onPopularity();
+            onHeatMap();
+
+        }, 500);
+    }
+    
+    $("#toggle-details").click(updateWithKeywords);
+    $("#input-keywords").keypress(updateWithKeywords);
+    $("#submit-search").click(updateWithKeywords);
+    $("#filter-day input").change(updateWithKeywords);
+    $("#input-time").on("slidechange", updateWithKeywords);
+    $("#input-date").on("slidechange", updateWithKeywords);
+
+}
+
 function onHeatMap(){
     
-    
+    removeHeatMap();
     createHeatMap();
-    
 }
 
 function onWordCloud(){
@@ -126,14 +151,12 @@ function onWordCloud(){
 
 function onPopularity(){
 
-    //reset popularity chart
-
     createPopularityMap();
+    
 }
 
 function reset(){
     removeHeatMap();
-    removeMovementMap();
     removeGridHeatMap();
     removePopularityMap();
 }
@@ -152,45 +175,7 @@ function createGridHeatMap(){
 
     query('grid', function(sqs){
 
-        //sqs: [slat, slng, elat, elng, weight]
-        //console.log(sqs);
         
-        var max = sqs[0][4];
-        for(var i=1,l=sqs.length;i<l;i++){
-            if(sqs[i][4] > max) max = sqs[i][4];
-        }
-
-        //create grid
-        for(var i=0,l=sqs.length;i<l;i++){
-            
-            var sq = sqs[i];
-
-            var rect = new google.maps.Rectangle({
-                strokeColor: '#000000',
-                strokeOpacity: 1,
-                strokeWeight: 1,
-                fillColor: '#f00',
-                fillOpacity:  sq[4] / max,
-                map: map,
-                bounds: {
-                    north: sq[0],
-                    south: sq[2],
-                    west: sq[1],
-                    east: sq[3]
-                }
-            });
-
-            grid.push(rect);
-
-            google.maps.event.addListener(rect, 'click', function (event) {
-                reset();
-                
-                boundary = this.getBounds();
-                map.fitBounds(boundary);
-                
-                //createGridHeatMap();
-            });
-        }
 
     });
 }
@@ -248,12 +233,14 @@ function createWordCloud(){
             if(keywords[i][1] > max) max = keywords[i][1];
         }
 
-        console.log(keywords);
+        var limit = 20; //limit words number
+        //console.log(keywords);
 
         function setCanvas($el){
             var h = $el.height();
+            limit = limit == 20 ? 10: 20;
             WordCloud($el.get(0), { 
-                list: keywords,
+                list: keywords.slice(0, limit),
                 weightFactor: function(size){
                     return h*0.2*size/max+h*0.01;
                 },
@@ -286,16 +273,31 @@ function createWordCloud(){
  * ********************************************/
 function createHeatMap(){
     query('heatmap', {
-        boundary: true
-    }, function(points){
+        boundary: true,
+        details: true,
+        keywords: true,
+        date: true,
+        time: true,
+        day: true,
+        layer: true
+    }, function(points, filters){
 
         //console.log(points);
 
         var gmPoints = [];
-        for(var i=0,l=points.length;i<l;i++){
-            var p = points[i];
-            //console.log(p);
-            gmPoints.push(new google.maps.LatLng(p[0], p[1]));
+        if(filters.details){
+            for(var i=0,l=points.length;i<l;i++){
+                var p = Util.decodeHash(points[i][0]);
+                //console.log(p);
+                var point = new google.maps.LatLng(p[0], p[1]);
+                var weight = points[i][1];
+                gmPoints.push(new google.maps.visualization.WeightedLocation(point, weight));
+            }
+        }else{
+            for(var i=0,l=points.length;i<l;i++){
+                var p = points[i];
+                gmPoints.push(new google.maps.LatLng(p[0], p[1]));
+            }
         }
 
         heatmap = new google.maps.visualization.HeatmapLayer({
@@ -320,6 +322,7 @@ function createHeatMap(){
             ]
         });
     });    
+
 }
 
 function removeHeatMap(){
@@ -336,8 +339,14 @@ function removeHeatMap(){
 function createPopularityMap(){
 
     query('popularity', {
-        boundary: true
-    }, function(hours){
+        boundary: true,
+        details: true,
+        keywords: true,
+        date: true,
+        time: true,
+        day: true,
+        layer: true
+    }, function(hours, filters){
 
         //split
         var labels = [];
@@ -375,31 +384,6 @@ function createPopularityMap(){
                 }
             }
         });
-
-        /*var max = 0; //TODO
-
-        for(var i=0,l=hours.length;i<l;i++){
-
-            var hour = hours[i];
-            var counter = day[hour] + 1;
-
-            if(counter > max) max = counter
-            day[hour] = counter;
-
-        }
-
-        //print columns
-        var $wrap = $("#popularity-canvas");
-        var columnWidth = $wrap.width() / 24;
-        var maxHeight = $wrap.height();
-        for(var i=0;i<24;i++){
-            $("<div></div>")
-                .addClass('column')
-                .text(i)
-                .height(day[i] / max * maxHeight)
-                .width(100/25 + "%") //columnWidth)
-                .appendTo($wrap);
-        }*/
 
     });
 
@@ -488,7 +472,7 @@ function removeMovementMap(){
  * ********************************************/
 
 function _formatDate(date){
-    var sDAte = date.toISOString();
+    var sDate = date.toISOString();
     sDate = sDate.split("T");
     sDate = sDate[0] + " " + sDate[1].split(".")[0];
 
@@ -504,8 +488,8 @@ function getFilters(filters){
         //get date
         if(filters.date){
             var date = {
-                start: _filterDate(new Date($( '#input-date' ).slider('values', 0))),
-                end: _filterDate(new Date($( '#input-date' ).slider('values', 1)))
+                start: _formatDate(new Date($( '#input-date' ).slider('values', 0))),
+                end: _formatDate(new Date($( '#input-date' ).slider('values', 1)))
             }
             processed.d = date;
         }
@@ -521,7 +505,7 @@ function getFilters(filters){
         }
 
         //get keyword
-        if(filters.keyword){
+        if(filters.keywords){
             var keywords = $( "#input-keywords" ).val().split(/,*\s/);
             processed.k = keywords;
         }
@@ -562,6 +546,10 @@ function getFilters(filters){
             processed.c = center;
         }
 
+        if(filters.details){
+            processed.dl = $("#toggle-details").hasClass("active");
+        }
+
 
         for(var key in filters){
             if(filters.hasOwnProperty(key) && processed.hasOwnProperty(key)){
@@ -594,17 +582,17 @@ function query(type, filters, success){
         filters = null;
     }
 
-    var data = getFilters(filters);
+    var filters = getFilters(filters);
 
     //console.log("Query: ", type);
 
     $.get(
         'json/' + type,
-        data,
+        filters,
         function(data){
             console.log("Success: ", type);
             //console.log(data);
-            success(data);
+            success(data, filters);
         }
     );
 }
@@ -623,4 +611,69 @@ function setUrl(_scope){
 function getUrl(){
     var url = window.location.hash;
     url = url.substr(1);
+}
+
+/**********************************************
+ *
+ *---------------UTILS
+ *
+ * ********************************************/
+ 
+function utils(){
+
+    var digits = {
+        'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6, 'H':7, 'I':8, 'J':9, 'K':10, 'L':11, 'M':12, 'N':13, 'O':14, 'P':15, 'Q':16, 'R':17, 'S':18, 'T':19, 'U':20,
+        'V':21, 'W':22, 'X':23, 'Y':24, 'Z':25,
+        'a':26, 'b':27, 'c':28, 'd':29, 'e':30, 'f':31, 'g':32, 'h':33, 'i':34, 'j':35, 'k':36, 'l':37, 'm':38, 'n':39, 'o':40, 'p':41, 'q':42, 'r':43, 's':44, 't':45, 'u':46,
+        'v':47, 'w':48, 'x':49, 'y':50, 'z':51,
+        '0':52, '1':53, '2':54, '3':55, '4':56, '5':57, '6':58, '7':59, '8':60, '9':61, '+':62, '/':63
+    };
+
+    var precisions = [0, 0.2, 0.6, 1.2, 50.0];
+
+    function from_64(s){
+        
+        var n = 0, m = 1;
+        while(s != 0){
+            var d = s % 10;
+            n += m*digits[d];
+            m *= 64
+            s /= 10;
+        }
+
+        return n;
+    }
+
+    function to_deg_lat(km){
+        return km / 111
+    }
+
+    function to_deg_lng(lat, km){
+        return abs(km / (111 * math.cos(lat)))
+    }
+
+    function layer_precision(index){
+        return precisions[index];
+    }
+
+    return {
+        decodeHash: function(hash){
+            var precision = layer_precision(layer);
+            var deg_lat = to_deg_lat(precision);
+            var deg_lng = to_deg_lng(Math.floor(deg_lat), precision);
+            var cols = Math.floor(360 / deg_lng);
+
+            var n = from_64(hash);
+            var lng = n % cols;
+            var lat = n / cols;
+
+            lat *= deg_lat;
+            lng *= deg_lng;
+
+            lat -= 180;
+            lng -= 180;
+
+            return [lat, lng];
+        }
+    };
 }

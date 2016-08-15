@@ -32,6 +32,10 @@ $(function() {
         $(".menu-items").slideToggle();
     });
 
+    $("#toggle-details").click(function(){
+        $(this).toggleClass("active");
+    });
+
     /*var PINNED = false;
     $(".preview").click(function(){
         PINNED = PINNED ? false : true;

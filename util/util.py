@@ -60,7 +60,8 @@ class Util(object):
         if '04:00:00' <= t < '12:00:00': return 1
         if '12:00:00' <= t < '17:00:00': return 2
         if '17:00:00' <= t < '22:00:00': return 3
-        if '22:00:00' <= t < '04:00:00': return 4
+        if '22:00:00' <= t < '24:00:00': return 4
+        if '00:00:00' <= t < '04:00:00': return 4
         else: return 0
 
     precisions = [0, 0.2, 0.6, 1.2, 50.0]

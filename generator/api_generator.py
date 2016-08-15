@@ -27,17 +27,11 @@ class Api_Generator(object):
 		if type == 'heatmap':
 			return self._get_heat_map(filterValue)
 
-		elif type == 'grid':
-			return self._get_grid_map(filterValue)
-
 		elif type == 'cloud':
 			return self._get_cloud(filterValue)
 
 		elif type == 'popularity':
 			return self._get_popularity(filterValue)
-
-		elif type == 'grid_popularity':
-			return self._get_grid_popularity(filterValue)
 
 		else:
 			raise Exception('Type of procedure is not defined')
@@ -84,12 +78,18 @@ class Api_Generator(object):
 		filters['date'] = date
 
 		#time
-		time = json.loads(fv.get('t', '{"start": "00:00:00", "end": "24:00:00"}'))
+		time = json.loads(fv.get('t', '{"start": "00:00:00", "end": "23:59:59"}'))
 		for key, value in time.items():
 			if not re.match(r'\d{2}:\d{2}:\d{2}', value):
 				raise Exception('Time is not in format')
 		filters['time'] = time
-		filters['daytime'] = {'start': self.util.day_time(time['start']), 'end': self.util.day_time(time['end'])}
+
+		#daytime
+		if time['start'] == '00:00:00' and time['end'] == '23:59:59':
+			daytime = {'start': 1, 'end': 4}
+		else:
+			daytime = {'start': self.util.day_time(time['start']), 'end': self.util.day_time(time['end'])}
+		filters['daytime'] = daytime
 
 		#days
 		days = json.loads(fv.get('ds', '[1,2,3,4,5,6,7]'))
@@ -120,60 +120,58 @@ class Api_Generator(object):
 		center = json.loads(fv.get('c', '[53.3385255,-6.2473989]'))
 		filters['geohash'] = self.util.hash_geo(center[0], center[1], self.util.layer_precision(layer))
 
+		#details
+		details = json.loads(fv.get('dl', 'false'))
+		filters['details'] = bool(details)
+
 		return filters
 
 	def _get_heat_map(self, fv):
 		"""Get last 10000 tweets' points
 			@return array of squares"""
 
-		sql_dev = """SELECT lat, lng 
-			FROM tweets 
-			WHERE 
-				text REGEXP '%s'
-				AND
-				CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
-			ORDER BY timestamp DESC 
-			LIMIT 5000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
-			#LIMIT 10000
-		#FIXME use parsed keywords
+		if fv['details']:
+			sql_dev = """SELECT wc._cloud, sum(wc.count) FROM word_counter wc
+				WHERE
+				    wc._layer = '%s'
+				GROUP BY wc._cloud , wc._layer
+				ORDER BY sum(wc.count) DESC
+				LIMIT 10000""" % (fv['layer'],)
+		else:
+			sql_dev = """SELECT lat, lng 
+				FROM tweets 
+				WHERE 
+					text REGEXP '%s'
+					AND
+					CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
+				ORDER BY timestamp DESC 
+				LIMIT 5000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
+				#LIMIT 10000
+			#FIXME use parsed keywords
 
 		return self._return_result(sql_dev)
 
 	def _get_popularity(self, fv):
 		"""Get hour from tweet date"""
 
-		sql_dev = """SELECT HOUR(timestamp), count(HOUR(timestamp))
-			FROM tweets 
-			WHERE 
-				text REGEXP '%s' 
-				AND
-				CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
-			GROUP BY HOUR(timestamp)
-			ORDER BY HOUR(timestamp) ASC 
-			LIMIT 2000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
-
-		return self._return_result(sql_dev)
-
-	def _get_grid_popularity(self, fv):
-		"""Get day time frequency from word counters"""
-		
-		sql_dev = """SELECT wc.day_time, sum(wc.count) FROM word_counter wc
-			WHERE
-			    wc._layer = '1'
-			GROUP BY wc._cloud , wc._layer, wc.day_time
-			ORDER BY wc._layer DESC"""
-
-		return self._return_result(sql_dev)
-
-	def _get_grid_map(self, fv):
-		"""Get most word clouds grid"""
-
-		sql_dev = """SELECT wc._cloud, sum(wc.count) FROM word_counter wc
+		if fv['details']:
+			sql_dev = """SELECT wc.day_time, sum(wc.count) FROM word_counter wc
 			WHERE
 			    wc._layer = '%s'
-			GROUP BY wc._cloud , wc._layer
-			ORDER BY sum(wc.count) DESC
-			LIMIT 10000""" % (fv['layer'],)
+			GROUP BY wc._cloud , wc._layer, wc.day_time, wc.day
+			ORDER BY wc._layer DESC""" % (fv['layer'],)
+			# TODO bind with day, 
+		else:
+			sql_dev = """SELECT HOUR(timestamp), count(HOUR(timestamp))
+				FROM tweets 
+				WHERE 
+					text REGEXP '%s' 
+					AND
+					CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME)  
+				GROUP BY HOUR(timestamp)
+				ORDER BY HOUR(timestamp) ASC 
+				LIMIT 2000""" % (fv['keywords'], fv['time']['start'], fv['time']['end'])
+
 
 		return self._return_result(sql_dev)
 
