@@ -39,15 +39,15 @@ class Util(object):
         lng += 180
 
         # bring coordinates to precision
-        # degs = self._to_degrees(precision)
-        deg_lat = self.to_deg_lat(precision)
-        deg_lng = self.to_deg_lng(int(lat), precision)
+        degs = self._to_degrees(precision)
+        #deg_lat = self.to_deg_lat(precision)
+        #deg_lng = self.to_deg_lng(int(lat), precision)
 
-        lat = int(lat / deg_lat)
-        lng = int(lng / deg_lng)
+        lat = int(lat / degs)
+        lng = int(lng / degs)
 
         # calculate index
-        cols = int(360 / deg_lng)
+        cols = int(360 / degs)
         index = (lat * cols) + lng
 
         # encode base64
@@ -57,14 +57,21 @@ class Util(object):
         return hash
 
     def day_time(self, t):
+        if '00:00:00' <= t < '04:00:00': return 0
         if '04:00:00' <= t < '12:00:00': return 1
         if '12:00:00' <= t < '17:00:00': return 2
         if '17:00:00' <= t < '22:00:00': return 3
-        if '22:00:00' <= t < '24:00:00': return 4
-        if '00:00:00' <= t < '04:00:00': return 4
-        else: return 0
+        if '22:00:00' <= t <='24:00:00': return 4
+        
+        else: return 5
 
-    precisions = [0, 0.2, 0.6, 1.2, 50.0]
+    def day_time_array(self, st, et):
+        start = self.day_time(st)
+        end = self.day_time(et)
+
+        return [i for i in range(start, end+1)]
+
+    precisions = [0, 0.2, 1.0, 5.0, 25.0, 100.0]
 
     def layer_index(self, precision):
         return Util.precisions.index(precision)

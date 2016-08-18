@@ -18,12 +18,14 @@
         <!-- custom scripts -->
         <script src="lib/wordcloud2.js"></script>
         <script type="text/javascript" src="js/css.js"></script>
-        <script type="text/javascript" src="js/scripts.js"></script>
         <!--[if lt IE 9]>
 	    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	  <![endif]-->
     </head>
     <body>
+        <div class="loader-wrapper" id="loader">
+            <div class="loader"></div>
+        </div>
         <div id="map"></div>
         <div class="left-bottom-corner">
             <div id="word-cloud" class="preview well">
@@ -78,7 +80,7 @@
                             <span class="day">
                                 <div class="input-group">
                                     <div class="input-group-addon" >
-                                        <input type="checkbox" id="input-day-mo" aria-label="...">
+                                        <input type="checkbox" id="input-day-mo" checked="">
                                     </div>
                                     <span class="form-control">Mo</span>
                                 </div>
@@ -86,7 +88,7 @@
                             <span class="day">
                                 <div class="input-group">
                                     <div class="input-group-addon" >
-                                        <input type="checkbox" id="input-day-tu" aria-label="...">
+                                        <input type="checkbox" id="input-day-tu" checked="">
                                     </div>
                                     <span class="form-control">Tu</span>
                                 </div>
@@ -95,7 +97,7 @@
                             <span class="day">
                                 <div class="input-group">
                                     <div class="input-group-addon" >
-                                        <input type="checkbox" id="input-day-we" aria-label="...">
+                                        <input type="checkbox" id="input-day-we" checked="">
                                     </div>
                                     <span class="form-control">We</span>
                                 </div>
@@ -103,7 +105,7 @@
                             <span class="day">
                                 <div class="input-group">
                                     <div class="input-group-addon" >
-                                        <input type="checkbox" id="input-day-th" aria-label="...">
+                                        <input type="checkbox" id="input-day-th" checked="">
                                     </div>
                                     <span class="form-control">Th</span>
                                 </div>
@@ -111,7 +113,7 @@
                             <span class="day">
                                 <div class="input-group">
                                     <div class="input-group-addon" >
-                                        <input type="checkbox" id="input-day-fr" aria-label="...">
+                                        <input type="checkbox" id="input-day-fr" checked="">
                                     </div>
                                     <span class="form-control">Fr</span>
                                 </div>
@@ -119,7 +121,7 @@
                             <span class="day">
                                 <div class="input-group">
                                     <div class="input-group-addon" >
-                                        <input type="checkbox" id="input-day-sa" aria-label="...">
+                                        <input type="checkbox" id="input-day-sa" checked="">
                                     </div>
                                     <span class="form-control">Sa</span>
                                 </div>
@@ -127,7 +129,7 @@
                             <span class="day">
                                 <div class="input-group">
                                     <div class="input-group-addon" >
-                                        <input type="checkbox" id="input-day-su" aria-label="...">
+                                        <input type="checkbox" id="input-day-su" checked="">
                                     </div>
                                     <span class="form-control">Su</span>
                                 </div>
@@ -158,15 +160,18 @@
                             </span>
                         </div>
                         <div id="filter-date" class="menu-item-body panel-body">
-                            <div class="input-group">
+                            <!--<div class="input-group">
                               <span class="input-group-addon" id="input-date-value"></span>
                               <div id="input-date" class="form-control slider" aria-describedby="input-date-value"></div>
-                            </div>
+                            </div>-->
+                            <input type="text" id="input-date-start" class="input-date"/>
+                            <input type="text" id="input-date-end" class="input-date" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script type="text/javascript" src="js/scripts.js"></script>
         <script async="" defer="" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxWS-HTeqQK4Z-BxrPmg8-UrXc-wERsQE&libraries=visualization&callback=initMap">
         </script>
     </body>

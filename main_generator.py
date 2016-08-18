@@ -53,21 +53,8 @@ def web_api(environ, start_response):
 	path = path[1:] #remove slash from the begining
 	d = parse_qs(environ['QUERY_STRING'])
 
-	def GET(key):
-		return escape(d.get(key, [''])[0])
-
-	filterValue = {
-		'boundary': GET('b'),
-		'time' : GET('t'),
-		'recent': GET('r'),
-		'date': GET('d'),
-		'days': GET('ds'),
-		'layer': GET('l'),
-		'keyword': GET('k'),
-	}
-
 	try:
-		content = GENERATOR.generate(path, filterValue)
+		content = GENERATOR.generate(path, d)
 	except Exception, e:
 		print('Error %s' % str(e))
 		return show_404_app(environ, start_response)

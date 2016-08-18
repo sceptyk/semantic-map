@@ -40,8 +40,6 @@ class Cloud_Parser(object):
 						print(str(e))
 						continue
 				start_time = twt.dict()['time']
-
-				break
 			except Exception, e:
 				print(str(e))
 
@@ -51,7 +49,7 @@ class Cloud_Parser(object):
 
 	def _get_keywords(self, txt):
 		#clear and split the text
-		list = txt.translate(string.maketrans("", ""), string.punctuation).split(' ')
+		list = txt.translate(string.maketrans("", ""), string.punctuation).split()
 		#return just meaningful words
 		return [w for i, w in enumerate(list) if not (w.lower() in self.stopwords
 			or len(w) <= 2 
@@ -67,7 +65,7 @@ class Cloud_Parser(object):
 #INSERTS START
 	def insert_keywords(self, list):
 		query = """INSERT IGNORE INTO keywords (word) VALUES %s"""
-		values = ""
+		values = "(''), " #insert wildcard keyword
 
 		for w in list:
 			values += "('%s'), " % w.lower()
@@ -75,13 +73,21 @@ class Cloud_Parser(object):
 		self.conn.execute(query % values[:-2]) #remove the last coma
 
 	def insert_counters(self, keywords, lat, lng, date):
-		query = """INSERT INTO word_counter (_keyword, _cloud, _layer, day_time, day) 
+		query = """INSERT INTO word_counter (_keyword, _cloud, _parent, _layer, day_time, day) 
 			VALUES %s ON DUPLICATE KEY UPDATE count = count + 1"""
 		
-		for k in keywords:
+		daytime = self.util.day_time(date[0])
+		day = date[1]
+
+		keywords.insert(0, '')
+
+		for layer in range(1, 5):
+			cloud = self.util.hash_geo(lat, lng, self.util.layer_precision(layer))
+			parent = self.util.hash_geo(lat, lng, self.util.layer_precision(layer+1))
+			
 			values = ""
-			for layer in range(1, 5):
-				values += "((SELECT _id FROM keywords WHERE word = '%s'), '%s', %d, %d, %d), " % (k, self.util.hash_geo(lat, lng, self.util.layer_precision(layer)), layer, self.util.day_time(date[0]), date[1])
+			for k in keywords:
+				values += "((SELECT _id FROM keywords WHERE word = '%s'), '%s', '%s', %d, %d, %d), " % (k, cloud, parent, layer, daytime, day)
 
 			self.conn.execute(query % values[:-2]) #remove the last coma
 			
@@ -117,6 +123,9 @@ class Cloud_Parser(object):
 		keywords = self._get_keywords(twt['text'])
 		date = self._parse_timestamp(twt['time'])
 
+		if len(keywords) == 0:
+			return
+			
 		#insert keywords
 		self.insert_keywords(keywords)
 		#insert clouds

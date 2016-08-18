@@ -7,7 +7,9 @@ parser = Cloud_Parser()
 
 if __name__ == '__main__':
 	import generator.cloud_generator as gen
+
 	gen.Cloud_Generator()
+	#parser.get_data()
 else:
 	print("---------Cloud processor-----------")
 	thread.start_new_thread(parser.get_data, ())
