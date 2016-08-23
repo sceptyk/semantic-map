@@ -26,6 +26,7 @@ class Cloud_Generator(object):
     					   count  BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '',
     					  PRIMARY KEY ( _id )  COMMENT '',
     					  UNIQUE KEY entry_unq (_keyword, _cloud, _layer, day_time, day)  COMMENT '',
+                          INDEX KEY cloud_idx (_cloud) COMMENT '',
     					  CONSTRAINT  keyword
     						FOREIGN KEY ( _keyword )
     						REFERENCES  keywords  ( _id )

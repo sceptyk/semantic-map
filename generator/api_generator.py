@@ -8,7 +8,6 @@ import simplejson as json
 class Api_Generator(object):
 
 	def __init__(self):
-		self.db = Mysql_Connect()
 		self.util = Util()
 		
 
@@ -157,14 +156,14 @@ class Api_Generator(object):
 			sql_dev = """SELECT lat, lng 
 				FROM tweets 
 				WHERE 
+					timestamp > '%s' AND timestamp < '%s' AND
+					CAST(timestamp as TIME) > CAST('%s' as TIME) AND 
+					CAST(timestamp as TIME) < CAST('%s' as TIME) AND
+					DAYOFWEEK(timestamp) IN %s AND
 					text REGEXP '%s'
-					AND
-					CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME) AND
-					timestamp > '%s' AND timestamp < '%s' 
 				ORDER BY timestamp DESC 
-				LIMIT 5000""" % (fv['regwords'], fv['time']['start'], fv['time']['end'], fv['date']['start'], fv['date']['end'])
-				#LIMIT 10000
-			#FIXME use parsed keywords
+				LIMIT 5000""" % (fv['date']['start'], fv['date']['end'], fv['time']['start'], fv['time']['end'], fv['days'], fv['regwords'])
+				#boundary
 
 		return self._return_result(sql_dev)
 
@@ -248,7 +247,9 @@ class Api_Generator(object):
 		return self._return_result(sql_dev)
 
 	def _return_result(self, sql):
-		cursor = self.db.execute(sql)
+		db = Mysql_Connect()
+		cursor = db.execute(sql)
 		results = cursor.fetchall()
+		db.close()
 
 		return json.dumps(results, use_decimal=True)

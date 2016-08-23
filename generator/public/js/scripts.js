@@ -1,3 +1,8 @@
+/**********************************************
+ *
+ *---------------GLOBALS
+ *
+ * ********************************************/
 var map;
 var heatmap;
 var chart;
@@ -8,12 +13,17 @@ var originBounds = [{lat: 53.447171, lng: -6.421509}, {lat: 53.189579, lng: -6.0
 var clickPoint = null;
 
 var Utils = utils();
+var scope = {
+    zoom: 12,
+    center: [53.3478, -6.2597],
+    type: "recent"
+}; //url address params TODO
 
-var scope = window.location.hash || '#heatmap'; //#heatmap, #gridmap, #movement
-
-var thread = 'free';
-var timer = null;
-
+/**********************************************
+ *
+ *---------------INIT
+ *
+ * ********************************************/
 function initMap() {
     boundary = new google.maps.LatLngBounds(originBounds[0], originBounds[1]);
 
@@ -62,16 +72,13 @@ function initMap() {
         else if(zoom < 15){
             _layer = 2;
         }
-        else if(zoom < 17){
-            _layer = 1;
-        }
         else{
-            _layer = 0;
+            _layer = 1;
         }
 
         clearTimeout(timer_1);
         timer_1 = setTimeout(function(_layer){
-            console.log(_layer, layer);
+            //console.log(_layer, layer);
             if(_layer != layer){
                 layer = _layer;
 
@@ -116,14 +123,17 @@ function initMenu(){
 
         clearTimeout(timer_3);
         timer_3 = setTimeout(function(){
-            console.log("updateWithKeywords");
+            //console.log("updateWithKeywords");
             onPopularity();
             onHeatMap();
 
-        }, 500);
+        }, 750);
     }
     
-    $("#toggle-details").click(updateWithKeywords);
+    $("#toggle-details").click(function(){
+        $("#filter-date").slideToggle(); //hide date filter
+        updateWithKeywords();
+    });
     $("#input-keywords").keypress(updateWithKeywords);
     $("#submit-search").click(updateWithKeywords);
     $("#filter-day input").change(updateWithKeywords);
@@ -264,8 +274,10 @@ function createHeatMap(done){
         //console.log(points);
         //console.log(filters);
 
+        var isDetails = JSON.parse(filters.dl);
+
         var gmPoints = [];
-        if(JSON.parse(filters.dl)){
+        if(isDetails){
             for(var i=0,l=points.length;i<l;i++){
                 var p = Utils.decodeHash(points[i][0], 1);
                 var point = new google.maps.LatLng(p[0], p[1]);
@@ -284,7 +296,7 @@ function createHeatMap(done){
         heatmap = new google.maps.visualization.HeatmapLayer({
             data: gmPoints,
             map: map,
-            maxIntensity: 5,
+            maxIntensity: isDetails ? 50 : 5,
             gradient: [
                 'rgba(255, 255, 255, 0)',
                 'rgba(255, 255, 255, 1)',
@@ -334,11 +346,18 @@ function createPopularityMap(done){
         //split
         var labels = [];
         var data = [];
+        var isDetails = JSON.parse(filters.dl);
 
         for(var i=0,l=hours.length;i<l;i++){
             var hour = hours[i];
             labels.push(hour[0]);
             data.push(hour[1]);
+        }
+
+        if(isDetails){
+            for(var i=0,l=labels.length;i<l;i++){
+                labels[i] = Utils.decodeDaytime(labels[i]);
+            }
         }
 
         //console.log(labels);
@@ -584,7 +603,7 @@ function query(type, filters, success){
         'json/' + type,
         filtered,
         function(data){
-            console.log("Success: ", type);
+            //console.log("Success: ", type);
             //console.log(data);
             success(data, filtered);
         }
@@ -605,6 +624,7 @@ function setUrl(_scope){
 function getUrl(){
     var url = window.location.hash;
     url = url.substr(1);
+    params = url.split("/");
 }
 
 /**********************************************
@@ -686,6 +706,15 @@ function utils(){
             lng -= 180;
 
             return [lat, lng];
+        },
+
+        decodeDaytime: function(daytime){
+            if(daytime == 0) return '0:00';
+            else if(daytime == 1) return '4:00';
+            else if(daytime == 2) return '12:00';
+            else if(daytime == 3) return '17:00';
+            else if(daytime == 4) return '22:00';
+            else return '0';
         }
     };
 }
