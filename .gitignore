@@ -1,4 +1,0 @@
-*.bat
-.pyc
-/main_collector.py
-/collector/mysql_connect.py
