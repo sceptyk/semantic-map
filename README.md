@@ -6,7 +6,7 @@ GNU GPLv3
 
 ### Usage
 ###### Code
-To collect your own data you will need change area filter in /collector/twitter_stream_collector.py in the last line. It could be skipped if no area filter is needed to be applied. The next step is configuring /collector/mysql_connect.py file so it matches you database credentials. And that's it. You can run all components from app.py file or each one seperately.
+To collect your own data you will need change area filter in /collector/twitter_stream_collector.py in the last line. It could be skipped if no area filter is needed to be applied. The next step is configuring /collector/mysql_connect.py file so it matches you database credentials and Twitter Credentials in /main_collector.py. And that's it. You can run all components from app.py file or each one seperately.
 * main_collector.py - Script to collect data from Twitter Stream
 * main_processor.py - Script to process collected data, calculate word clouds and bind keywords with tweets.
 * main_generator.py - Script responsible for running HTTP server, handling API calls and serving static application.
