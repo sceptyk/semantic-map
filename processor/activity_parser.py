@@ -34,8 +34,10 @@ class Activity_Parser(object):
 
 		cursor = db.execute(select_clouds)
 		results = cursor.fetchall()
-		clouds = results[:,0]
-		samples = 
+		clouds = []
+		for row in results:
+			clouds.append(row[0])
+		samples = []
 
 		for cloud in clouds:
 			#for each cloud select keywords
