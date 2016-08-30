@@ -61,13 +61,13 @@ class Util(object):
         if '04:00:00' <= t < '12:00:00': return 1
         if '12:00:00' <= t < '17:00:00': return 2
         if '17:00:00' <= t < '22:00:00': return 3
-        if '22:00:00' <= t <='24:00:00': return 4
+        if '22:00:00' <= t < '24:00:00': return 4
         
         else: return 5
 
     def day_time_array(self, st, et):
         start = self.day_time(st)
-        end = self.day_time(et)
+        end = self.day_time(et)-1
 
         return [i for i in range(start, end+1)]
 

@@ -18,12 +18,14 @@ You can play with the website and discover your city. The website provides heat 
 The website can find its application in different scenarios. The most promising one would marketing research. The geospatial analisys could provide 
 
 ### Future work
-* Implementation of machine learning clustering algorithms to find places similiar in activity.
+* Implementation of machine learning clustering algorithms to find places similar in activity.
 * Request limit based on IP of caller.
 * Dynamic url in web-app.
+* Server framework upgrade, static content optimization.
+* Migrating to geospatial database.
 
 ### Dataset provider
-Geotagged twitter data provided by Dr. Ate Poorthuis and Dr. Matthew Zook via the DOLLY project at the University of Kentucky
+Geotagged twitter data provided by Dr. Ate Poorthuis and Dr. Matthew Zook via the DOLLY project at the University of Kentucky (http://www.floatingsheep.org/p/dolly.html)
 
 ### Libraries used:
 Application-side:

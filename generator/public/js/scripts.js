@@ -50,7 +50,7 @@ function initMap() {
                 { saturation: 50 }
             ]
             },{
-                featureType: 'poi.business',
+                featureType: 'poi',
                 elementType: 'labels',
                 stylers: [
                     { visibility: 'off' }
@@ -81,7 +81,7 @@ function initMap() {
             //console.log(_layer, layer);
             if(_layer != layer){
                 layer = _layer;
-
+                clickPoint = null; //remove click point in order to get map center
                 onWordCloud();
             }
         }, 500, _layer);
@@ -221,12 +221,14 @@ function createWordCloud(done){
             if(keywords[i][1] > max) max = keywords[i][1];
         }
 
-        var limit = 20; //limit words number
+        var limit = 10; //limit words number
         //console.log(keywords);
 
-        function setCanvas($el){
+        function setCanvas($el, oldHeight){
             var h = $el.height();
-            limit = limit == 20 ? 10: 20;
+            if(h > oldHeight) limit = 20;
+            else limit = 10;
+
             WordCloud($el.get(0), { 
                 list: keywords.slice(0, limit),
                 weightFactor: function(size){
@@ -241,10 +243,12 @@ function createWordCloud(done){
 
             clearTimeout(OnHoverToken);
             preview.hide();
-            OnHoverToken = setTimeout(function(){
+            var height = preview.height();
+            OnHoverToken = setTimeout(function(height){
                 preview.show();
-                setCanvas(preview);
-            }, 1000);
+                preview.toggleClass("hoverAnimation");
+                setCanvas(preview, height);
+            }, 1000, height);
         });
 
         setCanvas(preview);
@@ -267,8 +271,7 @@ function createHeatMap(done){
         keywords: true,
         date: true,
         time: true,
-        day: true,
-        layer: true
+        day: true
     }, function(points, filters){
 
         //console.log(points);
@@ -278,10 +281,16 @@ function createHeatMap(done){
 
         var gmPoints = [];
         if(isDetails){
+            var minWeight = Number.MAX_VALUE;
+
+            for(var i=0,l=points.length;i<l;i++){
+                if(points[i][1] < minWeight) minWeight = points[i][1];
+            }
+
             for(var i=0,l=points.length;i<l;i++){
                 var p = Utils.decodeHash(points[i][0], 1);
                 var point = new google.maps.LatLng(p[0], p[1]);
-                var weight = points[i][1];
+                var weight = Math.floor(points[i][1]/minWeight);
                 gmPoints.push({location: point, weight: weight});
             }
         }else{
@@ -296,7 +305,7 @@ function createHeatMap(done){
         heatmap = new google.maps.visualization.HeatmapLayer({
             data: gmPoints,
             map: map,
-            maxIntensity: isDetails ? 50 : 5,
+            maxIntensity: 10,
             gradient: [
                 'rgba(255, 255, 255, 0)',
                 'rgba(255, 255, 255, 1)',
@@ -339,8 +348,7 @@ function createPopularityMap(done){
         keywords: true,
         date: true,
         time: true,
-        day: true,
-        layer: true
+        day: true
     }, function(hours, filters){
 
         //split
@@ -702,18 +710,23 @@ function utils(){
             lat *= degs;
             lng *= degs;
 
+            //move to real grid
             lat -= 180;
             lng -= 180;
+
+            //find center of grid square
+            lat += degs/2;
+            lng += degs/2;
 
             return [lat, lng];
         },
 
         decodeDaytime: function(daytime){
-            if(daytime == 0) return '0:00';
-            else if(daytime == 1) return '4:00';
-            else if(daytime == 2) return '12:00';
-            else if(daytime == 3) return '17:00';
-            else if(daytime == 4) return '22:00';
+            if(daytime == 0) return '0-4';
+            else if(daytime == 1) return '4-12';
+            else if(daytime == 2) return '12-17';
+            else if(daytime == 3) return '17-22';
+            else if(daytime == 4) return '22-24';
             else return '0';
         }
     };

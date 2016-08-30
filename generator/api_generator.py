@@ -53,7 +53,7 @@ class Api_Generator(object):
 			if len(keyword) == 0:
 				regex = "(.*)|"
 				break
-			if len(keyword) > 10:
+			if len(keyword) > 15:
 				raise Exception('Too long keyword')
 			regex += escape(keyword) + '|'
 		filters['regwords'] = regex[:-1]
@@ -154,15 +154,17 @@ class Api_Generator(object):
 				LIMIT 1000""" % (fv['days'], fv['daytime'], fv['keywords'])
 		else:
 			sql_dev = """SELECT lat, lng 
-				FROM tweets 
+				FROM tweets t
+				INNER JOIN tweet_keywords tk ON tk._tweet = t._id
+			    INNER JOIN keywords k ON k._id = tk._keyword
 				WHERE 
 					timestamp > '%s' AND timestamp < '%s' AND
 					CAST(timestamp as TIME) > CAST('%s' as TIME) AND 
 					CAST(timestamp as TIME) < CAST('%s' as TIME) AND
 					DAYOFWEEK(timestamp) IN %s AND
-					text REGEXP '%s'
+					k.word in %s
 				ORDER BY timestamp DESC 
-				LIMIT 5000""" % (fv['date']['start'], fv['date']['end'], fv['time']['start'], fv['time']['end'], fv['days'], fv['regwords'])
+				LIMIT 5000""" % (fv['date']['start'], fv['date']['end'], fv['time']['start'], fv['time']['end'], fv['days'], fv['keywords'])
 				#boundary
 
 		return self._return_result(sql_dev)
@@ -186,13 +188,15 @@ class Api_Generator(object):
 				ORDER BY wc.day_time ASC""" % (fv['days'], fv['daytime'], fv['keywords'])
 		else:
 			sql_dev = """SELECT HOUR(timestamp), count(HOUR(timestamp))
-				FROM tweets 
+				FROM tweets t
+				INNER JOIN tweet_keywords tk ON tk._tweet = t._id
+			    INNER JOIN keywords k ON k._id = tk._keyword
 				WHERE 
-					text REGEXP '%s' AND
+					k.word in %s AND
 					CAST(timestamp as TIME) > CAST('%s' as TIME) AND CAST(timestamp as TIME) < CAST('%s' as TIME) AND 
 					timestamp > '%s' AND timestamp < '%s'
 				GROUP BY HOUR(timestamp)
-				ORDER BY HOUR(timestamp) ASC""" % (fv['regwords'], fv['time']['start'], fv['time']['end'], fv['date']['start'], fv['date']['end'])
+				ORDER BY HOUR(timestamp) ASC""" % (fv['keywords'], fv['time']['start'], fv['time']['end'], fv['date']['start'], fv['date']['end'])
 
 
 		return self._return_result(sql_dev)

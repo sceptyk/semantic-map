@@ -42,10 +42,12 @@
                 <i class="fa fa-info" aria-hidden="true"></i>
                 <div class="view">
                     <h2>What is it?</h2>
-                    <p>This is a semantic map of Dublin based on Twitter activity. We use public tweets with coordinates to map the most popular spots, graph the popularity hours and present word-clouds for specific regions. If you click on the map you will change the base region for word-cloud. Click on graph icon to switch between recent and all history mode. Click on filter icon to expand menu. You can filter content by keywords day of week, daytime or date.
+                    <p>This is a semantic map of Dublin based on Twitter activity. We use public tweets with coordinates to map the most popular spots, graph the popularity hours and present word-clouds for specific regions. If you click on the map you will change the base region for word-cloud. Click on graph icon to switch between recent and all history mode. Click on filter icon to expand menu. You can filter content by keywords, day of the week, daytime or date.
+                    <h3>Credits:</h3>
+                    <p>Geotagged twitter data provided by Dr. Ate Poorthuis and Dr. Matthew Zook via the DOLLY project at the University of Kentucky <a href="http://www.floatingsheep.org/p/dolly.html">http://www.floatingsheep.org/p/dolly.html</a></p>
                     <h3>Authors:</h3>
-                    <p>Filip Nowakowski & Vsev Mondes @ UCD | Copyrights &copy; 2016 UCD</p>
-                    <p>Geotagged twitter data provided by Dr. Ate Poorthuis and Dr. Matthew Zook via the DOLLY project at the University of Kentucky</p>
+                    <p>Filip Nowakowski & Vsevolods Caka @ UCD | Copyrights &copy; 2016 UCD</p>
+                    <p><a href="https://github.com/sceptyk/semantic-map">Github repository</a></p>
                 </div>
             </div>
                     </div>
@@ -149,6 +151,7 @@
                             <div class="input-group">
                               <span class="input-group-addon" id="input-time-value"></span>
                               <div id="input-time" class="form-control slider" aria-describedby="input-time-value"></div>
+                              <div id="input-daytime" class="form-control slider" style="display: none;" aria-describedby="input-time-value"></div>
                             </div>
                         </div>
                     </div>
@@ -161,10 +164,6 @@
                             </span>
                         </div>
                         <div id="filter-date" class="menu-item-body panel-body">
-                            <!--<div class="input-group">
-                              <span class="input-group-addon" id="input-date-value"></span>
-                              <div id="input-date" class="form-control slider" aria-describedby="input-date-value"></div>
-                            </div>-->
                             <input type="text" id="input-date-start" class="input-date"/>
                             <input type="text" id="input-date-end" class="input-date" />
                         </div>
